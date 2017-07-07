@@ -105,7 +105,7 @@ if($dbcomm->deletelistByID($listID));
         {
             $ts = $dbcomm->getHumanTimeFromTimestamp($listdata['timestamp']);
             $listID = $listdata['checklistID'];
-            echo "<tr><td><a href = \"editlist.php?id=$listID\">$listname</a></td><td>$ts</td><td><a href =\"signin.php?delete=$listID\" class =\"confirmation\">[X]</a></td></tr>";
+            echo "<tr><td><a href = \"editlist.php?id=$listID\">$listname</a></td><td>$ts</td><td><a href =\"index.php?delete=$listID\" class =\"confirmation\">[X]</a></td></tr>";
 
         }
 

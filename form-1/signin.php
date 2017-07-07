@@ -1,4 +1,44 @@
 <!DOCTYPE html>
+
+<?php
+if (isset($_POST['Submit'])) {
+    # SHOULD START OUT FALSE. SET AS TRUE TO TEST
+    $goodAccountID = True;
+    $goodUsername = True;
+    $goodPassword = True;
+    /*
+    if(isset($_POST['form-accountID'])) {
+        if() {
+            $goodAccountID = True;
+        }
+        else {
+        echo '<div style="color: red">' . 'Account ID is invalid' . '<br/></div>';
+        }
+    }
+    if(isset($_POST['form-username'])) {
+        if() {
+            $goodUsername = True;
+        }
+        else {
+        echo '<div style="color: red">' . 'Username is invalid' . '<br/></div>';
+        }
+    }
+    if(isset($_POST['form-password'])) {
+        if() {
+            $goodPassword = True;
+        }
+        else {
+        echo '<div style="color: red">' . 'Password is invalid' . '<br/></div>';
+        }
+    }
+    */
+    if($goodAccountID and $goodUsername and $goodPassword) {
+        echo "<script>window.location = 'http://dev2.planbook.xyz/index.php'</script>";
+
+    }
+}
+?>
+
 <html lang="en">
 
 <head>
@@ -62,16 +102,16 @@
                         </div>
                     </div>
                     <div class="form-bottom">
-                        <form role="form" action="" method="post" class="login-form">
+                        <form role="form" action="signin.php" method="post" class="login-form">
                             <div class="form-group">
-                                <label class="sr-only" for="form-username">Username</label>
-                                <input type="text" name="form-username" placeholder="Account ID..."
-                                       class="form-username form-control" id="form-accountID">
+                                <label class="sr-only" for="form-accountID">AccountID</label>
+                                <input type="text" name="form-accountID" placeholder="Account ID..."
+                                       class="form-accountID form-control" id="form-accountID">
                             </div>
                             <div class="form-group">
-                                <label class="sr-only" for="form-password">Password</label>
+                                <label class="sr-only" for="form-username">Username</label>
                                 <input type="text" name="form-username" placeholder="Username..."
-                                       class="form-password form-control" id="form-username">
+                                       class="form-username form-control" id="form-username">
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-password">Password</label>
@@ -81,7 +121,7 @@
                             <div class="form-group">
                                 <input type="checkbox" name="remember" value="yes">&nbsp;&nbsp;Remember me<br>
                             </div>
-                            <button class = "btn" type = "submit" formaction="checklist/index.php">Login</button>
+                            <button class = "btn" type = "submit" name="Submit">Login</button>
                         </form>
                         <div>
 

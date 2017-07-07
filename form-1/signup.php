@@ -1,4 +1,50 @@
 <!DOCTYPE html>
+
+<?php
+if (isset($_POST['Submit'])) {
+    $errorCount = 0;
+
+    if(isset($_POST['form-accountID'])) {
+        if(1==2) {
+            $errorCount++;
+        }
+    }
+    if(isset($_POST["form-email"])){
+        if (!filter_var($_POST["form-email"], FILTER_VALIDATE_EMAIL)) {
+            $errorCount++;
+        }
+    }
+    if ($_POST['form-phonenumber']){
+        if(!preg_match("/^\(\d{3}\) \d{3}-\d{4}$/", $_POST['form-phonenumber'])){
+            $errorCount++;
+        }
+    }
+    if(isset($_POST['form-password'])) {
+        $password = filter_var($_POST['form-password'], FILTER_SANITIZE_STRING);
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $number = preg_match('@[0-9]@', $password);
+        if (!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
+            $errorCount++;
+        }
+    }
+    if(isset($_POST['form-repassword'])) {
+        $repassword = filter_var($_POST['form-repassword'], FILTER_SANITIZE_STRING);
+        if($repassword != $password) {
+            $errorCount++;
+        }
+    }
+
+    if ($errorCount == 0) {
+        echo "<script>window.location = 'http://dev2.planbook.xyz/planbook/form-1/index.php'</script>";
+    }
+    else {
+        echo "<script>document.getElementById(\"form-password\").innerHTML = \"\";</script>";
+        echo "<script>document.getElementById(\"form-repassword\").innerHTML = \"\";</script>";
+    }
+}
+?>
+
 <html lang="en">
 
 <head>
@@ -55,19 +101,19 @@
                     <div class="form-bottom">
                         <form role="form" action="" method="post" class="login-form">
                             <div class="form-group">
-                                <label class="sr-only" for="form-username">Username</label>
-                                <input type="text" name="form-username" placeholder="Account ID..."
-                                       class="form-username form-control" id="form-accountID">
+                                <label class="sr-only" for="form-accountID">Account ID</label>
+                                <input type="text" name="form-accountID" placeholder="Account ID..."
+                                       class="form-accountID form-control" id="form-accountID">
                             </div>
                             <div class="form-group">
-                                <label class="sr-only" for="form-username">Username</label>
-                                <input type="text" name="form-username" placeholder="Email..."
-                                       class="form-username form-control" id="form-accountID">
+                                <label class="sr-only" for="form-email">Email</label>
+                                <input type="text" name="form-email" placeholder="Email..."
+                                       class="form-email form-control" id="form-email">
                             </div>
                             <div class="form-group">
-                                <label class="sr-only" for="form-username">Username</label>
-                                <input type="text" name="form-username" placeholder="Phone number..."
-                                       class="form-username form-control" id="form-accountID">
+                                <label class="sr-only" for="form-phonenumber">Phone Number</label>
+                                <input type="text" name="form-phonenumber" placeholder="Phone number..."
+                                       class="form-phonenumber form-control" id="form-phonenumber">
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-password">Password</label>
@@ -75,11 +121,11 @@
                                        class="form-password form-control" id="form-password">
                             </div>
                             <div class="form-group">
-                                <label class="sr-only" for="form-password">Password</label>
-                                <input type="password" name="form-password" placeholder="Re-enter password..."
-                                       class="form-password form-control" id="form-password">
+                                <label class="sr-only" for="form-repassword">Re-enter Password</label>
+                                <input type="password" name="form-repassword" placeholder="Re-enter password..."
+                                       class="form-repassword form-control" id="form-repassword">
                             </div>
-                            <button type="submit" class="btn" formaction="checklist/index.php">Register!</button>
+                            <button type="submit" class="btn" formaction="index.php">Register!</button>
                         </form>
                         <div>
 
@@ -101,6 +147,7 @@
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/jquery.backstretch.min.js"></script>
 <script src="assets/js/scripts.js"></script>
+<script src="assets/js/formatPhoneInput.js"></script>
 
 <!--[if lt IE 10]>
 <script src="assets/js/placeholder.js"></script>

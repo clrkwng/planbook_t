@@ -16,7 +16,7 @@ jQuery(document).ready(function() {
     $('.login-form').on('submit', function(e) {
     	
     	$(this).find('input[type="text"], input[type="password"], textarea').each(function(){
-    		if( $(this).val() == "" ) {
+    		if( $(this).val() === "" ) {
     			e.preventDefault();
     			$(this).addClass('input-error');
     		}
@@ -26,6 +26,17 @@ jQuery(document).ready(function() {
     	});
     	
     });
-    
+
+    function invalidInput(variable) {
+		$('.login-form').preventDefault();
+        $("#"+variable).addClass('input-error');
+	}
+/*
+	$(this).find('input[type="text"], input[type="password"], textarea').each(function(){
+        $('this').on('change', function() {
+            $(this).removeClass('input-error');
+        });
+    });
+    */
     
 });
