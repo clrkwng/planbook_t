@@ -36,7 +36,7 @@ if (isset($_POST['Submit'])) {
     }
 
     if ($errorCount == 0) {
-        echo "<script>window.location = 'http://dev2.planbook.xyz/planbook/form-1/index.php'</script>";
+        echo "<script>window.location = 'http://dev2.planbook.xyz/planbook/form-1/homepage.php'</script>";
     }
     else {
         echo "<script>document.getElementById(\"form-password\").innerHTML = \"\";</script>";

@@ -33,7 +33,7 @@ if (isset($_POST['Submit'])) {
     }
     */
     if($goodAccountID and $goodUsername and $goodPassword) {
-        echo "<script>window.location = 'http://dev2.planbook.xyz/index.php'</script>";
+        echo "<script>window.location = 'http://dev2.planbook.xyz/homepage.php'</script>";
 
     }
 }
@@ -81,8 +81,7 @@ if (isset($_POST['Submit'])) {
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
                     <h1><strong>
-                            <font color
-                                  ="#959962">Planbook</strong> Login Page</font>
+                            <font color="White" >Planbook</strong> Login Page</font>
                     </h1>
                     <div class="description">
                         <p>

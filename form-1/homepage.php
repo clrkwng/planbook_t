@@ -67,7 +67,7 @@ if($dbcomm->deletelistByID($listID));
         ?>
 
     <div class="well well-lg">
-        <form action = "index.php" method = "post" class = "form-horizontal">
+        <form action = "homepage.php" method = "post" class = "form-horizontal">
         <form class="form-horizontal">
             <div class="form-group form-group-lg">
                 <label class="col-sm-2 control-label" for="newlistname">List Name:</label>
@@ -105,7 +105,7 @@ if($dbcomm->deletelistByID($listID));
         {
             $ts = $dbcomm->getHumanTimeFromTimestamp($listdata['timestamp']);
             $listID = $listdata['checklistID'];
-            echo "<tr><td><a href = \"editlist.php?id=$listID\">$listname</a></td><td>$ts</td><td><a href =\"index.php?delete=$listID\" class =\"confirmation\">[X]</a></td></tr>";
+            echo "<tr><td><a href = \"editlist.php?id=$listID\">$listname</a></td><td>$ts</td><td><a href =\"homepage.php?delete=$listID\" class =\"confirmation\">[X]</a></td></tr>";
 
         }
 
