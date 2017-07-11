@@ -1,22 +1,34 @@
 <!DOCTYPE html>
 
 <?php
-if (isset($_POST['Submit'])) {
+
     $errorCount = 0;
 
     if(isset($_POST['form-accountID'])) {
         if(1==2) {
             $errorCount++;
+            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  This Account ID is already used.
+</div>';
         }
     }
     if(isset($_POST["form-email"])){
         if (!filter_var($_POST["form-email"], FILTER_VALIDATE_EMAIL)) {
             $errorCount++;
+            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  Invalid email.
+</div>';
         }
     }
-    if ($_POST['form-phonenumber']){
+    if (isset($_POST['form-phonenumber'])){
         if(!preg_match("/^\(\d{3}\) \d{3}-\d{4}$/", $_POST['form-phonenumber'])){
             $errorCount++;
+            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  Invalid phone number.
+</div>';
         }
     }
     if(isset($_POST['form-password'])) {
@@ -26,23 +38,32 @@ if (isset($_POST['Submit'])) {
         $number = preg_match('@[0-9]@', $password);
         if (!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
             $errorCount++;
+            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  Your password needs to be more than 8 characters with at least one uppercase letter, one lowercase letter, and one number.
+</div>';
         }
     }
     if(isset($_POST['form-repassword'])) {
         $repassword = filter_var($_POST['form-repassword'], FILTER_SANITIZE_STRING);
         if($repassword != $password) {
             $errorCount++;
+            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  The passwords do not match.
+</div>';
         }
     }
 
-    if ($errorCount == 0) {
-        echo "<script>window.location = 'http://dev2.planbook.xyz/planbook/form-1/homepage.php'</script>";
+    if ($errorCount == 0 && isset($_POST['form-password'])) {
+        echo "<script>window.location = '/homepage.php'</script>";
     }
     else {
+
         echo "<script>document.getElementById(\"form-password\").innerHTML = \"\";</script>";
         echo "<script>document.getElementById(\"form-repassword\").innerHTML = \"\";</script>";
     }
-}
+
 ?>
 
 <html lang="en">
@@ -78,6 +99,37 @@ if (isset($_POST['Submit'])) {
 </head>
 
 <body>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="landing_page_files/index.php">Planbook</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href ="signin.php">Sign In/Sign up</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="landing_page_files/index.php#portfolio">Activities</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="landing_page_files/index.php#about">About</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="landing_page_files/index.php#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
 
 <!-- Top content -->
 <div class="top-content">
@@ -86,20 +138,28 @@ if (isset($_POST['Submit'])) {
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1><strong>
-                            <font color
-                                  ="#959962">Planbook</strong> Signup Page</font>
+                    <h1>
+                            <font color="White" style="font-size: 1.5em;"><strong>Planbook</strong> Signup Page</font>
                     </h1>
                     <div class="description">
                         <p>
-                            <font color="#959962">"To achieve <strong>big</strong> things, start small"</font>
+                            <font color="White" style="font-size:1.5em;" >"To achieve <strong>big</strong> things, start small"</font>
                         </p>
                     </div>
+
+                    <? if (isset($alert)) //if the alert for creating list is set, then echo the alert
+                    {
+                        echo '<div>';
+                        echo $alert;
+                        echo '</div>';
+                    }
+                    ?>
+
                 </div>
 
                 <div class="col-sm-6 col-sm-offset-3 form-box">
                     <div class="form-bottom">
-                        <form role="form" action="" method="post" class="login-form">
+                        <form role="form" action="" method="post" class="login-form" id="signup-form">
                             <div class="form-group">
                                 <label class="sr-only" for="form-accountID">Account ID</label>
                                 <input type="text" name="form-accountID" placeholder="Account ID..."
@@ -113,7 +173,8 @@ if (isset($_POST['Submit'])) {
                             <div class="form-group">
                                 <label class="sr-only" for="form-phonenumber">Phone Number</label>
                                 <input type="text" name="form-phonenumber" placeholder="Phone number..."
-                                       class="form-phonenumber form-control" id="form-phonenumber">
+                                       class="form-phonenumber form-control" id="form-phonenumber"
+                                       onblur="$(this).val($(this).val().replace(/[^0-9.]/g, '')); if($(this).val().length >= 10){$(this).val('(' + $(this).val().substring(0,3) + ') ' + $(this).val().substring(3,6) + '-' + $(this).val().substring(6,10));}">
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-password">Password</label>
@@ -125,7 +186,7 @@ if (isset($_POST['Submit'])) {
                                 <input type="password" name="form-repassword" placeholder="Re-enter password..."
                                        class="form-repassword form-control" id="form-repassword">
                             </div>
-                            <button type="submit" class="btn" formaction="index.php">Register!</button>
+                            <button type="submit" class="btn" >Register!</button>
                         </form>
                         <div>
 
@@ -134,7 +195,7 @@ if (isset($_POST['Submit'])) {
                 </div>
             </div>
             <div class = "row">
-                Back to <a href="signin.php">login</a>
+                <font color="White"> Back to <a href="signin.php">Login</a></font>
             </div>
         </div>
     </div>

@@ -33,7 +33,7 @@ if (isset($_POST['Submit'])) {
     }
     */
     if($goodAccountID and $goodUsername and $goodPassword) {
-        echo "<script>window.location = 'http://dev2.planbook.xyz/homepage.php'</script>";
+        echo "<script>window.location = '/homepage.php'</script>";
 
     }
 }
@@ -72,7 +72,37 @@ if (isset($_POST['Submit'])) {
 </head>
 
 <body>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="landing_page_files/index.php">Planbook</a>
+        </div>
 
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href ="signin.php">Sign In/Sign up</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="landing_page_files/index.php#portfolio">Activities</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="landing_page_files/index.php#about">About</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="landing_page_files/index.php#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
 <!-- Top content -->
 <div class="top-content">
 
@@ -80,12 +110,12 @@ if (isset($_POST['Submit'])) {
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1><strong>
-                            <font color="White" >Planbook</strong> Login Page</font>
+                    <h1>
+                        <font color="White" style="font-size: 1.5em;"><strong>Planbook</strong> Login Page</font>
                     </h1>
                     <div class="description">
                         <p>
-                            <font color="#959962">"To achieve <strong>big</strong> things, start small"</font>
+                            <font color="White" style="font-size:1.5em;" >"To achieve <strong>big</strong> things, start small"</font>
                         </p>
                     </div>
                 </div>
