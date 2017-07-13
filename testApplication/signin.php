@@ -1,26 +1,38 @@
-<!DOCTYPE html>
-
 <?php
-if (isset($_POST['Submit'])) {
-    # SHOULD START OUT FALSE. SET AS TRUE TO TEST
-    $goodAccountID = True;
-    $goodUsername = True;
-    $goodPassword = True;
-    /*
-    if(isset($_POST['form-accountID']) and isset($_POST['form-username']) and isset($_POST['form-password'])) {
-        if() {
-            echo "<script>window.location = 'homepage.php'</script>";
-        }
-        else {
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <strong>Error!</strong>  Invalid credentials.</div>';
+    session_start();
+    if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
+        $cookieUsername = $_COOKIE['username'];
+        $cookiePassword = $_COOKIE['password'];
+    }
+
+
+    require_once "dbcomm.php";
+    //create db connection
+    $dbcomm = new dbcomm();
+
+    if (isset($_POST['Submit'])) {
+        if(isset($_POST['form-username']) and isset($_POST['form-password'])) {
+            if($dbcomm->verifyCredentials($_POST['form-username'], sha1($_POST['form-password']))) {
+                if($_POST['remember']=='yes'){
+                    $cookie_name_username = 'username';
+                    $cookie_value_username = $_POST['form-username'];
+                    setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
+                    $cookie_name_password = 'password';
+                    $cookie_value_password = $_POST['form-password'];
+                    setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
+                }
+
+                echo "<script>window.location = 'homepage.php'</script>";
+            }
+            else {
+                $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>Error!</strong> Incorrect Username/Password</div>';
+            }
         }
     }
-    */
-}
 ?>
-
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -125,12 +137,14 @@ if (isset($_POST['Submit'])) {
                             <div class="form-group">
                                 <label class="sr-only" for="form-username">Username</label>
                                 <input type="text" name="form-username" placeholder="Username..."
-                                       class="form-username form-control" id="form-username">
+                                       class="form-username form-control" id="form-username"
+                                       value="<? echo (isset($cookieUsername))?$cookieUsername:''; ?>">
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-password">Password</label>
                                 <input type="password" name="form-password" placeholder="Password..."
-                                       class="form-password form-control" id="form-password">
+                                       class="form-password form-control" id="form-password"
+                                       value="<? echo (isset($cookiePassword))?$cookiePassword:''; ?>">
                             </div>
                             <div class="form-group">
                                 <input type="checkbox" name="remember" value="yes">&nbsp;&nbsp;Remember me<br>

@@ -111,7 +111,16 @@ class dbcomm
 
     function verifyCredentials($username, $password)
     {
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username' AND `password`='$password';";
+        $result = $this->doQuery($query);
 
+        $SQLdataarray = mysqli_fetch_array($result);
+        if(count($SQLdataarray) < 1) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
     }
 
     function getUserIDFromUsername()
