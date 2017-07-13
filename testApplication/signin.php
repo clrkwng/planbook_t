@@ -7,35 +7,17 @@ if (isset($_POST['Submit'])) {
     $goodUsername = True;
     $goodPassword = True;
     /*
-    if(isset($_POST['form-accountID'])) {
+    if(isset($_POST['form-accountID']) and isset($_POST['form-username']) and isset($_POST['form-password'])) {
         if() {
-            $goodAccountID = True;
+            echo "<script>window.location = 'homepage.php'</script>";
         }
         else {
-        echo '<div style="color: red">' . 'Account ID is invalid' . '<br/></div>';
-        }
-    }
-    if(isset($_POST['form-username'])) {
-        if() {
-            $goodUsername = True;
-        }
-        else {
-        echo '<div style="color: red">' . 'Username is invalid' . '<br/></div>';
-        }
-    }
-    if(isset($_POST['form-password'])) {
-        if() {
-            $goodPassword = True;
-        }
-        else {
-        echo '<div style="color: red">' . 'Password is invalid' . '<br/></div>';
+            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Error!</strong>  Invalid credentials.</div>';
         }
     }
     */
-    if($goodAccountID and $goodUsername and $goodPassword) {
-        echo "<script>window.location = '/homepage.php'</script>";
-
-    }
 }
 ?>
 
@@ -118,6 +100,14 @@ if (isset($_POST['Submit'])) {
                             <font color="White" style="font-size:1.5em;" >"To achieve <strong>big</strong> things, start small!"</font>
                         </p>
                     </div>
+
+                    <? if (isset($alert)) //if the alert for creating list is set, then echo the alert
+                    {
+                        echo '<div>';
+                        echo $alert;
+                        echo '</div>';
+                    }
+                    ?>
                 </div>
 
                 <div class="col-sm-6 col-sm-offset-3 form-box">
@@ -132,11 +122,6 @@ if (isset($_POST['Submit'])) {
                     </div>
                     <div class="form-bottom">
                         <form role="form" action="signin.php" method="post" class="login-form">
-                            <div class="form-group">
-                                <label class="sr-only" for="form-accountID">AccountID</label>
-                                <input type="text" name="form-accountID" placeholder="Account ID..."
-                                       class="form-accountID form-control" id="form-accountID">
-                            </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-username">Username</label>
                                 <input type="text" name="form-username" placeholder="Username..."

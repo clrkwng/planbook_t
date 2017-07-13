@@ -1,68 +1,91 @@
 <!DOCTYPE html>
 
 <?php
+require_once "dbcomm.php";
+//create db connection
+$dbcomm = new dbcomm();
 
-    $errorCount = 0;
+$errorCount = 0;
 
-    if(isset($_POST['form-accountID'])) {
-        if(1==2) {
-            $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+if(isset($_POST['form-username'])) {
+    if(1==2) {
+        $errorCount++;
+        $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  This Account ID is already used.
-</div>';
-        }
+  <strong>Error!</strong>  This Account ID is already used.</div>';
     }
-    if(isset($_POST["form-email"])){
-        if (!filter_var($_POST["form-email"], FILTER_VALIDATE_EMAIL)) {
-            $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+}
+if(isset($_POST['form-password'])) {
+    $password = filter_var($_POST['form-password'], FILTER_SANITIZE_STRING);
+    $uppercase = preg_match('@[A-Z]@', $password);
+    $lowercase = preg_match('@[a-z]@', $password);
+    $number = preg_match('@[0-9]@', $password);
+    if (!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
+        $errorCount++;
+        $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  Invalid email.
-</div>';
-        }
+  <strong>Error!</strong>  Your password does not meet the requirements.</div>';
     }
-    if (isset($_POST['form-phonenumber'])){
-        if(!preg_match("/^\(\d{3}\) \d{3}-\d{4}$/", $_POST['form-phonenumber'])){
-            $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+}
+if(isset($_POST['form-repassword']) and $_POST['form-password']) {
+    $repassword = filter_var($_POST['form-repassword'], FILTER_SANITIZE_STRING);
+    if($repassword != $_POST['form-password']) {
+        $errorCount++;
+        $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  Invalid phone number.
-</div>';
-        }
+  <strong>Error!</strong>  The passwords do not match.</div>';
     }
-    if(isset($_POST['form-password'])) {
-        $password = filter_var($_POST['form-password'], FILTER_SANITIZE_STRING);
-        $uppercase = preg_match('@[A-Z]@', $password);
-        $lowercase = preg_match('@[a-z]@', $password);
-        $number = preg_match('@[0-9]@', $password);
-        if (!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
-            $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  Your password does not meet the requirements.
-</div>';
-        }
+}
+if (isset($_POST['form-phonenumber'])){
+    if(!preg_match("/^\(\d{3}\) \d{3}-\d{4}$/", $_POST['form-phonenumber'])){
+        $errorCount++;
+        $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Error!</strong>  Invalid phone number.</div>';
     }
-    if(isset($_POST['form-repassword'])) {
-        $repassword = filter_var($_POST['form-repassword'], FILTER_SANITIZE_STRING);
-        if($repassword != $password) {
-            $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  The passwords do not match.
-</div>';
-        }
+}
+if(isset($_POST["form-email"])){
+    if (!filter_var($_POST["form-email"], FILTER_VALIDATE_EMAIL)) {
+        $errorCount++;
+        $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>Error!</strong>  Invalid email.</div>';
     }
+}
 
-    if ($errorCount == 0 && isset($_POST['form-password'])) {
-        echo "<script>window.location = '/homepage.php'</script>";
-    }
-    else {
+if ($errorCount == 0 && isset($_POST['form-password'])) {
+    $username = $_POST['form-username'];
+    $password = sha1($_POST['form-password']);
+    $email = $_POST['form-email'];
+    $phonenumber = preg_replace('/\D+/', '', $_POST['form-phonenumber']);
 
-        echo "<script>document.getElementById(\"form-password\").innerHTML = \"\";</script>";
-        echo "<script>document.getElementById(\"form-repassword\").innerHTML = \"\";</script>";
+    if($dbcomm->checkIfUsernameExists($username)) {
+        $errorCount += 1;
+        $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Sorry!</strong> That username is already in use.</div>';
     }
+    if($dbcomm->checkIfPhonenumberExists($phonenumber)) {
+        $errorCount += 1;
+        $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Sorry!</strong> That phone number is already associated with an account.</div>';
+    }
+    if($dbcomm->checkIfEmailExists($email)) {
+        $errorCount += 1;
+        $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Sorry!</strong> That email is already associated with an account.</div>';
+    }
+    if ($errorCount == 0) {
+        $dbcomm->createNewUser($username, $password, $email, $phonenumber);
+        echo "<script>window.location = 'homepage.php'</script>";
+    }
+}
+else {
+    echo "<script>document.getElementById(\"form-password\").innerHTML = \"\";</script>";
+    echo "<script>document.getElementById(\"form-repassword\").innerHTML = \"\";</script>";
+}
 
 ?>
 
@@ -139,7 +162,7 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
                     <h1>
-                            <font color="White" style="font-size: 1.5em;"><strong>Planbook</strong> Signup Page</font>
+                        <font color="White" style="font-size: 1.5em;"><strong>Planbook</strong> Signup Page</font>
                     </h1>
                     <div class="description">
                         <p>
@@ -170,20 +193,9 @@
                     <div class="form-bottom">
                         <form role="form" action="" method="post" class="login-form" id="signup-form">
                             <div class="form-group">
-                                <label class="sr-only" for="form-accountID">Account ID</label>
-                                <input type="text" name="form-accountID" placeholder="Account ID..."
-                                       class="form-accountID form-control" id="form-accountID">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="form-email">Email</label>
-                                <input type="text" name="form-email" placeholder="Email..."
-                                       class="form-email form-control" id="form-email">
-                            </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="form-phonenumber">Phone Number</label>
-                                <input type="text" name="form-phonenumber" placeholder="Phone number..."
-                                       class="form-phonenumber form-control" id="form-phonenumber"
-                                       onblur="$(this).val($(this).val().replace(/[^0-9.]/g, '')); if($(this).val().length >= 10){$(this).val('(' + $(this).val().substring(0,3) + ') ' + $(this).val().substring(3,6) + '-' + $(this).val().substring(6,10));}">
+                                <label class="sr-only" for="form-username">Username</label>
+                                <input type="text" name="form-username" placeholder="Username..."
+                                       class="form-username form-control" id="form-username">
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-password">Password</label>
@@ -195,6 +207,17 @@
                                 <input type="password" name="form-repassword" placeholder="Re-enter password..."
                                        class="form-repassword form-control" id="form-repassword">
                             </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="form-phonenumber">Phone Number</label>
+                                <input type="text" name="form-phonenumber" placeholder="Phone number..."
+                                       class="form-phonenumber form-control" id="form-phonenumber"
+                                       onblur="$(this).val($(this).val().replace(/[^0-9.]/g, '')); if($(this).val().length >= 10){$(this).val('(' + $(this).val().substring(0,3) + ') ' + $(this).val().substring(3,6) + '-' + $(this).val().substring(6,10));}">
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="form-email">Email</label>
+                                <input type="text" name="form-email" placeholder="Email..."
+                                       class="form-email form-control" id="form-email">
+                            </div>
                             <button type="submit" class="btn" >Register!</button>
                         </form>
                         <div>
@@ -204,7 +227,7 @@
                 </div>
             </div>
             <div class = "row">
-                <font color="White"> Back to <a href="signin.php">Login</a></font>
+                Back to <a href="signin.php">Login</a>
             </div>
         </div>
     </div>

@@ -41,17 +41,17 @@ if($dbcomm->deletelistByID($listID));
 
 <html lang="en">
 <head>
-    <?php require_once "template_items/meta_tags.php";?>
+    <?php require_once "assets/template_items/meta_tags.php";?>
 
     <title>Planbook</title>
 
 
-<?php require_once "template_items/bootstrap_header.php";?>
+<?php require_once "assets/template_items/bootstrap_header.php";?>
 </head>
 
 <body>
 
-<?php require_once "template_items/navbar.php";?>
+<?php require_once "assets/template_items/navbar.php";?>
 
 <div class="container">
 
