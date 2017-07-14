@@ -12,8 +12,7 @@ if(isset($_POST['newlistname']))
 
         $alert = '<div class="alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  The list already exists.
-</div>';
+  <strong>Error!</strong>  The list already exists.</div>';
     }
     else
     {
@@ -115,7 +114,7 @@ if($dbcomm->deletelistByID($listID));
 </div><!-- /.container -->
 
 
-<?php require_once "template_items/bootstrap_footer.php";?>
+<?php require_once "assets/template_items/bootstrap_footer.php";?>
 
 <script type="text/javascript">
     var elems = document.getElementsByClassName('confirmation');

@@ -1,33 +1,35 @@
 <?php
-session_start();
-if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
-    $cookieUsername = $_COOKIE['username'];
-    $cookiePassword = $_COOKIE['password'];
-}
-
-
 require_once "dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 
-if (isset($_POST['Submit'])) {
-    if(isset($_POST['signin-username']) and isset($_POST['signin-password'])) {
-        if($dbcomm->verifyCredentials($_POST['signin-username'], sha1($_POST['signin-password']))) {
-            if($_POST['remember']=='yes'){
-                $cookie_name_username = 'username';
-                $cookie_value_username = $_POST['signin-username'];
-                setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
-                $cookie_name_password = 'password';
-                $cookie_value_password = $_POST['signin-password'];
-                setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
-            }
+if (isset($_POST['Submit'])){
+    if(isset($_POST['recovery-email'])){
+        $email = $_POST['recovery-email'];
+        if ($dbcomm->checkIfEmailExists($email)){
+            $username = $dbcomm->getUsernameByEmail($email);
+            $encryptedUsername = openssl_encrypt("$username", 'CAST5-CBC', 'resetPasswordPassword');
+            $message = "<html><body><div>Hello,<br><br>
+Your username is <b>$username</b>.<br><br>
+Click on the following link to reset your Planbook password.<br><br>
+<a href='http://dev1.planbook.xyz/testApplication/resetPassword.php?id=$encryptedUsername'>Reset Password</a><br><br>
+Please ignore this email if you did not request a password change.<br><br>
+As always, thanks for using Planbook!<br><br>
+Planbook Services<br>
+<a href='http://dev1.planbook.xyz/testApplication/index.html'>www.planbook.com</a>
+</div></body></html>";
+            $headers = "From: noreply@planbook.xyz"."\r\n";
+            $headers .= "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            mail( $email, "Planbook Recovery Email", $message, $headers);
 
-            echo "<script>window.location = 'homepage.php'</script>";
+            $alert .='<div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> Email has been sent. </div>';
         }
-        else {
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Error!</strong> Incorrect Username/Password</div>';
+
+        else{
+            $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> This email is currently not registered. </div>';
         }
     }
 }
@@ -103,13 +105,13 @@ if (isset($_POST['Submit'])) {
     <div class="inner-bg">
         <div class="container">
             <div class="row">
-                <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1>
-                        <font color="White" style="font-size: 1.5em;"><strong>Planbook</strong> Login Page</font>
+                <div class="col-sm-6 col-sm-offset-3 text">
+                    <h1 align="left">
+                        <font color="#696969"><strong>Login Recovery Page</strong></font>
                     </h1>
-                    <div class="description">
-                        <p>
-                            <font color="White" style="font-size:1.5em;" >"To achieve <strong>big</strong> things, start small!"</font>
+                    <div class="">
+                        <p align = "left">
+                            <font color="696969">Enter your email and follow the instructions on resetting your password.</font>
                         </p>
                     </div>
 
@@ -123,45 +125,21 @@ if (isset($_POST['Submit'])) {
                 </div>
 
                 <div class="col-sm-6 col-sm-offset-3 form-box">
-                    <div class="form-top">
-                        <div class="form-top-left">
-                            <h3>Login to our site</h3>
-                            <p>Enter your credentials to log on:</p>
-                        </div>
-                        <div class="form-top-right">
-                            <i class="fa fa-key"></i>
-                        </div>
-                    </div>
                     <div class="form-bottom">
-                        <form role="form" action="signin.php" method="post" class="login-form">
+                        <form role="form" action="" method="post" class="login-form">
                             <div class="form-group">
-                                <label class="sr-only" for="signin-username">Username</label>
-                                <input type="text" name="signin-username" placeholder="Username..."
-                                       class="form-control" id="signin-username"
-                                       value="<? echo (isset($cookieUsername))?$cookieUsername:''; ?>">
+                                <label class="sr-only" for="recovery-email">Email</label>
+                                <input type="email" name="recovery-email" placeholder="Email..."
+                                       class="form-email form-control" id="recovery-email"
+                                       value="">
                             </div>
-                            <div class="form-group">
-                                <label class="sr-only" for="signin-password">Password</label>
-                                <input type="password" name="signin-password" placeholder="Password..."
-                                       class="form-control" id="signin-password"
-                                       value="<? echo (isset($cookiePassword))?$cookiePassword:''; ?>">
-                            </div>
-                            <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-                                <tr>
-                                    <td align = "left"><div class="form-group"><input type="checkbox" name="remember" value="yes">&nbsp;&nbsp;Remember me</div></td>
-                                    <td align = "right"><div class = "form-group"><a href="sendRecoveryEmail.php">Forgot login?</a></div></td>
-                                </tr>
-                            </table>
-                            <button class = "btn" type = "submit" name="Submit">Login</button>
+                            <button class = "btn" type = "submit" name="Submit">Send email</button>
                         </form>
                         <div>
 
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class = "row">
-                Don't have an account yet? <a href="signup.php">Click Here</a>
             </div>
         </div>
     </div>

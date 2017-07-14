@@ -55,6 +55,20 @@ class dbcomm
      * SIGN-UP FUNCTIONS ------------------------------------------------------------
      * */
 
+    function checkIfAccountNameExists($accountName)
+    {
+        $query = "SELECT `id` FROM `Account` WHERE `account_name`='$accountName';";
+        $result = $this->doQuery($query);
+
+        $SQLdataarray = mysqli_fetch_array($result);
+        if(count($SQLdataarray) < 1) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
+    }
+
     function checkIfUsernameExists($username)
     {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
@@ -69,9 +83,9 @@ class dbcomm
         }
     }
 
-    function checkIfPhonenumberExists($phonnumber)
+    function checkIfPhonenumberExists($phonenumber)
     {
-        $query = "SELECT `id` FROM `Account` WHERE `phone_number`='$phonnumber';";
+        $query = "SELECT `id` FROM `User` WHERE `phone_number`='$phonenumber';";
         $result = $this->doQuery($query);
 
         $SQLdataarray = mysqli_fetch_array($result);
@@ -85,7 +99,7 @@ class dbcomm
 
     function checkIfEmailExists($email)
     {
-        $query = "SELECT `id` FROM `Account` WHERE `email`='$email';";
+        $query = "SELECT `id` FROM `User` WHERE `email`='$email';";
         $result = $this->doQuery($query);
 
         $SQLdataarray = mysqli_fetch_array($result);
@@ -97,12 +111,27 @@ class dbcomm
         }
     }
 
-    function createNewUser($username, $password, $email, $phonenumber)
+    function createNewUser($accountName, $username, $password, $email, $phonenumber)
     {
-        $query = "INSERT INTO  `Account` (`email`, `phone_number`) VALUES ('$email', '$phonenumber');";
+        $query = "INSERT INTO  `Account` (`account_name`) VALUES ('$accountName');";
         $this->doQuery($query);
-        $query = "INSERT INTO `User` (`username`, `password`) VALUES ('$username', '$password');";
+
+        $query = "SELECT `id` FROM `Account` WHERE `account_name`='$accountName'";
+        $result = $this->doQuery($query);
+        $SQLdataarray = mysqli_fetch_array($result);
+        $accountID = $SQLdataarray['id'];
+
+        $query = "INSERT INTO `User` (`account_id`, `username`, `password`, `email`, `phone_number`) VALUES ('$accountID', '$username', '$password', '$email', '$phonenumber');";
         $this->doQuery($query);
+
+        $query = "UPDATE `User` SET `type_id`='1' WHERE `username`='$username'";
+        $this->doQuery($query);
+    }
+
+    function verifyAccountByAccountID($accountID)
+    {
+        $query = "UPDATE `Account` SET `verify`='1' WHERE `id`='$accountID'";
+        return $this->doQuery($query);
     }
 
     /*
@@ -123,20 +152,36 @@ class dbcomm
         }
     }
 
-    function getUserIDFromUsername()
+    function getUserIDFromUsername($username)
+    {
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getEmailFromUserID($userID)
     {
 
     }
 
-    function getEmailFromUserID()
+    function getPhonenumberFromUserID($userID)
     {
 
     }
 
-    function getPhonenumberFromUserID()
-    {
+    /*
+     * Recovery FUNCTIONS ------------------------------------------------------------
+     * */
 
+    // check if email exists uses the function in the sign-up section
+
+    function getUsernameByEmail($email) {
+        $query = "SELECT `username` FROM `User` WHERE `email`='$email'";
+        return mysqli_fetch_array($this->doQuery($query))['username'];
     }
 
+    function resetPasswordByUsername($username, $password) {
+        $query = "UPDATE `User` SET `password`='$password' WHERE `username`='$username'";
+        return $this->doQuery($query);
+    }
 
 }
