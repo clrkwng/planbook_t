@@ -1,0 +1,22 @@
+{
+  "name": "planbook",
+  "version": "1.0.0",
+  "description": "Monmouth University Summer Research Project",
+  "main": "testApplication/index.html",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/musrp2017/planbook.git"
+  },
+  "author": "Andrew Parise",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/musrp2017/planbook#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1"
+  }
+}
