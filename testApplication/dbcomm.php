@@ -130,7 +130,7 @@ class dbcomm
 
     function verifyAccountByAccountID($accountID)
     {
-        $query = "UPDATE `Account` SET `verify`='1' WHERE `id`='$accountID'";
+        $query = "UPDATE `Account` SET `verified`='1' WHERE `id`='$accountID'";
         return $this->doQuery($query);
     }
 
@@ -152,20 +152,38 @@ class dbcomm
         }
     }
 
+    function isAccountVerified($username){
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID =  mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $query = "SELECT `verified` FROM `Account` WHERE `id`='$accountID'";
+        $verified  = mysqli_fetch_array($this->doQuery($query))['verified'];
+        if ($verified > 0){
+            return True;
+        }
+        else{
+            return False;
+        }
+    }
+
     function getUserIDFromUsername($username)
     {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
         return mysqli_fetch_array($this->doQuery($query))['id'];
     }
 
-    function getEmailFromUserID($userID)
-    {
+    /*
+     * Verify FUNCTIONS ------------------------------------------------------------
+     * */
 
+    function getEmailByUsername($username) {
+        $query = "SELECT `email` FROM `User` WHERE `username`='$username'";
+        return mysqli_fetch_array($this->doQuery($query))['email'];
     }
 
-    function getPhonenumberFromUserID($userID)
-    {
-
+    function verifyAccountByUsername($username) {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID =  mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $this->verifyAccountByAccountID($accountID);
     }
 
     /*

@@ -4,9 +4,8 @@
     $dbcomm = new dbcomm();
 
     if(!isset($_GET['id'])) {
-        die("Error: The username was not set.");
+        die("Error: The id was not set.");
     }
-    /*<? echo openssl_encrypt('KevinYan', 'CAST5-CBC', 'resetPasswordPassword'); ?>*/
     $username = openssl_decrypt($_GET['id'], 'CAST5-CBC', 'resetPasswordPassword');
 
     if(isset($_POST['Submit'])) {
