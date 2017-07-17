@@ -152,7 +152,8 @@ class dbcomm
         }
     }
 
-    function isAccountVerified($username){
+    function isAccountVerified($username)
+    {
         $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
         $accountID =  mysqli_fetch_array($this->doQuery($query))['account_id'];
         $query = "SELECT `verified` FROM `Account` WHERE `id`='$accountID'";
@@ -169,6 +170,14 @@ class dbcomm
     {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
         return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getTypeByUsername($username)
+    {
+        $query = "SELECT `type_id` FROM `User` WHERE `username`='$username'";
+        $type = mysqli_fetch_array($this->doQuery($query))['type_id'];
+        $query = "SELECT `name` FROM `Type` WHERE `id`='$type'";
+        return mysqli_fetch_array($this->doQuery($query))['name'];
     }
 
     /*
@@ -200,6 +209,32 @@ class dbcomm
     function resetPasswordByUsername($username, $password) {
         $query = "UPDATE `User` SET `password`='$password' WHERE `username`='$username'";
         return $this->doQuery($query);
+    }
+
+    /*
+     * Admin Panel FUNCTIONS ------------------------------------------------------------
+     * */
+
+    function getAccountNameByUsername($username) {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $query = "SELECT `account_name` FROM `Account` WHERE `id`='$accountID'";
+        return mysqli_fetch_array($this->doQuery($query))['account_name'];
+    }
+
+    function getAllUsersByAdminUsername($username) {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
+
+        $query = "SELECT * FROM `User` WHERE `account_id`='$accountID'";
+        $result = $this->doQuery($query);
+
+        $users = Array();
+        while($row = mysqli_fetch_array($result)) {
+            $users[$row['id']] = Array("username"=>$row['username'], "total_points"=>$row['total_points']);
+        }
+        ksort($users);
+        return $users;
     }
 
 }

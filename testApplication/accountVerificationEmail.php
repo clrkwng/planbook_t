@@ -38,7 +38,7 @@ if ($dbcomm->checkIfEmailExists($email)) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Planbook Login</title>
+    <title>Account Verification</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
@@ -78,7 +78,7 @@ if ($dbcomm->checkIfEmailExists($email)) {
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="signin.php">Sign In/Sign up</a>
+                    <a href ="signin.php">Login/Sign up</a>
                 </li>
                 <li class="page-scroll">
                     <a href="index.html#portfolio">Activities</a>
