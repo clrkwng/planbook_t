@@ -78,7 +78,9 @@
         }
         if ($errorCount == 0) {
             $dbcomm->createNewUser($accountName, $username, $password, $email, $phonenumber);
-            echo "<script>window.location = 'homepage.php'</script>";
+            $encryptedUsername = openssl_encrypt("$username", 'RC4', 'sendVerificationEmailPassword');
+            #die($encryptedUsername . " ; 9xOTHT9ndaPbHaGq/ygu%20g== ::: " . openssl_decrypt("$encryptedUsername", 'BF-ECB', 'sendVerificationEmailPassword') . " ; " . openssl_decrypt('9xOTHT9ndaPbHaGq/ygu%20g==', 'BF-ECB', 'sendVerificationEmailPassword'));
+            echo "<script>window.location = 'http://dev1.planbook.xyz/testApplication/accountVerificationEmail.php?id=$encryptedUsername';</script>";
         }
     }
     else {
@@ -95,7 +97,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Planbook Login</title>
+    <title>Sign Up</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
@@ -135,7 +137,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="signin.php">Sign In/Sign up</a>
+                    <a href ="signin.php">Login/Sign up</a>
                 </li>
                 <li class="page-scroll">
                     <a href="index.html#portfolio">Activities</a>

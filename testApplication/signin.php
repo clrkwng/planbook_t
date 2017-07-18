@@ -13,16 +13,34 @@ $dbcomm = new dbcomm();
 if (isset($_POST['Submit'])) {
     if(isset($_POST['signin-username']) and isset($_POST['signin-password'])) {
         if($dbcomm->verifyCredentials($_POST['signin-username'], sha1($_POST['signin-password']))) {
-            if($_POST['remember']=='yes'){
-                $cookie_name_username = 'username';
-                $cookie_value_username = $_POST['signin-username'];
-                setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
-                $cookie_name_password = 'password';
-                $cookie_value_password = $_POST['signin-password'];
-                setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
-            }
 
-            echo "<script>window.location = 'homepage.php'</script>";
+            $username = $_POST['signin-username'];
+
+            if($dbcomm->isAccountVerified($_POST['signin-username'])) {
+                if($_POST['remember']=='yes'){
+                    $cookie_name_username = 'username';
+                    $cookie_value_username = $_POST['signin-username'];
+                    setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
+                    $cookie_name_password = 'password';
+                    $cookie_value_password = $_POST['signin-password'];
+                    setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
+                }
+                $type = $dbcomm->getTypeByUsername($_POST['signin-username']);
+                if($type == "Admin") {
+                    $encryptedUsername = openssl_encrypt("$username",'bf-cfb','adminPanelPassword');
+                    echo "<script>window.location = 'adminPanel.php?id=$encryptedUsername'</script>";
+                }
+                elseif($type == "Regular") {
+                    $encryptedUsername = openssl_encrypt("$username",'RC4-40','regularUserPassword');
+                    echo "<script>window.location = 'homepage.php?id=$encryptedUsername'</script>";
+                }
+            }
+            else {
+                $encryptedUsername = openssl_encrypt("$username", 'RC4', 'sendVerificationEmailPassword');
+                $alert .= "<div class='alert alert-warning alert-dismissible' role='alert'>
+          <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+          <strong>Sorry!</strong> Please verify your account. <a href='http://dev1.planbook.xyz/testApplication/accountVerificationEmail.php?id=$encryptedUsername'>Click here</a> to resend the verification email.</div>";
+            }
         }
         else {
             $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
@@ -40,7 +58,7 @@ if (isset($_POST['Submit'])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Planbook Login</title>
+    <title>Login</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
@@ -80,7 +98,7 @@ if (isset($_POST['Submit'])) {
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="signin.php">Sign In/Sign up</a>
+                    <a href ="signin.php">Login/Sign up</a>
                 </li>
                 <li class="page-scroll">
                     <a href="index.html#portfolio">Activities</a>

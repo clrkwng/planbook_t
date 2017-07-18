@@ -130,7 +130,7 @@ class dbcomm
 
     function verifyAccountByAccountID($accountID)
     {
-        $query = "UPDATE `Account` SET `verify`='1' WHERE `id`='$accountID'";
+        $query = "UPDATE `Account` SET `verified`='1' WHERE `id`='$accountID'";
         return $this->doQuery($query);
     }
 
@@ -152,20 +152,47 @@ class dbcomm
         }
     }
 
+    function isAccountVerified($username)
+    {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID =  mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $query = "SELECT `verified` FROM `Account` WHERE `id`='$accountID'";
+        $verified  = mysqli_fetch_array($this->doQuery($query))['verified'];
+        if ($verified > 0){
+            return True;
+        }
+        else{
+            return False;
+        }
+    }
+
     function getUserIDFromUsername($username)
     {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
         return mysqli_fetch_array($this->doQuery($query))['id'];
     }
 
-    function getEmailFromUserID($userID)
+    function getTypeByUsername($username)
     {
-
+        $query = "SELECT `type_id` FROM `User` WHERE `username`='$username'";
+        $type = mysqli_fetch_array($this->doQuery($query))['type_id'];
+        $query = "SELECT `name` FROM `Type` WHERE `id`='$type'";
+        return mysqli_fetch_array($this->doQuery($query))['name'];
     }
 
-    function getPhonenumberFromUserID($userID)
-    {
+    /*
+     * Verify FUNCTIONS ------------------------------------------------------------
+     * */
 
+    function getEmailByUsername($username) {
+        $query = "SELECT `email` FROM `User` WHERE `username`='$username'";
+        return mysqli_fetch_array($this->doQuery($query))['email'];
+    }
+
+    function verifyAccountByUsername($username) {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID =  mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $this->verifyAccountByAccountID($accountID);
     }
 
     /*
@@ -182,6 +209,32 @@ class dbcomm
     function resetPasswordByUsername($username, $password) {
         $query = "UPDATE `User` SET `password`='$password' WHERE `username`='$username'";
         return $this->doQuery($query);
+    }
+
+    /*
+     * Admin Panel FUNCTIONS ------------------------------------------------------------
+     * */
+
+    function getAccountNameByUsername($username) {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $query = "SELECT `account_name` FROM `Account` WHERE `id`='$accountID'";
+        return mysqli_fetch_array($this->doQuery($query))['account_name'];
+    }
+
+    function getAllUsersByAdminUsername($username) {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
+
+        $query = "SELECT * FROM `User` WHERE `account_id`='$accountID'";
+        $result = $this->doQuery($query);
+
+        $users = Array();
+        while($row = mysqli_fetch_array($result)) {
+            $users[$row['id']] = Array("username"=>$row['username'], "total_points"=>$row['total_points']);
+        }
+        ksort($users);
+        return $users;
     }
 
 }
