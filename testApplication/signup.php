@@ -77,7 +77,7 @@
   <strong>Sorry!</strong> That email is already associated with an account.</div>';
         }
         if ($errorCount == 0) {
-            $dbcomm->createNewUser($accountName, $username, $password, $email, $phonenumber);
+            $dbcomm->createNewAdmin($accountName, $username, $password, $email, $phonenumber);
             $encryptedUsername = openssl_encrypt("$username", 'RC4', 'sendVerificationEmailPassword');
             #die($encryptedUsername . " ; 9xOTHT9ndaPbHaGq/ygu%20g== ::: " . openssl_decrypt("$encryptedUsername", 'BF-ECB', 'sendVerificationEmailPassword') . " ; " . openssl_decrypt('9xOTHT9ndaPbHaGq/ygu%20g==', 'BF-ECB', 'sendVerificationEmailPassword'));
             echo "<script>window.location = 'http://dev1.planbook.xyz/testApplication/accountVerificationEmail.php?id=$encryptedUsername';</script>";
@@ -226,9 +226,6 @@
                             </div>
                             <button type="submit" class="btn" >Register!</button>
                         </form>
-                        <div>
-
-                        </div>
                     </div>
                 </div>
             </div>

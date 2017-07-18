@@ -2,8 +2,13 @@
 <?php
 require_once "dbcomm.php";
 $dbcomm = new dbcomm();
-$username="ClarkWang";
 
+if(!isset($_GET['id'])) {
+    die("Error: The id was not set.");
+}
+$username = openssl_decrypt($_GET['id'], 'bf-cfb', 'adminPanelPassword');
+$accountID = $dbcomm->getAccountIDByUsername($username);
+$encryptedAccountID = openssl_encrypt($accountID, 'bf-ecb', 'makeNewUserPassword');
 
 ?>
 
@@ -13,8 +18,7 @@ $username="ClarkWang";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="Magic Checklist">
-    <meta name="author" content="Clark Wang">
+
     <!--<link rel="icon" href="../../favicon.ico">-->
 
     <!--meta tags, from bootstrap template-->
@@ -31,7 +35,7 @@ $username="ClarkWang";
     <![endif]-->
 </head>
 
-<body>
+<body style="background-color: #e6f7ff;">
 
 <?php require_once "assets/template_items/navbar.php";?>
 
@@ -39,21 +43,20 @@ $username="ClarkWang";
 
     <div class="starter-template">
         <h1 align="left">Admin Panel</h1>
-        <p class="lead">Hello, <? echo $username ?>!</p>
     </div>
 
     <? if (isset($alert))  echo $alert; ?>
 
-    <h2 align="center">Manage <? echo $dbcomm->getAccountNameByUsername($username); ?></h2>
+    <h2 align="center">Manage <b><? echo $dbcomm->getAccountNameByUsername($username); ?></b> Users</h2>
     <table class="table table-hover" width="100%">
         <tr>
-            <th width="35%">
+            <th width="40%">
                 User:
             </th>
             <th width="20%">
                 Points:
             </th>
-            <th width="30%">
+            <th width="20%">
                 Actions:
             </th>
         </tr>
@@ -63,9 +66,14 @@ $username="ClarkWang";
         {
             $userName = $userValues['username'];
             $userPoints = $userValues['total_points'];
-            echo "<tr><td>$userName</td><td>$userPoints</td><td><a href='adminPanel.php' class='confirmation'>[delete]</a></td></tr>";
+            echo "<tr style='height:80px;'><td style='vertical-align: middle;'>$userName</td><td style='vertical-align: middle;'>$userPoints</td><td><a href='adminPanel.php' class='confirmation'>[X]</a></td></tr>";
         }
         ?>
+        <tr style="height: 80px;">
+            <td colspan="3" style="vertical-align: middle;">
+                <a href = "createUser.php?id=<? echo $encryptedAccountID; ?>"><div class = "glyphicon glyphicon-plus"></div> New User</a>
+            </td>
+        </tr>
     </table>
 
 </div><!-- /.container -->

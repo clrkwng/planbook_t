@@ -111,7 +111,7 @@ class dbcomm
         }
     }
 
-    function createNewUser($accountName, $username, $password, $email, $phonenumber)
+    function createNewAdmin($accountName, $username, $password, $email, $phonenumber)
     {
         $query = "INSERT INTO  `Account` (`account_name`) VALUES ('$accountName');";
         $this->doQuery($query);
@@ -125,6 +125,18 @@ class dbcomm
         $this->doQuery($query);
 
         $query = "UPDATE `User` SET `type_id`='1' WHERE `username`='$username'";
+        $this->doQuery($query);
+    }
+
+    function getAccountIDByUsername($username)
+    {
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        return mysqli_fetch_array($this->doQuery($query))['account_id'];
+    }
+
+    function createNewUser($accountID, $username, $password, $email, $phonenumber)
+    {
+        $query = "INSERT INTO `User` (`account_id`, `username`, `password`, `email`, `phone_number`) VALUES ('$accountID', '$username', '$password', '$email', '$phonenumber');";
         $this->doQuery($query);
     }
 
