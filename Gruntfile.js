@@ -11,6 +11,25 @@ module.exports = function (grunt) {
                 src: 'src/<%= pkg.name %>.js',
                 dest: 'build/<%= pkg.name %>.min.js'
             }
+        },
+        clean: {
+            bin: [
+                'bin/*'
+            ],
+            deploy: [
+                'C:/xampp/htdocs/planbook/*'
+            ]
+        },
+        copy: {
+            deploy: {
+               files: [
+                   {
+                       expand: true,
+                       src: ['bin/**'],
+                       dest: 'C:/xampp/htdocs/planbook/'
+                   }
+               ]
+            }
         }
     });
 
@@ -26,6 +45,9 @@ module.exports = function (grunt) {
     grunt.registerTask('default',
         ['uglify']
     );
-
-
+    grunt.registerTask('deploy',
+        [
+            'copy:deploy'
+        ]
+    );
 };
