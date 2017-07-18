@@ -20,7 +20,80 @@ module.exports = function (grunt) {
                 'C:/xampp/htdocs/planbook/*'
             ]
         },
+        less: {
+            bin: {
+                options: {
+                    compress: true,
+                    yuicompress: true,
+                    optimization: 2
+                },
+                files: {
+                    "bin/css/main.css": "testApplication/assets/less/*.less"
+                }
+            }
+        },
         copy: {
+            bin: {
+                files: [
+                    {
+                        expand: true,
+                        src: ['testApplication/css/**'],
+                        dest: 'bin/css/'
+                    },
+                    {
+                        expand: true,
+                        src: ['testApplication/ico/**'],
+                        dest: 'bin/img/ico/'
+                    },
+                    {
+                        expand: true,
+                        src: ['testApplication/img/**'],
+                        dest: 'bin/img/'
+                    },
+                    {
+                        expand: true,
+                        src: ['testApplication/js/**'],
+                        dest: 'bin/scripts/jquery/'
+                    },
+                    {
+                        expand: true,
+                        src: [
+                            'testApplication/mail/**'
+                        ],
+                        dest: 'bin/modules/mail/'
+                    },
+                    {
+                        expand: true,
+                        src: [
+                            'testApplication/template_items/**'
+                        ],
+                        dest: 'bin/modules/templates/'
+                    },
+                    {
+                        expand: true,
+                        src: [
+                            'testApplication/*.php',
+                            'testApplication/*.html'
+                        ],
+                        dest: 'bin/modules/'
+                    },
+                    {
+                        expand: true,
+                        src: ['node_modules/font-awesome/**'],
+                        dest: 'bin/libs/font-awesome/'
+                    },
+                    {
+                        expand: true,
+                        src: ['node_modules/jquery/**'],
+                        dest: 'bin/libs/jquery/'
+                    },
+                    {
+                        expand: true,
+                        src: ['node_modules/bootstrap/**'],
+                        dest: 'bin/libs/bootstrap/'
+                    }
+                ]
+            },
             deploy: {
                files: [
                    {
