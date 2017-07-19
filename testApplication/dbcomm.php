@@ -249,4 +249,14 @@ class dbcomm
         return $users;
     }
 
+    function deleteUserByUsername($username) {
+        $query = "DELETE FROM `User` WHERE `username`='$username'";
+        $this->doQuery($query);
+    }
+
+    function getAdminUsernameByAccountID($accountID) {
+        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='1'";
+        return mysqli_fetch_array($this->doQuery($query))['username'];
+    }
+
 }

@@ -27,11 +27,11 @@ if (isset($_POST['Submit'])) {
                 }
                 $type = $dbcomm->getTypeByUsername($_POST['signin-username']);
                 if($type == "Admin") {
-                    $encryptedUsername = openssl_encrypt("$username",'bf-cfb','adminPanelPassword');
+                    $encryptedUsername = openssl_encrypt($username,'bf-cfb','adminPanelPassword');
                     echo "<script>window.location = 'adminPanel.php?id=$encryptedUsername'</script>";
                 }
                 elseif($type == "Regular") {
-                    $encryptedUsername = openssl_encrypt("$username",'RC4-40','regularUserPassword');
+                    $encryptedUsername = openssl_encrypt($username,'RC4-40','regularUserPassword');
                     echo "<script>window.location = 'homepage.php?id=$encryptedUsername'</script>";
                 }
             }

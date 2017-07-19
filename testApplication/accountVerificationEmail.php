@@ -113,7 +113,7 @@ if ($dbcomm->checkIfEmailExists($email)) {
                 </div>
                 <br><br><br><br>
                 <div>
-                    <img src="assets/img/email-logo.png" width="350px" height="350px">
+                    <img src="assets/img/email-logo.png" width="250px" height="250px">
                 </div>
             </div>
 

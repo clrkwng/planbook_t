@@ -77,7 +77,8 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
     }
     if ($errorCount == 0) {
         $dbcomm->createNewUser($accountID, $username, $password, $email, $phonenumber);
-        $encryptedUsername = openssl_encrypt($username, 'bf-cfb', 'adminPanelPassword');
+        $adminUsername = $dbcomm->getAdminUsernameByAccountID($accountID);
+        $encryptedUsername = openssl_encrypt($adminUsername, 'bf-cfb', 'adminPanelPassword');
         echo "<script>window.location = 'http://dev1.planbook.xyz/testApplication/adminPanel.php?id=$encryptedUsername';</script>";
     }
 }
