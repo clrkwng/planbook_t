@@ -17,6 +17,15 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/musrp2017/planbook#readme",
   "devDependencies": {
-    "grunt": "^1.0.1"
+    "bootstrap": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-replace": "^1.0.1",
+    "jquery": "^3.2.1"
   }
 }

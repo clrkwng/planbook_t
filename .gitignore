@@ -4,4 +4,6 @@ target
 build
 dist
 bin/
-node_modules
+node_modules/
+npm-debug.log
+/testApplication/.idea_index/
