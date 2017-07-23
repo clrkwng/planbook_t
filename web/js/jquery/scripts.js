@@ -4,7 +4,7 @@ jQuery(document).ready(function() {
     /*
         Fullscreen background
     */
-    $.backstretch("assets/img/backgrounds/1.jpg");
+    $.backstretch("assets/img/backgrounds/1.png");
     
     /*
         Form validation
@@ -31,12 +31,5 @@ jQuery(document).ready(function() {
 		$('.login-form').preventDefault();
         $("#"+variable).addClass('input-error');
 	}
-/*
-	$(this).find('input[type="text"], input[type="password"], textarea').each(function(){
-        $('this').on('change', function() {
-            $(this).removeClass('input-error');
-        });
-    });
-    */
     
 });

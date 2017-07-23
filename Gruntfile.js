@@ -13,10 +13,12 @@ module.exports = function (grunt) {
             }
         },
         clean: {
+            options: { force: true },
+
             bin: [
                 'bin/*'
             ],
-            deploy: [
+            xampp: [
                 'C:/xampp/htdocs/planbook/*'
             ]
         },
@@ -28,7 +30,15 @@ module.exports = function (grunt) {
                     optimization: 2
                 },
                 files: {
-                    "bin/css/main.css": "testApplication/assets/less/*.less"
+                    "bin/css/admin/admin.css": "web/less/admin/*.less",
+                    "bin/css/auth/account-verification.css": "web/less/auth/account-verification/*.less",
+                    "bin/css/auth/create-account.css": "web/less/auth/create-account/*.less",
+                    "bin/css/auth/login.css": "web/less/auth/login/*.less",
+                    "bin/css/email-sender/email-sender.css": "web/less/email-sender/*.less",
+                    "bin/css/error/error.css": "web/less/error/*.less",
+                    "bin/css/user/homepage.css": "web/less/user/homepage.less",
+                    "bin/css/user/market.css": "web/less/user/market.less",
+                    "bin/css/user/user-profile.css": "web/less/user/user-profile.less"
                 }
             }
         },
@@ -37,68 +47,114 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        src: ['testApplication/css/**'],
+                        cwd: 'web/css',
+                        src: ['**'],
                         dest: 'bin/css/'
                     },
                     {
                         expand: true,
-                        src: ['testApplication/ico/**'],
-                        dest: 'bin/img/ico/'
+                        cwd: 'web/img',
+                        src: ['**'],
+                        dest: 'bin/resources/img/'
                     },
                     {
                         expand: true,
-                        src: ['testApplication/img/**'],
-                        dest: 'bin/img/'
+                        cwd: 'web/js',
+                        src: ['**'],
+                        dest: 'bin/scripts/'
                     },
                     {
                         expand: true,
-                        src: ['testApplication/js/**'],
-                        dest: 'bin/scripts/jquery/'
-                    },
-                    {
-                        expand: true,
+                        cwd: 'src/AppBundle/views',
                         src: [
-                            'testApplication/mail/**'
-                        ],
-                        dest: 'bin/modules/mail/'
-                    },
-                    {
-                        expand: true,
-                        src: [
-                            'testApplication/template_items/**'
-                        ],
-                        dest: 'bin/modules/templates/'
-                    },
-                    {
-                        expand: true,
-                        src: [
-                            'testApplication/*.php',
-                            'testApplication/*.html'
+                            '**'
                         ],
                         dest: 'bin/modules/'
                     },
                     {
                         expand: true,
-                        src: ['node_modules/font-awesome/**'],
+                        cwd: 'src/AppBundle/business-logic',
+                        src: [
+                            '**'
+                        ],
+                        dest: 'bin/scripts/php/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/font-awesome',
+                        src: ['**'],
                         dest: 'bin/libs/font-awesome/'
                     },
                     {
                         expand: true,
-                        src: ['node_modules/jquery/**'],
+                        cwd: 'node_modules/jquery',
+                        src: ['**'],
                         dest: 'bin/libs/jquery/'
                     },
                     {
                         expand: true,
-                        src: ['node_modules/bootstrap/**'],
+                        cwd: 'node_modules/freelancer',
+                        src: ['**'],
+                        dest: 'bin/libs/freelancer/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/bootstrap',
+                        src: ['**'],
                         dest: 'bin/libs/bootstrap/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/fullpage.js',
+                        src: ['**'],
+                        dest: 'bin/libs/fullpage-js/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/html5shiv',
+                        src: ['**'],
+                        dest: 'bin/libs/html5shiv/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/jquery.easing',
+                        src: ['**'],
+                        dest: 'bin/libs/jquery-easing/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/jquery-backstretch',
+                        src: ['**'],
+                        dest: 'bin/libs/jquery-backstretch/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/jquery-ui',
+                        src: ['**'],
+                        dest: 'bin/libs/jquery-ui/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/w3-css',
+                        src: ['**'],
+                        dest: 'bin/libs/w3-css/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'vendor',
+                        src: ['**'],
+                        dest: 'bin/libs/vendor/'
                     }
+
                 ]
             },
-            deploy: {
-               files: [
+            xampp: {
+
+                files: [
                    {
                        expand: true,
-                       src: ['bin/**'],
+                       cwd: 'bin',
+                       src: ['**'],
                        dest: 'C:/xampp/htdocs/planbook/'
                    }
                ]
@@ -113,14 +169,27 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
-
     //Build Task Registration
     grunt.registerTask('default',
-        ['uglify']
-    );
-    grunt.registerTask('deploy',
         [
-            'copy:deploy'
+            'buildToBin',
+            // 'deployXampp'
         ]
     );
+
+    grunt.registerTask('buildToBin',
+        [
+            'clean:bin',
+            'copy:bin',
+            'less:bin'
+
+        ]
+    );
+    grunt.registerTask('deployXampp',
+        [
+            'clean:xampp',
+            'copy:xampp'
+        ]
+    );
+
 };
