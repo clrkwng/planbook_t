@@ -15,16 +15,22 @@ $username = openssl_decrypt($encryptedUsername, 'DES-EDE3', 'viewUserProfilePass
 $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
 $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
 
+echo "<script>console.log('WHADAMAYA');</script>";
+if (!file_exists('hello')) {
+    echo "<script>console.log('Made new directory.');</script>";
+    mkdir('hello', 0777);
+}
+
 if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
     if ($_FILES['image']['size'] == 0 and $_FILES['image']['error'] == 0)
     {
         $alert = '<div class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Warning!</strong>  No file was selected.</div>'; //successful deletion alert
+  <strong>Warning!</strong>  No file was selected.</div>';
     }
     else {
-        if (!file_exists('././resources/img/profilePictures/'.$username)) {
-            mkdir('././resources/img/profilePictures/'.$username, 0777, true);
+        if (!file_exists('../../resources/img/profilePictures/'.$username)) {
+            mkdir('../../resources/img/profilePictures/'.$username, 0777);
         }
 
         $allowed_ext= array('jpg','jpeg','png','gif');

@@ -154,7 +154,7 @@ if (isset($_POST['SubmitReward'])) {
         <td width="15%" style="text-align: right" valign="center" id="awardsSideBar">
             <p align="center" style="vertical-align: top;"><u>Awards</u></p>
 
-            <p style="display: inline-block; height: 45px;"><? echo $dbcomm->getNumCurrentPointsByUsername($userUsername); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block;">Points&nbsp;</div>
+            <p style="display: inline-block; height: 45px;"><? echo $dbcomm->getNumCurrentPointsByUsername($userUsername); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;"> Total Points&nbsp;</div>
             <p><? echo $dbcomm->getNumBronzeStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getBronzeStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
             <p><? echo $dbcomm->getNumSilverStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getSilverStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
             <p><? echo $dbcomm->getNumGoldStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getGoldStarImageSource(); ?>" width="50" height="50">&nbsp;</p>

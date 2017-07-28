@@ -120,9 +120,9 @@ if (isset($_POST['doneButton'])) {
 
             </table>
         </td>
-        <td width="15%" style="text-align: right" valign="center">
+        <td width="15%" style="text-align: right" valign="center" id="awardsSideBar">
             <br>
-            <p style="display: inline-block"><? echo $dbcomm->getNumCurrentPointsByUsername($username); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block;">Points&nbsp;</div>
+            <p style="display: inline-block; height: 45px;"><? echo $dbcomm->getNumCurrentPointsByUsername($username); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;"> Total Points&nbsp;</div>
             <p><? echo $dbcomm->getNumBronzeStarsByUsername($username); ?> <img src="<? echo $dbcomm->getBronzeStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
             <p><? echo $dbcomm->getNumSilverStarsByUsername($username); ?> <img src="<? echo $dbcomm->getSilverStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
             <p><? echo $dbcomm->getNumGoldStarsByUsername($username); ?> <img src="<? echo $dbcomm->getGoldStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
