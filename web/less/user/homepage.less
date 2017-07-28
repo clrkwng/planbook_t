@@ -2,18 +2,22 @@ table tr#starSymbols td {
   vertical-align: bottom;
   height: 27%;
 }
+
 table tr#trophySymbols td {
   vertical-align: bottom;
   height: 32%;
 }
+
 table tr#starCount td {
   vertical-align: top;
   height: 6%;
 }
+
 table tr#trophyCount td {
   vertical-align: top;
   height: 6%;
 }
+
 h1 {
   font-size: 58px;
 }
@@ -27,21 +31,32 @@ h1 {
   transform-origin: bottom center;
 }
 
-#toMarket1 { transform: rotate(-162deg); }
-#toMarket2 { transform: rotate(-150deg); }
-#toMarket3 { transform: rotate(-126deg); }
-#toMarket4 { transform: rotate(-114deg); }
-#toMarket5 { transform: rotate(-102deg); }
-#toMarket6 { transform: rotate(-78deg); }
-#toMarket7 { transform: rotate(-66deg); }
-#toMarket8 { transform: rotate(-54deg); }
-#toMarket9 { transform: rotate(-42deg); }
-#toMarket10 { transform: rotate(-30deg); }
-#toMarket11 { transform: rotate(-18deg); }
+#toMarket1 {  transform: rotate(-162deg);  }
+
+#toMarket2 {  transform: rotate(-150deg);  }
+
+#toMarket3 {  transform: rotate(-126deg);  }
+
+#toMarket4 {  transform: rotate(-114deg);  }
+
+#toMarket5 {  transform: rotate(-102deg);  }
+
+#toMarket6 {  transform: rotate(-78deg);  }
+
+#toMarket7 {  transform: rotate(-66deg);  }
+
+#toMarket8 {  transform: rotate(-54deg);  }
+
+#toMarket9 {  transform: rotate(-42deg);  }
+
+#toMarket10 {  transform: rotate(-30deg);  }
+
+#toMarket11 {  transform: rotate(-18deg);  }
 
 #exchangeSystem p {
   font-size: 20px;
 }
+
 body {
   margin: 0;
   min-width: 250px;
@@ -91,7 +106,6 @@ ul li.checked {
   text-decoration: line-through;
 }
 
-
 /* Style the close button */
 .close {
   position: absolute;
@@ -105,56 +119,21 @@ ul li.checked {
   color: white;
 }
 
-.list-group {
-  margin-top: 0 !important;;
+.panel-group .panel + .panel .panel-heading {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.section table {
-  height: 100%;
-  tr:first-child {
-    height:25%;
-
-    td:first-child {
-      border-right: 1px solid black;
-
-      p {
-        transform: rotate(90deg);
-        font-size: 25px;
-      }
-
-      p:first-child {
-        font-size: 18px;
-      }
-    }
-
-    td:last-child h3{
-      color: dimgrey;
-      font-size: 30px;
-      text-align: left;
-    }
-  }
-
+.panel {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-#starSymbols td:last-child {
-  vertical-align: middle;
-
-  div:last-child {
-    height: 30px;
-  }
+td {
+  height: 10px;
 }
 
-#section2 table tr:last-child{
-  height:5%;
-}
-
-.panel-heading {
-  background-color:#B37FCA;
-}
-
-.w3-button {
-  transform: translateX(50%);
-  width: 190px;
-  height: 180px;
-  font-size: 75px;
+.modal .modal-body {
+  max-height: 420px;
+  overflow-y: auto;
 }

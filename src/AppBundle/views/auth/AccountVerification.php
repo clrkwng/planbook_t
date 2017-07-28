@@ -1,6 +1,25 @@
-<?php include '../../scripts/php/email-sender/Recovery.php';?>
-
 <!DOCTYPE html>
+<?php
+require_once "../../scripts/dbcomm.php";
+//create db connection
+$dbcomm = new dbcomm();
+
+if(!isset($_GET['id'])) {
+    die("Error: The id was not set.");
+}
+$encryptedUsername = $_GET['id'];
+$encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
+$encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
+$username = openssl_decrypt($encryptedUsername, 'RC4', 'sendVerificationEmailPassword');
+
+if($dbcomm->checkIfUsernameExists($username)){
+    $dbcomm->verifyAccountByUsername($username);
+}
+
+
+?>
+?>
+
 <html lang="en">
 
 <head>
@@ -8,21 +27,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Recovery</title>
+    <title>Account Verification</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
     <link rel="stylesheet" href="../../libs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../css/form-elements.css">
     <link rel="stylesheet" href="../../css/main-style.css">
+    <link rel="stylesheet" href="../../css/auth/account-verification.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+    <!--[if lt IE 9]-->
     <script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
     <script src="../../libs/vendor/respond.min.js"></script>
-    <![endif]-->
+    <!--[endif]-->
 
     <!-- Favicon and touch icons -->
     <link rel="shortcut icon" href="../../resources/img/ico/favicon.png">
@@ -48,7 +68,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="/planbook/modules/auth/Login.html">Login/Sign up</a>
+                    <a href ="Login.php">Login/Sign up</a>
                 </li>
                 <li class="page-scroll">
                     <a href="../index.html#portfolio">Activities</a>
@@ -65,47 +85,30 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
+
 <!-- Top content -->
 <div class="top-content">
 
     <div class="inner-bg">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 text">
-                    <h1 align="left">
-                        <font color="#696969"><strong>Login Recovery Page</strong></font>
-                    </h1>
-                    <div class="">
-                        <p align = "left">
-                            <font color="696969">Enter your email and follow the instructions on resetting your password.</font>
-                        </p>
-                    </div>
-
-                    <?php require_once "../../scripts/php/error/CheckShowAlert.php";?>
-
+                <br><br>
+                <div>
+                    <img src="../../resources/img/checkmark.png" width="180px" height="150px">
                 </div>
-
-            <div class="col-sm-6 col-sm-offset-3 form-box">
-                <div class="form-bottom">
-                    <form role="form" action="" method="post" class="login-form">
-                        <div class="form-group">
-                            <label class="sr-only" for="recovery-email">Email</label>
-                            <input type="email" name="recovery-email" placeholder="Email..."
-                                   class="form-email form-control" id="recovery-email"
-                                   value="">
-                        </div>
-                        <button class = "btn" type = "submit" name="Submit">Send email</button>
-                    </form>
-                    <div>
-
-                    </div>
+                <br><br>
+                <div class="col-sm-8 col-sm-offset-2 text">
+                    <h4>
+                        <font color="White">Your Planbook account has been verified. Please login to continue.</font>
+                    </h4>
                 </div>
             </div>
+
+
         </div>
     </div>
 </div>
 
-</div>
 
 
 <!-- Javascript -->
@@ -113,6 +116,7 @@
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
 <script src="../../scripts/jquery/scripts.js"></script>
+<script src="../../scripts/jquery/formatPhoneInput.js"></script>
 
 <!--[if lt IE 10]-->
 <script src="../../scripts/jquery/placeholder.js"></script>

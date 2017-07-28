@@ -8,11 +8,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link href="../../libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../css/user/user-profile.css" rel="stylesheet">
+    <link href="../../css/user/user-profile.css" rel="stylesheet" type="text/css">
 
 </head>
 <body>
-<?php require_once "../../scripts/php/templates/navbar.php";?>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="../index.html">Planbook</a></li>
+            </ul>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="glyphicon glyphicon-user"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="UserProfile.php">Profile</a></li>
+                    <li><a href="#">Group Settings</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="../auth/Login.php">Log out</a></li>
+                </ul>
+            </div>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <div class="container bootstrap snippets">
 

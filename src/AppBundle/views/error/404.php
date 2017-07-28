@@ -16,7 +16,7 @@
 
     <p>The page you're looking for does not exist or some other error occurred.</p>
 
-    <p>Go back to our <a href="../index.html">home page</a> or to our <a href="/planbook/modules/auth/Login.html">login page</a>.</p>
+    <p>Go back to our <a href="../index.html">home page</a> or to our <a href="../auth/Login.php">login page</a>.</p>
 
 </div>
 

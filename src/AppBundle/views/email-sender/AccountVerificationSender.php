@@ -1,4 +1,35 @@
 <!DOCTYPE html>
+<?php
+require_once "../../scripts/dbcomm.php";
+//create db connection
+$dbcomm = new dbcomm();
+
+if(!isset($_GET['id'])) {
+    die("Error: The id was not set.");
+}
+$encryptedUsername = $_GET['id'];
+$username = openssl_decrypt($encryptedUsername, 'RC4', 'sendVerificationEmailPassword');
+
+$email = $dbcomm->getEmailByUsername($username);
+
+if ($dbcomm->checkIfEmailExists($email)) {
+    $headers = "From: noreply@planbook.xyz" . "\r\n";
+    $headers .= "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $message = "<html><body><div>Hello,<br><br>
+        Click on the following link to verify your Planbook account.<br><br>
+        <a href='http://dev1.planbook.xyz/Bitbucket/bin/modules/auth/AccountVerification.php?id=$encryptedUsername'>Verify Account</a><br><br>
+        Please ignore this email if you did not create a Planbook account.<br><br>
+        As always, thanks for using Planbook!<br><br>
+        Planbook Services<br>
+        <a href='http://dev1.planbook.xyz/Bitbucket/bin/modules/index.html'>www.planbook.com</a>
+        </div></body></html>";
+    mail($email, "Planbook Verification Email", $message, $headers);
+}
+
+
+?>
+
 <html lang="en">
 
 <head>
@@ -6,7 +37,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reset Password</title>
+    <title>Account Verification</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,300,500">
@@ -14,13 +45,14 @@
     <link rel="stylesheet" href="../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../css/form-elements.css">
     <link rel="stylesheet" href="../../css/main-style.css">
+    <link rel="stylesheet" href="../../css/email-sender/email-sender.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+    <!--[if lt IE 9]-->
     <script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
     <script src="../../libs/vendor/respond.min.js"></script>
-    <![endif]-->
+    <!--[endif]-->
 
     <!-- Favicon and touch icons -->
     <link rel="shortcut icon" href="../../resources/img/ico/favicon.png">
@@ -46,7 +78,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="/planbook/modules/auth/Login.html">Login/Sign up</a>
+                    <a href ="../auth/Login.php">Login/Sign up</a>
                 </li>
                 <li class="page-scroll">
                     <a href="../index.html#portfolio">Activities</a>
@@ -63,50 +95,31 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
+
 <!-- Top content -->
 <div class="top-content">
 
     <div class="inner-bg">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 text">
-                    <h1 align="left">
-                        <font color="#696969"><strong>Reset Your Password</strong></font>
-                    </h1>
-                    <div class="">
-                        <p align="left">
-                            <font color="#696969">
-                                Enter your new password for <b><? echo $username; ?></b>.<br>
-                                Make sure your password has at least one uppercase letter, one lowercase letter,
-                                one number, and at least 8 characters long.
-                            </font>
-                        </p>
-                    </div>
-                    <?php require_once "../../scripts/php/error/CheckShowAlert.php";?>
-
+                <div class="col-sm-8 col-sm-offset-2 text">
+                    <br>
+                    <h4>
+                        <font color="White"> Your verification email has been sent. Please check your inbox.</font>
+                    </h4>
+                    <p class="description">
+                        <a href = "AccountVerificationSender.php?id=<? echo $encryptedUsername ?>">Resend email?</a>
+                    </p>
                 </div>
-
-            <div class="col-sm-6 col-sm-offset-3 form-box">
-                <div class="form-bottom">
-                    <form role="form" method="post" class="login-form">
-                        <div class="form-group">
-                            <label class="sr-only" for="reset-newPassword">New Password</label>
-                            <input type="password" name="reset-newPassword" placeholder="New Password..."
-                                   class="form-control" id="reset-newPassword">
-                        </div>
-                        <div class="form-group">
-                            <label class="sr-only" for="reset-rePassword">Re-enter Password</label>
-                            <input type="password" name="reset-rePassword" placeholder="Re-enter Password..."
-                                   class="form-control" id="reset-rePassword">
-                        </div>
-                        <button class = "btn" type = "submit" name="Submit">Submit</button>
-                    </form>
+                <br><br><br><br>
+                <div>
+                    <img src="../../resources/img/email-logo.png" width="250px" height="250px">
                 </div>
             </div>
+
+
         </div>
     </div>
-</div>
-
 </div>
 
 
@@ -115,6 +128,7 @@
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
 <script src="../../scripts/jquery/scripts.js"></script>
+<script src="../../scripts/jquery/formatPhoneInput.js"></script>
 
 <!--[if lt IE 10]-->
 <script src="../../scripts/jquery/placeholder.js"></script>

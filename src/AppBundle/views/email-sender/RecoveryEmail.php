@@ -1,8 +1,43 @@
+<?php
+require_once "../../scripts/dbcomm.php";
+//create db connection
+$dbcomm = new dbcomm();
+
+if (isset($_POST['Submit'])){
+    if(isset($_POST['recovery-email'])){
+        $email = $_POST['recovery-email'];
+        if ($dbcomm->checkIfEmailExists($email)){
+            $username = $dbcomm->getUsernameByEmail($email);
+            $encryptedUsername = openssl_encrypt("$username", 'CAST5-CBC', 'resetPasswordPassword');
+            $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
+            $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+            $message = "<html><body><div>Hello,<br><br>
+Your username is <b>$username</b>.<br><br>
+Click on the following link to reset your Planbook password.<br><br>
+<a href='../auth/PasswordReset.php?id=$encryptedUsername'>Reset Password</a><br><br>
+Please ignore this email if you did not request a password change.<br><br>
+As always, thanks for using Planbook!<br><br>
+Planbook Services<br>
+<a href='http://dev2.planbook.xyz/Bitbucket/bin/modules/index.html'>www.planbook.com</a>
+</div></body></html>";
+            $headers = "From: noreply@planbook.xyz"."\r\n";
+            $headers .= "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            mail( $email, "Planbook Recovery Email", $message, $headers);
+
+            $alert .='<div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> Email has been sent. </div>';
+        }
+
+        else{
+            $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> This email is currently not registered. </div>';
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
-
-<?php include '../../scripts/php/auth/NewAccount.php';?>
-
-
 <html lang="en">
 
 <head>
@@ -10,7 +45,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign Up</title>
+    <title>Recovery</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,100,300,500">
@@ -18,7 +53,6 @@
     <link rel="stylesheet" href="../../libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../css/form-elements.css">
     <link rel="stylesheet" href="../../css/main-style.css">
-    <link rel="stylesheet" href="../../css/auth/create-account.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -51,7 +85,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="/planbook/modules/auth/Login.html">Login/Sign up</a>
+                    <a href ="../auth/Login.php">Login/Sign up</a>
                 </li>
                 <li class="page-scroll">
                     <a href="../index.html#portfolio">Activities</a>
@@ -68,80 +102,52 @@
     </div>
     <!-- /.container-fluid -->
 </nav>
-
 <!-- Top content -->
 <div class="top-content">
 
     <div class="inner-bg">
         <div class="container">
             <div class="row">
-                <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1>
-                        <font color="White"><strong>Planbook</strong> Signup Page</font>
+                <div class="col-sm-6 col-sm-offset-3 text">
+                    <h1 align="left">
+                        <font color="#696969"><strong>Login Recovery Page</strong></font>
                     </h1>
-                    <div class="description">
-                        <p>
-                            <font color="White" >"To achieve <strong>big</strong> things, start small!"</font>
+                    <div class="">
+                        <p align = "left">
+                            <font color="696969">Enter your email and follow the instructions on resetting your password.</font>
                         </p>
                     </div>
 
-                    <?php require_once "../../scripts/php/error/CheckShowAlert.php";?>
-
+                    <? if (isset($alert)) //if the alert for creating list is set, then echo the alert
+                    {
+                        echo '<div>';
+                        echo $alert;
+                        echo '</div>';
+                    }
+                    ?>
 
                 </div>
 
             <div class="col-sm-6 col-sm-offset-3 form-box">
-                <div class="form-top">
-                    <div class="form-top-left">
-                        <h3>Sign up for our site</h3>
-                        <p>Making an account is easy and free!</p>
-                    </div>
-                    <div class="form-top-right">
-                        <i class="fa fa-key"></i>
-                    </div>
-                </div>
                 <div class="form-bottom">
-                    <form role="form" action="" method="post" class="login-form" id="signup-form">
+                    <form role="form" action="" method="post" class="login-form">
                         <div class="form-group">
-                            <label class="sr-only" for="signup-accountName">Account Name</label>
-                            <input type="text" name="signup-accountName" placeholder="Account Name..."
-                                   class="form-control" id="signup-accountName">
+                            <label class="sr-only" for="recovery-email">Email</label>
+                            <input type="email" name="recovery-email" placeholder="Email..."
+                                   class="form-email form-control" id="recovery-email"
+                                   value="">
                         </div>
-                        <div class="form-group">
-                            <label class="sr-only" for="signup-username">Username</label>
-                            <input type="text" name="signup-username" placeholder="Admin Username..."
-                                   class="form-control" id="signup-username">
-                        </div>
-                        <div class="form-group">
-                            <label class="sr-only" for="signup-password">Password</label>
-                            <input type="password" name="signup-password" placeholder="Admin Password..."
-                                   class="form-control" id="signup-password">
-                        </div>
-                        <div class="form-group">
-                            <label class="sr-only" for="signup-repassword">Re-enter Password</label>
-                            <input type="password" name="signup-repassword" placeholder="Re-enter password..."
-                                   class="form-control" id="signup-repassword">
-                        </div>
-                        <div class="form-group">
-                            <label class="sr-only" for="signup-phonenumber">Phone Number</label>
-                            <input type="text" name="signup-phonenumber" placeholder="Phone number..."
-                                   class="form-control" id="signup-phonenumber"
-                                   onblur="$(this).val($(this).val().replace(/[^0-9.]/g, '')); if($(this).val().length >= 10){$(this).val('(' + $(this).val().substring(0,3) + ') ' + $(this).val().substring(3,6) + '-' + $(this).val().substring(6,10));}">
-                        </div>
-                        <div class="form-group">
-                            <label class="sr-only" for="signup-email">Email</label>
-                            <input type="text" name="signup-email" placeholder="Email..."
-                                   class="form-email form-control" id="signup-email">
-                        </div>
-                        <button type="submit" class="btn" >Register!</button>
+                        <button class = "btn" type = "submit" name="Submit">Send email</button>
                     </form>
+                    <div>
+
+                    </div>
                 </div>
             </div>
         </div>
-        <div class = "row">
-            Back to <a href="/planbook/modules/auth/Login.html">Login</a>
-        </div>
     </div>
+</div>
+
 </div>
 
 
@@ -150,12 +156,11 @@
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
 <script src="../../scripts/jquery/scripts.js"></script>
-<script src="../../scripts/jquery/formatPhoneInput.js"></script>
 
 <!--[if lt IE 10]-->
 <script src="../../scripts/jquery/placeholder.js"></script>
 <!--[endif]-->
-</div>
+
 </body>
 
 </html>
