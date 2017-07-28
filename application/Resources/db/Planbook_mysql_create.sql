@@ -1,3 +1,7 @@
+CREATE SCHEMA `planbookdb` ;
+
+use planbookdb;
+
 CREATE TABLE `Frequency` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
@@ -20,8 +24,8 @@ CREATE TABLE `Special_Goal` (
 	`image_id` int NOT NULL,
 	`start_date` DATETIME NOT NULL,
 	`end_date` DATETIME NOT NULL,
-	`repeat_on_list` bit NOT NULL DEFAULT '0',
-  `description` varchar(255) NOT NULL,
+	`repeat_on_list` bit NOT NULL DEFAULT 0,
+	`description` varchar(255) NOT NULL,
 	`result` varchar(255),
 	`default_points` varchar(255),
 	PRIMARY KEY (`id`)
@@ -41,8 +45,10 @@ CREATE TABLE `Redeem` (
 CREATE TABLE `Account` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`password` varchar(255) NOT NULL,
-	`email` varchar(255) NOT NULL,
-	`phone_number` varchar(255) NOT NULL,
+	`name` varchar(255),
+	`email` varchar(255),
+	`phone_number` varchar(255),
+	`verified` bit NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
@@ -50,16 +56,17 @@ CREATE TABLE `Special_Goal_List` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`user_id` int NOT NULL,
 	`date_achieved` DATETIME,
-  `description_ov` varchar(255),
+	`description_ov` varchar(255),
 	`reminder_time` DATETIME,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `Theme` (
-	`id` int NOT NULL,
+	`id` int NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
 	`image_id` int NOT NULL,
-	`color` varchar(255) NOT NULL
+	`color` varchar(255) NOT NULL,
+	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `User` (
@@ -92,7 +99,7 @@ CREATE TABLE `Special_Done` (
 	`special_goal_id` int NOT NULL,
 	`period` varchar(255) NOT NULL,
 	`total_listed` varchar(255) NOT NULL,
-	`achieved` bit NOT NULL DEFAULT '0',
+	`achieved` bit NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
@@ -100,12 +107,12 @@ CREATE TABLE `User_Awards` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`award_id` int NOT NULL,
 	`user_id` int NOT NULL,
-	`quantity` int NOT NULL DEFAULT '0',
+	`quantity` int NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `Awards` (
-	`id` bigint NOT NULL AUTO_INCREMENT,
+	`id` int NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
 	`image_id` int NOT NULL,
 	`amount` int NOT NULL,
@@ -116,12 +123,13 @@ CREATE TABLE `Awards` (
 
 CREATE TABLE `Task` (
 	`id` int NOT NULL AUTO_INCREMENT,
+	`name` varchar(255) NOT NULL,
 	`priority_id` int NOT NULL,
 	`category_id` int NOT NULL,
 	`image_id` int NOT NULL,
 	`description` varchar(255) NOT NULL,
 	`length` varchar(255) NOT NULL,
-	`repeat` bit NOT NULL DEFAULT '0',
+	`repeat` bit NOT NULL DEFAULT 0,
 	`start_time` DATETIME NOT NULL,
 	`end_time` DATETIME NOT NULL,
 	PRIMARY KEY (`id`)
@@ -162,9 +170,8 @@ CREATE TABLE `Task_Done` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`user_id` int NOT NULL,
 	`period` varchar(255) NOT NULL,
-	`start_date` DATETIME NOT NULL,
+	`completed_timestamp` DATETIME NOT NULL,
 	`total_task` varchar(255) NOT NULL,
-	`completed` bit NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`)
 );
 
@@ -175,7 +182,6 @@ CREATE TABLE `Daily_Task_List` (
 	`user_id` int NOT NULL,
 	`start_time` DATETIME NOT NULL,
 	`end_time` DATETIME NOT NULL,
-	`length` varchar(255) NOT NULL,
 	`status_id` int NOT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -192,12 +198,9 @@ CREATE TABLE `Type` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `Redeem` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	PRIMARY KEY (`id`)
-);
-
 ALTER TABLE `Special_Goal` ADD CONSTRAINT `Special_Goal_fk0` FOREIGN KEY (`award_id`) REFERENCES `Awards`(`id`);
+
+ALTER TABLE `Special_Goal` ADD CONSTRAINT `Special_Goal_fk1` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
 
 ALTER TABLE `Redeem` ADD CONSTRAINT `Redeem_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
 
@@ -221,15 +224,13 @@ ALTER TABLE `Special_Done` ADD CONSTRAINT `Special_Done_fk1` FOREIGN KEY (`speci
 
 ALTER TABLE `User_Awards` ADD CONSTRAINT `User_Awards_fk0` FOREIGN KEY (`award_id`) REFERENCES `Awards`(`id`);
 
+ALTER TABLE `User_Awards` ADD CONSTRAINT `User_Awards_fk1` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
 ALTER TABLE `Awards` ADD CONSTRAINT `Awards_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
 
 ALTER TABLE `Category` ADD CONSTRAINT `Category_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
 
 ALTER TABLE `Theme` ADD CONSTRAINT `Theme_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
-
-ALTER TABLE `Special_Goal` ADD CONSTRAINT `Special_Goal_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
-
-ALTER TABLE `User_Awards` ADD CONSTRAINT `User_Awards_fk1` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
 
 ALTER TABLE `Task` ADD CONSTRAINT `Task_fk0` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
 
