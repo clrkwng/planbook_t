@@ -1,4 +1,5 @@
 <?php
+ini_set('display_errors',0);
 require_once "../../scripts/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
@@ -15,11 +16,6 @@ $username = openssl_decrypt($encryptedUsername, 'DES-EDE3', 'viewUserProfilePass
 $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
 $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
 
-echo "<script>console.log('WHADAMAYA');</script>";
-if (!file_exists('hello')) {
-    echo "<script>console.log('Made new directory.');</script>";
-    mkdir('hello', 0777);
-}
 
 if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
     if ($_FILES['image']['size'] == 0 and $_FILES['image']['error'] == 0)
@@ -29,23 +25,30 @@ if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
   <strong>Warning!</strong>  No file was selected.</div>';
     }
     else {
-        if (!file_exists('../../resources/img/profilePictures/'.$username)) {
-            mkdir('../../resources/img/profilePictures/'.$username, 0777);
+        chdir("../../resources/img/profilePictures/");
+        $cwd = getcwd();
+        $path = $cwd . '/'.$username;
+        echo "<script>console.log('$path');</script>";
+        if (mkdir("$path")){
+            //echo "<script>console.log('Huzzah!');</script>";
+        }
+        else {
+            //echo "<script>console.log('...');</script>";
         }
 
         $allowed_ext= array('jpg','jpeg','png','gif');
         $file_name =$_FILES['image']['name'];
         //   $file_name =$_FILES['image']['tmp_name'];
-        $file_ext = strtolower( end(explode('.',$file_name)));
+        $file_ext = strtolower(end(explode('.',$file_name)));
 
         $file_size=$_FILES['image']['size'];
         $file_tmp= $_FILES['image']['tmp_name'];
         //echo $file_tmp;echo "<br>";
 
         $type = pathinfo($file_tmp, PATHINFO_EXTENSION);
-        $data = file_get_contents($file_ext);
+        $data = file_get_contents($file_tmp);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-        echo "<script>console.log('$base64');</script>";
+        //echo "<script>console.log('$base64');</script>";
         //echo "Base64 is ".$base64;
 
         if(in_array($file_ext,$allowed_ext) === false) {
@@ -60,8 +63,9 @@ if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
           <strong>Sorry!</strong>  The file size must be under 2mb.</div>';
         }
         if(empty($errors)) {
-            move_uploaded_file($file_tmp, '../../resources/img/profilePictures/'.$username.'/'.$file_name);
-            echo "<script>console.log('The file was uploaded');</script>";
+            move_uploaded_file($file_tmp, "$path".'/'.$file_name);
+            //echo "<script>console.log('The file was uploaded');</script>";
+            $dbcomm->updateProfileImageByUsername($username,"../../resources/img/profilePictures/".$username."/".$file_name);
         }
     }
 }
