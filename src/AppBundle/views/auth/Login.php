@@ -43,15 +43,39 @@ if (isset($_POST['Submit'])) {
                 $encryptedUsername = openssl_encrypt("$username", 'RC4', 'sendVerificationEmailPassword');
                 $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
                 $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
-                $alert .= "<div class='alert alert-warning alert-dismissible' role='alert'>
-          <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-          <strong>Sorry!</strong> Please verify your account. <a href='../email-sender/AccountVerificationSender.php?id=$encryptedUsername'>Click here</a> to resend the verification email.</div>";
+                $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        .'<strong>'
+                            .'Error:'
+                        .'</strong>'
+                        .'<span>'
+                            .'Please verify your account.'
+                        .'</span>'
+                        .'<a href="../email-sender/AccountVerificationSender.php?id=$encryptedUsername">'
+                            .'Click here'
+                        .'</a>'
+                        .'<span>'
+                            .' to resend the verification email.'
+                        .'</span>'
+                    .'</div>';
             }
         }
         else {
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Error!</strong> Incorrect Username/Password</div>';
+            $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Incorrect Username/Password'
+                        . '</span>'
+                    . '</div>';
         }
     }
 }
@@ -130,23 +154,7 @@ if (isset($_POST['Submit'])) {
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1>
-                        <font color="White"><strong>Planbook</strong> Login Page</font>
-                    </h1>
-                    <div class="description">
-                        <p>
-                            <font color="White" >"To achieve <strong>big</strong> things, start small!"</font>
-                        </p>
-                    </div>
-
-                    <? if (isset($alert)) //if the alert for creating list is set, then echo the alert
-                    {
-                        echo '<div>';
-                        echo $alert;
-                        echo '</div>';
-                    }
-                    ?>
-
+                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
                 </div>
 
             <div class="col-sm-6 col-sm-offset-3 form-box">
@@ -165,13 +173,13 @@ if (isset($_POST['Submit'])) {
                             <label class="sr-only" for="signin-username">Username</label>
                             <input type="text" name="signin-username" placeholder="Username..."
                                    class="form-control" id="signin-username"
-                                   value="<? echo (isset($cookieUsername))?$cookieUsername:''; ?>">
+                                    <?php if (isset($cookieUsername)) echo "value='echo $cookieUsername'";?>/>
                         </div>
                         <div class="form-group">
                             <label class="sr-only" for="signin-password">Password</label>
                             <input type="password" name="signin-password" placeholder="Password..."
                                    class="form-control" id="signin-password"
-                                   value="<? echo (isset($cookiePassword))?$cookiePassword:''; ?>">
+                                <?php if (isset($cookiePassword)) echo "value='echo $cookiePassword'";?>/>
                         </div>
                         <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                             <tr>

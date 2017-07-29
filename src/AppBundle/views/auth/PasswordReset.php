@@ -21,17 +21,35 @@ if(isset($_POST['Submit'])) {
         $number = preg_match('@[0-9]@', $password);
         if (!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
             $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  Your password does not meet the requirements.</div>';
+            $alertMessage =
+                '<div class="alert alert-danger alert-dismissible" role="alert">'
+                    .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                        .'<span aria-hidden="true">&times;</span>'
+                    .'</button>'
+                    .'<strong>'
+                        .'Error: '
+                    .'</strong>'
+                    .'<span>'
+                        .'Password does not meet the requirements.'
+                    .'</span>'
+                .'</div>';
         }
 
         $repassword = filter_var($_POST['reset-rePassword'], FILTER_SANITIZE_STRING);
         if ($repassword != $_POST['reset-newPassword']) {
             $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  The passwords do not match.</div>';
+            $alertMessage =
+                '<div class="alert alert-danger alert-dismissible" role="alert">'
+                    .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                        .'<span aria-hidden="true">&times;</span>'
+                    .'</button>'
+                    .'<strong>'
+                        .'Error: '
+                    .'</strong>'
+                    .'<span>'
+                        .'Password does not match.'
+                    .'</span>'
+                .'</div>';
         }
     }
 
@@ -127,13 +145,8 @@ if(isset($_POST['Submit'])) {
                             </font>
                         </p>
                     </div>
-                    <? if (isset($alert)) //if the alert for creating list is set, then echo the alert
-                    {
-                        echo '<div>';
-                        echo $alert;
-                        echo '</div>';
-                    }
-                    ?>
+
+                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
 
                 </div>
 

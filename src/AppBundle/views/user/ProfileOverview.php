@@ -20,9 +20,18 @@ $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
 if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
     if ($_FILES['image']['size'] == 0 and $_FILES['image']['error'] == 0)
     {
-        $alert = '<div class="alert alert-warning alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Warning!</strong>  No file was selected.</div>';
+        $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'No file was selected'
+                        . '</span>'
+                    . '</div>';
     }
     else {
         chdir("../../resources/img/profilePictures/");
@@ -52,17 +61,36 @@ if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
         //echo "Base64 is ".$base64;
 
         if(in_array($file_ext,$allowed_ext) === false) {
-            $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Sorry!</strong>  That extension is not allowed.</div>';
+            $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Invalid file extension.'
+                        . '</span>'
+                    . '</div>';
         }
 
         if($file_size > 2097152) {
-            $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Sorry!</strong>  The file size must be under 2mb.</div>';
+            $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'File is too large. Must be less than two megabytes.'
+                        . '</span>'
+                    . '</div>';
+
         }
-        if(!isset($alert)) {
+        if(!isset($alertMessage)) {
             move_uploaded_file($file_tmp, "$path".'/'.$file_name);
             //echo "<script>console.log('The file was uploaded');</script>";
             $dbcomm->updateProfileImageByUsername($username,"../../resources/img/profilePictures/".$username."/".$file_name);
@@ -75,15 +103,33 @@ if (isset($_POST['Submit2']) and isset($_POST['email'])) {
     $email = $_POST["email"];
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errorCount++;
-        $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Error!</strong>  Invalid email.</div>';
+        $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Invalid email.'
+                        . '</span>'
+                    . '</div>';
     }
     if ($dbcomm->checkIfEmailExists($email)) {
         $errorCount += 1;
-        $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Sorry!</strong> That email is already associated with an account.</div>';
+        $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Email is already associated with an account.'
+                        . '</span>'
+                    . '</div>';
     }
     if ($errorCount == 0) {
         $dbcomm->updateEmailByUsername($username, $email);
@@ -97,16 +143,35 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
     if (isset($_POST['signup-phonenumber'])){
         if(!preg_match("/^\(\d{3}\) \d{3}-\d{4}$/", $_POST['signup-phonenumber'])){
             $errorCount++;
-            $alert .= '<div class="alert alert-danger alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <strong>Error!</strong>  Invalid phone number.</div>';
+            $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Invalid phone number.'
+                        . '</span>'
+                    . '</div>';
         }
     }
     if($dbcomm->checkIfPhonenumberExists($phonenumber)) {
         $errorCount += 1;
-        $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Sorry!</strong> That phone number is already associated with an account.</div>';
+        $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Phone number is already associated with an account.'
+                        . '</span>'
+                    . '</div>';
+
     }
     if ($errorCount == 0) {
         $dbcomm->updatePhoneNumberByUsername($username, $phonenumber);
@@ -207,7 +272,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 </h1>
             </div>
             <div class="row">
-                <? if (isset($alert))  echo $alert; ?>
+                <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
             </div>
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 text">

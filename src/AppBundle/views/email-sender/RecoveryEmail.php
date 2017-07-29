@@ -11,27 +11,79 @@ if (isset($_POST['Submit'])){
             $encryptedUsername = openssl_encrypt("$username", 'CAST5-CBC', 'resetPasswordPassword');
             $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
             $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
-            $message = "<html><body><div>Hello,<br><br>
-Your username is <b>$username</b>.<br><br>
-Click on the following link to reset your Planbook password.<br><br>
-<a href='../auth/PasswordReset.php?id=$encryptedUsername'>Reset Password</a><br><br>
-Please ignore this email if you did not request a password change.<br><br>
-As always, thanks for using Planbook!<br><br>
-Planbook Services<br>
-<a href='http://dev2.planbook.xyz/Bitbucket/bin/modules/index.html'>www.planbook.com</a>
-</div></body></html>";
+            $message =
+                "<html>"
+                    ."<body>"
+                        ."<div>"
+                            ."<span>"
+                                ."Hello, "
+                                ."$username"
+                            ."</span>"
+                            ."<br>"
+                            ."<br>"
+                            ."<span>"
+                                ."Click on the following link to reset your Planbook password."
+                            ."</span>"
+                            ."<br>"
+                            ."<br>"
+                            ."<a "
+                                ."href='./auth/PasswordReset.php?id="
+                                .$encryptedUsername
+                            ."'>"
+                                ."Reset Password".
+                            ".</a>"
+                            ."<br>"
+                            ."<br>"
+                            ."<span>"
+                                ."Please ignore this email if you did not request a password change."
+                            ."</span>"
+                            ."<br>"
+                            ."<br>"
+                            ."<span>"
+                                ."As always, thanks for using Planbook!"
+                            ."</span>"
+                            ."<br>"
+                            ."<br>"
+                            ."<span>"
+                                ."Planbook Services"
+                            ."</span>"
+                            ."<br>"
+                            ."<a "
+                                ."href='http://dev2.planbook.xyz/Bitbucket/bin/modules/index.html"
+                            ."'>"
+                                ."www.planbook.com"
+                            ."</a>"
+                        ."</div>"
+                    ."</body>"
+                ."</html>";
             $headers = "From: noreply@planbook.xyz"."\r\n";
             $headers .= "MIME-Version: 1.0" . "\r\n";
             $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
             mail( $email, "Planbook Recovery Email", $message, $headers);
-
-            $alert .='<div class="alert alert-success alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> Email has been sent. </div>';
-        }
+            $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<span>'
+                            . 'Email has been sent.'
+                        . '</span>'
+                    . '</div>';
+              }
 
         else{
-            $alert .= '<div class="alert alert-warning alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> This email is currently not registered. </div>';
+            $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Associated email was not registered.'
+                        . '</span>'
+                    . '</div>';
         }
     }
 }
@@ -118,13 +170,8 @@ Planbook Services<br>
                         </p>
                     </div>
 
-                    <? if (isset($alert)) //if the alert for creating list is set, then echo the alert
-                    {
-                        echo '<div>';
-                        echo $alert;
-                        echo '</div>';
-                    }
-                    ?>
+                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+
 
                 </div>
 

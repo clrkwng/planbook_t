@@ -27,9 +27,18 @@ $dbcomm = new dbcomm();
 if (isset($_POST['doneButton'])) {
     $unencryptedRewardName = str_replace("XyzYx", " ", $_POST['rewardName']);
     if (!$dbcomm->redeemRewardByUsername($userUsername, $unencryptedRewardName)) {
-        $alert = '<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  You don\'t have enough points. Go complete more tasks!</div>';
+        $alertMessage =
+                    '<div class="alert alert-danger alert-dismissible" role="alert">'
+                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                            .'<span aria-hidden="true">&times;</span>'
+                        .'</button>'
+                        . '<strong>'
+                            . 'Error: '
+                        . '</strong>'
+                        . '<span>'
+                            . 'Not enough points to redeem reward.'
+                        . '</span>'
+                    . '</div>';
     }
 }
 
@@ -67,7 +76,7 @@ if (isset($_POST['SubmitReward'])) {
         <td height="25%">
             <h1>Rewards</h1>
             <p style="font-size: 25px;">Manage Rewards for <b><? echo $userUsername; ?></b></p>
-            <? if (isset($alert))  echo $alert; ?>
+            <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
         </td>
         <td width="15%" valign="bottom">
             <p style="max-width: 100%;">

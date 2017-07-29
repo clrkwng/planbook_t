@@ -332,15 +332,7 @@ if(isset($_POST['createTask'])) {
             <div class="modal-content">
                 <div class="modal-header">
                     <h2>Create New Task</h2>
-
-                    <? if (isset($alert)) //if the alert for creating list is set, then echo the alert
-                    {
-                        echo '<div>';
-                        echo $alert;
-                        echo '</div>';
-                    }
-                    ?>
-
+                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
                 </div>
                 <div class="modal-body">
                     <table width="80%" align="center">
