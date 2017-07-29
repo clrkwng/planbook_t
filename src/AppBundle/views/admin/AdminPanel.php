@@ -2,7 +2,7 @@
 <?php
 ini_set('display_errors',0);
 
-require_once "../../scripts/dbcomm.php";
+require_once "../db/dbcomm.php";
 $dbcomm = new dbcomm();
 
 if(!isset($_GET['id'])) {

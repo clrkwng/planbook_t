@@ -20,7 +20,7 @@ $userUsername = openssl_decrypt($encryptedUserUsername, 'aes-192-cfb', 'rewardPa
 $encryptedUserUsername = str_replace("+", "!!!", $encryptedUserUsername);
 $encryptedUserUsername = str_replace("%", "$$$", $encryptedUserUsername);
 
-require_once "../../scripts/dbcomm.php";
+require_once "../db/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 

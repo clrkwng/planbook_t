@@ -1,5 +1,5 @@
 <?php
-require_once "../../scripts/dbcomm.php";
+require_once "../db/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 

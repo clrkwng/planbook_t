@@ -10,7 +10,7 @@ $encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
 $encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
 $username = openssl_decrypt($encryptedUsername,'CAST5-ECB','toMarketPassword');
 
-require_once "../../scripts/dbcomm.php";
+require_once "../db/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 

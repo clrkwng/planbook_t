@@ -6,7 +6,7 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
 }
 
 
-require_once "../../scripts/dbcomm.php";
+require_once "../db/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 
