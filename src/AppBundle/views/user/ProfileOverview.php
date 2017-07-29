@@ -28,7 +28,7 @@ if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
         chdir("../../resources/img/profilePictures/");
         $cwd = getcwd();
         $path = $cwd . '/'.$username;
-        echo "<script>console.log('$path');</script>";
+        //echo "<script>console.log('$path');</script>";
         if (mkdir("$path")){
             //echo "<script>console.log('Huzzah!');</script>";
         }
@@ -62,7 +62,7 @@ if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
           <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <strong>Sorry!</strong>  The file size must be under 2mb.</div>';
         }
-        if(empty($errors)) {
+        if(!isset($alert)) {
             move_uploaded_file($file_tmp, "$path".'/'.$file_name);
             //echo "<script>console.log('The file was uploaded');</script>";
             $dbcomm->updateProfileImageByUsername($username,"../../resources/img/profilePictures/".$username."/".$file_name);

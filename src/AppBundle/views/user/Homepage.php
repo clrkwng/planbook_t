@@ -98,124 +98,33 @@ if(isset($_POST['createTask'])) {
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="3" align="left">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="background-color:#BA7FD5;">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" href="#collapse1">Homework</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse1" class="panel-collapse collapse">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">hi</li>
-                                            <li class="list-group-item">Two</li>
-                                            <li class="list-group-item">Three</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="left">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="background-color:#B37FCA;">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" href="#collapse2">Sports</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse2" class="panel-collapse collapse">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">One</li>
-                                            <li class="list-group-item">Two</li>
-                                            <li class="list-group-item">Three</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="left">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="background-color:#AB7FC0;">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" href="#collapse3">Health</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse3" class="panel-collapse collapse">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">One</li>
-                                            <li class="list-group-item">Two</li>
-                                            <li class="list-group-item">Three</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="left">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="background-color:#A47FB5;">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" href="#collapse4">Exercise</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse4" class="panel-collapse collapse">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">One</li>
-                                            <li class="list-group-item">Two</li>
-                                            <li class="list-group-item">Three</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="left">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="background-color:#9D7FAA;">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" href="#collapse5">Other</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse5" class="panel-collapse collapse">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">One</li>
-                                            <li class="list-group-item">Two</li>
-                                            <li class="list-group-item">Three</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" align="left">
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="background-color:#957FA0;">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" href="#collapse6">Special tasks</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapse6" class="panel-collapse collapse">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">One</li>
-                                            <li class="list-group-item">Two</li>
-                                            <li class="list-group-item">Three</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
+                        <?
+                        $categories = $dbcomm->getCategoriesByUsername($username);
+                        for ($i = 0; $i < sizeOf($categories); $i++){
+                            $category = $categories[$i];
+                            echo '<tr>';
+                            echo '<td colspan="3" align="left">';
+                            echo '<div class="panel-group">';
+                            echo '<div class="panel panel-default">';
+                            echo '<div class="panel-heading" style="background-color:#BA7FD5;">';
+                            echo '<h4 class="panel-title">';
+                            echo '<a data-toggle="collapse" href="#collapse'.($i+1).'">'.$category.'</a>';
+                            echo '</h4>';
+                            echo '</div>';
+                            echo '<div id="collapse'.($i+1).'" class="panel-collapse collapse">';
+                            echo' <ul class="list-group">';
+                            $tasks = $dbcomm->getTasksByCategory($username, $category);
+                            for ($j = 0; $j < sizeOf($tasks); $j++) {
+                                echo '<li class="list-group-item">'.$tasks[$j].'</li>';
+                            }
+                            echo '</ul>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</td>';
+                            echo '</tr>';
+                        }
+                        ?>
                     </tr>
                 </table>
             </div>
@@ -418,8 +327,6 @@ if(isset($_POST['createTask'])) {
 </script>
 </body>
 <div class="modal fade" id="mymodal">
-
-
     <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#secondPage" method="post" class="task_create">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -456,20 +363,27 @@ if(isset($_POST['createTask'])) {
                             <td>
                                 <select class="form-control" name="categoryName" id="categoryName">
                                     <option value="" disabled selected>Choose Category</option>
-                                    <option value="1">Homework</option>
-                                    <option value="2">Sports</option>
-                                    <option value="3">Health</option>
-                                    <option value="4">Exercise</option>
-                                    <option value="5">Other</option>
-                                    <option value="6">Special Tasks</option>
+                                    <?php
+                                    $categories = $dbcomm->getCategoriesByUsername($username);
+                                    for($i = 0; $i < count($categories); $i++) {
+                                        echo "<option value='$categories[$i]'>$categories[$i]</option>";
+                                    }
+                                    ?>
+                                    <option disabled>-----------------</option>
+                                    <option value="AddCategory">Add Category</option>
+                                    <option value="DeleteCategory">Delete Category</option>
                                 </select>
                             </td>
                             <td></td>
                             <td width="40%">
                                 <select class="form-control" name="importance" id="importance">
                                     <option value="" disabled selected>Choose Importance</option>
-                                    <option value="2">Important</option>
-                                    <option value="1">Not Important</option>
+                                    <?php
+                                    $priorities = $dbcomm->getPriorities();
+                                    for($i = 0; $i < count($priorities); $i++) {
+                                        echo "<option value='$priorities[$i]'>$priorities[$i]</option>";
+                                    }
+                                    ?>
                                 </select>
 
                             </td>

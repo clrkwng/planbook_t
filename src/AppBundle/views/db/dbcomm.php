@@ -77,6 +77,12 @@ class dbcomm
             $this->doQuery($query);
             $query = "DELETE FROM `Image` WHERE `id` = '$userImageID'";
             $this->doQuery($query);
+            $query = "DELETE FROM `Task` WHERE `user_id` = '$userID'";
+            $this->doQuery($query);
+            $query = "DELETE FROM `Category` WHERE `user_id` = '$userID'";
+            $this->doQuery($query);
+            $query = "DELETE FROM `Redeem` WHERE `user_id` = '$userID'";
+            $this->doQuery($query);
             $query = "DELETE FROM `User` WHERE `id` = '$userID'";
             $this->doQuery($query);
         }
@@ -194,6 +200,19 @@ class dbcomm
         $this->doQuery($query);
         $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($goldTrophyID, $userID, '0');";
         $this->doQuery($query);
+
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Homework','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Sports','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Health','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Exercise','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Other','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Special Tasks','$userID')";
+        $this->doQuery($query);
     }
 
     function getAccountIDByUsername($username)
@@ -240,6 +259,19 @@ class dbcomm
         $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($silverTrophyID, $userID, '0');";
         $this->doQuery($query);
         $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($goldTrophyID, $userID, '0');";
+        $this->doQuery($query);
+
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Homework','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Sports','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Health','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Exercise','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Other','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Special Tasks','$userID')";
         $this->doQuery($query);
     }
 
@@ -348,7 +380,7 @@ class dbcomm
         $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
         $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
 
-        $query = "SELECT * FROM `User` WHERE `account_id`='$accountID'";
+        $query = "SELECT * FROM `User` WHERE `account_id`='$accountID' AND `type_id`='2'";
         $result = $this->doQuery($query);
 
         $users = Array();
@@ -563,13 +595,27 @@ class dbcomm
     }
 
     function redeemRewardByUsername($username, $rewardName) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
+        $query = "SELECT `id`,`total_points` FROM `User` WHERE `username`='$username'";
         $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $totalPoints = mysqli_fetch_array($this->doQuery($query))['total_points'];
 
-        date_default_timezone_set("America/New_York");
-        $datetime = date('Y-m-d H:i:s');
-        $query = "UPDATE `Redeem` SET `completed`='1', `redeem_date`='$datetime' WHERE `user_id`='$userID' AND `reward`='$rewardName'";
-        $this->doQuery($query);
+        $query = "SELECT `points` FROM `Redeem` WHERE `user_id`='$userID' AND `reward`='$rewardName'";
+        $pointsRequired = mysqli_fetch_array($this->doQuery($query))['points'];
+
+        if ($totalPoints >= $pointsRequired) {
+            date_default_timezone_set("America/New_York");
+            $datetime = date('Y-m-d H:i:s');
+            $query = "UPDATE `Redeem` SET `completed`='1', `redeem_date`='$datetime' WHERE `user_id`='$userID' AND `reward`='$rewardName'";
+            $this->doQuery($query);
+
+            $pointsAfterRedemption = $totalPoints - $pointsRequired;
+            $query = "UPDATE `User` SET `total_points`='$pointsAfterRedemption' WHERE `id`='$userID'";
+            $this->doQuery($query);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     function addRewardByUsername($username, $rewardName, $points) {
@@ -584,11 +630,83 @@ class dbcomm
      * Create Task FUNCTIONS ----------------------------------------------------------
      */
 
-    function createTaskByUsername($username, $taskName, $categoryName, $importance, $startDateTime, $endDateTime){
+    function createTaskByUsername($username, $taskName, $categoryName, $importance, $startDateTime, $endDateTime) {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
         $userID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `Task` (`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`) VALUES ('$userID', '$taskName', '$categoryName', '$importance', '$startDateTime', '$endDateTime')";
+        $query = "SELECT `id` FROM `Category` WHERE `name`='$categoryName' AND `user_id`='$userID'";
+        $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "SELECT `id` FROM `Priority` WHERE `name`='$importance'";
+        $priorityID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "INSERT INTO `Task` (`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`) VALUES ('$userID', '$taskName', '$categoryID', '$priorityID', '$startDateTime', '$endDateTime')";
+        $this->doQuery($query);
+    }
+
+    function getCategoriesByUsername($username) {
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
+        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "SELECT `name` FROM `Category` WHERE `user_id`='$userID'";
+        $result = $this->doQuery($query);
+
+        $categories = Array();
+        $counter = 0;
+        while($row = mysqli_fetch_array($result)) {
+            $categories[$counter] = $row['name'];
+            $counter++;
+        }
+        sort($categories);
+        return $categories;
+    }
+
+    function getTasksByCategory($username, $category){
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
+        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "SELECT `id` FROM `Category` WHERE `name` ='$category' AND `user_id` = '$userID'";
+        $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "SELECT `task_name` FROM `Task` WHERE `category_id` = '$categoryID' AND `user_id` = '$userID'";
+        $result = $this->doQuery($query);
+
+        $tasks = Array();
+        $counter = 0;
+        while($row = mysqli_fetch_array($result)){
+            $tasks[$counter]=$row['task_name'];
+            $counter++;
+        }
+        sort($tasks);
+        return $tasks;
+    }
+
+    function getPriorities() {
+        $query = "SELECT `name` FROM `Priority`";
+        $result = $this->doQuery($query);
+
+        $priorities = Array();
+        $counter = 0;
+        while($row = mysqli_fetch_array($result)) {
+            $priorities[$counter] = $row['name'];
+            $counter++;
+        }
+        return $priorities;
+    }
+
+    function createNewCategoryByUsername($username, $categoryName) {
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
+        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "INSERT INTO `Category` (`user_id`, `name`) VALUES ('$userID', '$categoryName')";
+        $this->doQuery($query);
+    }
+
+    function deleteCategoryByUsername($username, $categoryName) {
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
+        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "DELETE FROM `Category` WHERE `user_id`='$userID' AND `name`='$categoryName'";
         $this->doQuery($query);
     }
 

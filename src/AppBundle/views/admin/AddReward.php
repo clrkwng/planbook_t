@@ -26,7 +26,11 @@ $dbcomm = new dbcomm();
 
 if (isset($_POST['doneButton'])) {
     $unencryptedRewardName = str_replace("XyzYx", " ", $_POST['rewardName']);
-    $dbcomm->redeemRewardByUsername($userUsername, $unencryptedRewardName);
+    if (!$dbcomm->redeemRewardByUsername($userUsername, $unencryptedRewardName)) {
+        $alert = '<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  You don\'t have enough points. Go complete more tasks!</div>';
+    }
 }
 
 if (isset($_POST['SubmitReward'])) {
@@ -63,6 +67,7 @@ if (isset($_POST['SubmitReward'])) {
         <td height="25%">
             <h1>Rewards</h1>
             <p style="font-size: 25px;">Manage Rewards for <b><? echo $userUsername; ?></b></p>
+            <? if (isset($alert))  echo $alert; ?>
         </td>
         <td width="15%" valign="bottom">
             <p style="max-width: 100%;">
@@ -135,7 +140,7 @@ if (isset($_POST['SubmitReward'])) {
                         echo "<td>
                                     <form role='form' action=\"AddReward.php?id=$encryptedAdminUsername&reward=$encryptedUserUsername\" method='post'>
                                         <input type='text' name='rewardName' value='$encyptedRewardName' style='display: none;'>
-                                        <button type='submit' name='doneButton' id='doneButton'>Redeem?</button>
+                                        <button type='submit' name='doneButton' id='doneButton' class='confirmRedeem'>Redeem?</button>
                                     </form>
                               </td>";
                     }
@@ -154,7 +159,7 @@ if (isset($_POST['SubmitReward'])) {
         <td width="15%" style="text-align: right" valign="center" id="awardsSideBar">
             <p align="center" style="vertical-align: top;"><u>Awards</u></p>
 
-            <p style="display: inline-block; height: 45px;"><? echo $dbcomm->getNumCurrentPointsByUsername($userUsername); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;"> Total Points&nbsp;</div>
+            <p style="display: inline-block; height: 45px;"><? echo $dbcomm->getNumTotalPointsByUsername($userUsername); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;"> Total Points&nbsp;</div>
             <p><? echo $dbcomm->getNumBronzeStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getBronzeStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
             <p><? echo $dbcomm->getNumSilverStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getSilverStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
             <p><? echo $dbcomm->getNumGoldStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getGoldStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
@@ -172,6 +177,15 @@ if (isset($_POST['SubmitReward'])) {
 
 <script src="../../libs/jquery/dist/jquery.min.js"></script>
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
+    var elems = document.getElementsByClassName('confirmRedeem');
+    var confirmIt = function (e) {
+        if (!confirm('Are you sure you want to redeem this reward?')) e.preventDefault();
+    };
+    for (var i = 0, l = elems.length; i < l; i++) {
+        elems[i].addEventListener('click', confirmIt, false);
+    }
+</script>
 
 </body>
 
