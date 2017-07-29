@@ -1,5 +1,13 @@
 module.exports = function (grunt) {
 
+    var isApple = true; //This flag needs to be set based on the dev environment's base OS
+    var target;
+    if(isApple){
+        target = grunt.option('target') || 'devApple';
+    }else{
+        target = grunt.option('target') || 'devWindows'
+    }
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -18,8 +26,11 @@ module.exports = function (grunt) {
             bin: [
                 'bin/*'
             ],
-            xampp: [
+            devWindows: [
                 'C:/xampp/htdocs/planbook/*'
+            ],
+            devApple: [
+                //insert Apple unique paths to clean here
             ]
         },
         less: {
@@ -41,6 +52,16 @@ module.exports = function (grunt) {
                     "bin/css/user/user-profile.css": "web/less/user/user-profile.less"
                 }
             }
+        },
+        properties: {
+            devWindows: [
+                'application/config/profiles/dev/base.properties',
+                'application/config/profiles/dev/windows.properties'
+            ],
+            devApple: [
+                'application/config/profiles/dev/base.properties',
+                'application/config/profiles/dev/apple.properties'
+            ]
         },
         copy: {
             bin: {
@@ -70,14 +91,6 @@ module.exports = function (grunt) {
                             '**'
                         ],
                         dest: 'bin/modules/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'src/AppBundle/business-logic',
-                        src: [
-                            '**'
-                        ],
-                        dest: 'bin/scripts/php/'
                     },
                     {
                         expand: true,
@@ -148,7 +161,7 @@ module.exports = function (grunt) {
 
                 ]
             },
-            xampp: {
+            devWindows: {
 
                 files: [
                    {
@@ -158,9 +171,52 @@ module.exports = function (grunt) {
                        dest: 'C:/xampp/htdocs/planbook/'
                    }
                ]
+            },
+            devApple: {
+
+                // files: [
+                //     {
+                //         expand: true,
+                //         cwd: 'bin',
+                //         src: ['**'],
+                //         dest: ''
+                //     }
+                // ]
+            }
+        },
+        'string-replace': {
+            bin: {
+                files: [{
+                    expand: true,
+                    cwd: 'bin/',
+                    src: '**/*.php',
+                    dest: 'bin/'
+                }],
+                options: {
+                    replacements: [
+                        {
+                            pattern: '{db.host}',
+                            replacement: '<%= '+ target +'.dbHost %>'
+                        },
+                        {
+                            pattern: '{db.name}',
+                            replacement: '<%= '+ target +'.dbName %>'
+                        },
+                        {
+                            pattern: '{db.user}',
+                            replacement: '<%= '+ target +'.dbUser %>'
+                        },
+                        {
+                            pattern: '{db.password}',
+                            replacement: '<%= '+ target +'.dbPassword %>'
+                        }
+                    ]
+                }
             }
         }
     });
+
+
 
     //Grunt plugins
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -168,27 +224,32 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-properties-reader');
+    grunt.loadNpmTasks('grunt-string-replace');
+
 
     //Build Task Registration
     grunt.registerTask('default',
         [
             'buildToBin',
-            // 'deployXampp'
+            'deploy'
         ]
     );
 
     grunt.registerTask('buildToBin',
         [
+            'properties',
             'clean:bin',
             'copy:bin',
-            'less:bin'
+            'less:bin',
+            'string-replace:bin'
 
         ]
     );
-    grunt.registerTask('deployXampp',
+    grunt.registerTask('deploy',
         [
-            'clean:xampp',
-            'copy:xampp'
+            'clean:' + target,
+            'copy:' + target
         ]
     );
 

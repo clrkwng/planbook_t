@@ -34,7 +34,7 @@ class dbcomm
 
     //connect to db or die
     function connect() {
-        $this->sqlconn = mysqli_connect('mysql.planbook.xyz','pb_dev1','4FEF!j1w3KUSz0M','planbook_db1');
+        $this->sqlconn = mysqli_connect('{db.host}','{db.user}','{db.password}','{db.name}');
         if (mysqli_connect_errno()) {
             die("Connection failed: " . mysqli_connect_error());
         }
