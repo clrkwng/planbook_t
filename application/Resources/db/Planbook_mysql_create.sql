@@ -1,6 +1,6 @@
-CREATE SCHEMA `planbookdb` ;
+CREATE SCHEMA `planbook_db1` ;
 
-use planbookdb;
+use planbook_db1;
 
 CREATE TABLE `Frequency` (
 	`id` int NOT NULL AUTO_INCREMENT,
@@ -72,8 +72,8 @@ CREATE TABLE `Theme` (
 CREATE TABLE `User` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`account_id` int NOT NULL,
-	`demographic_id` int NOT NULL,
-	`theme_id` int NOT NULL,
+	`demographic_id` int,
+	`theme_id` int,
 	`username` varchar(255) NOT NULL,
 	`password` varchar(255) NOT NULL,
 	`image_id` int NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE `User` (
 	`total_points` int NOT NULL DEFAULT '0',
 	`current_points` int NOT NULL DEFAULT '0',
 	`email` varchar(255) NOT NULL,
-	`phone_number` varchar(255) NOT NULL,
+	`phone_number` varchar(255),
 	`school` varchar(255),
 	PRIMARY KEY (`id`)
 );
@@ -127,6 +127,7 @@ CREATE TABLE `Task` (
 	`priority_id` int NOT NULL,
 	`category_id` int NOT NULL,
 	`image_id` int NOT NULL,
+	`user_id` int NOT NULL,
 	`description` varchar(255) NOT NULL,
 	`length` varchar(255) NOT NULL,
 	`repeat` bit NOT NULL DEFAULT 0,
@@ -161,8 +162,9 @@ CREATE TABLE `Common_Task_Goal` (
 CREATE TABLE `Category` (
 	`id` int NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
-	`image_id` int NOT NULL,
-	`color` varchar(255) NOT NULL,
+	`user_id` int,
+	`image_id` int,
+	`color` varchar(255),
 	PRIMARY KEY (`id`)
 );
 
@@ -230,6 +232,8 @@ ALTER TABLE `Awards` ADD CONSTRAINT `Awards_fk0` FOREIGN KEY (`image_id`) REFERE
 
 ALTER TABLE `Category` ADD CONSTRAINT `Category_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
 
+ALTER TABLE `Category` ADD CONSTRAINT `Category_fk1` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
 ALTER TABLE `Theme` ADD CONSTRAINT `Theme_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
 
 ALTER TABLE `Task` ADD CONSTRAINT `Task_fk0` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
@@ -237,6 +241,8 @@ ALTER TABLE `Task` ADD CONSTRAINT `Task_fk0` FOREIGN KEY (`priority_id`) REFEREN
 ALTER TABLE `Task` ADD CONSTRAINT `Task_fk1` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`);
 
 ALTER TABLE `Task` ADD CONSTRAINT `Task_fk2` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+
+ALTER TABLE `Task` ADD CONSTRAINT `Task_fk3` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
 
 ALTER TABLE `Common_Task_Goal` ADD CONSTRAINT `Common_Task_Goal_fk0` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`);
 

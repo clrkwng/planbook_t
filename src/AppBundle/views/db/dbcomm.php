@@ -436,7 +436,7 @@ class dbcomm
             "INSERT INTO `Type` "
             ."(`name`) "
             ."VALUES "
-            ."($typeName)";
+            ."('$typeName')";
         $this->doQuery($query);
     }
 
