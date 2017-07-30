@@ -8,10 +8,7 @@ $dbcomm = new dbcomm();
 if(!isset($_GET['id'])){
     die("Error: The ID was not set.");
 }
-$encryptedAccountID = $_GET['id'];
-$encryptedAccountID = str_replace("!!!", "+", $encryptedAccountID);
-$encryptedAccountID = str_replace("$$$", "%", $encryptedAccountID);
-$accountID = openssl_decrypt($encryptedAccountID, 'bf-ecb', 'makeNewUserPassword');
+
 
 $errorCount = 0;
 
@@ -141,6 +138,10 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
             .'</div>';
     }
     if ($errorCount == 0) {
+        $encryptedAccountID = $_GET['id'];
+        $encryptedAccountID = str_replace("!!!", "+", $encryptedAccountID);
+        $encryptedAccountID = str_replace("$$$", "%", $encryptedAccountID);
+        $accountID = openssl_decrypt($encryptedAccountID, 'bf-ecb', 'makeNewUserPassword');
         $dbcomm->createNewUser($accountID, $username, $password, $email, $phonenumber);
         $adminUsername = $dbcomm->getAdminUsernameByAccountID($accountID);
         $encryptedUsername = openssl_encrypt($adminUsername, 'bf-cfb', 'adminPanelPassword');

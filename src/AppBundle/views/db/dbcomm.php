@@ -543,12 +543,16 @@ class dbcomm
         $query = "SELECT `id` FROM `Image` WHERE `name`='SYSTEM_DEFAULT'";
         $imageID = mysqli_fetch_array($this->doQuery($query))['id'];
 
+        //Fetch User Type Id
+        $query = "SELECT `id` FROM `Type` WHERE `name`='User'";
+        $typeID = mysqli_fetch_array($this->doQuery($query))['id'];
+
         //Create User Record in forest
         $query =
             "INSERT INTO `User` "
-                ."(`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`) "
+                ."(`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`, `type_id`) "
             ."VALUES "
-            ."('$accountID', '$username', '$password', '$imageID', '$email', '$phoneNumber');";
+            ."('$accountID', '$username', '$password', '$imageID', '$email', '$phoneNumber', '$typeID');";
         $this->doQuery($query);
 
         //Get the newly created user's corresponding id
