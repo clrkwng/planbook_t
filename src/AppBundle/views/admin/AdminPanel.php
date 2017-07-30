@@ -110,7 +110,9 @@ if(isset($_GET['delete'])) //delete the user
 
     <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
 
-    <h2 align="center">Manage <b><? echo $dbcomm->getAccountNameByUsername($username); ?></b> Users</h2>
+    <h2 align="center">Manage <b>
+            <?php if (isset($username)) echo $dbcomm->getAccountNameByUsername($username);?>
+    </b> Users</h2>
     <br>
     <table class="table table-hover" width="100%">
         <tr>

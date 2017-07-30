@@ -100,9 +100,8 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
     $password = sha1($_POST['signup-password']);
     $email = $_POST['signup-email'];
     $phonenumber = preg_replace('/\D+/', '', $_POST['signup-phonenumber']);
-
     if($dbcomm->checkIfAccountNameExists($accountName)) {
-        $errorCount += 1;
+        $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
                 .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
@@ -117,7 +116,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
             .'</div>';
     }
     if($dbcomm->checkIfUsernameExists($username)) {
-        $errorCount += 1;
+        $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
                 .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
@@ -132,7 +131,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
             .'</div>';
     }
     if($dbcomm->checkIfPhonenumberExists($phonenumber)) {
-        $errorCount += 1;
+        $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
                 .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
@@ -147,7 +146,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
             .'</div>';
     }
     if($dbcomm->checkIfEmailExists($email)) {
-        $errorCount += 1;
+        $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
                 .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'

@@ -149,10 +149,6 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
         echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername';</script>";
     }
 }
-else {
-    echo "<script>document.getElementById(\"user-password\").innerHTML = \"\";</script>";
-    echo "<script>document.getElementById(\"user-repassword\").innerHTML = \"\";</script>";
-}
 
 ?>
 
