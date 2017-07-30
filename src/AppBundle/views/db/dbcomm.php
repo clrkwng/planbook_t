@@ -500,15 +500,14 @@ class dbcomm
         }
     }
 
-    function createNewAdmin($accountName, $username, $password, $email, $phonenumber)
+    function createNewAdmin($accountName, $username, $password, $email, $phoneNumber)
     {
-
         //Register forest in Account DB
         $query =
             "INSERT INTO  `Account` "
                 ."(`name`, `password`, `email`, `phone_number`) "
             ."VALUES "
-                ."('$accountName', '$password', '$email', '$phonenumber');";
+                ."('$accountName', '$password', '$email', '$phoneNumber');";
         $this->doQuery($query);
 
         //Fetch the corresponding Id for the newly created record
@@ -527,50 +526,8 @@ class dbcomm
         $query =
             "INSERT INTO `User` "
                 ."(`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`, `type_id`) "
-        ."VALUES "
-            ."('$accountID', '$username', '$password', '$profilePic_ID', '$email', '$phonenumber', '$adminID');";
-        $this->doQuery($query);
-
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeStar'";
-        $bronzeStarID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverStar'";
-        $silverStarID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldStar'";
-        $goldStarID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeTrophy'";
-        $bronzeTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverTrophy'";
-        $silverTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldTrophy'";
-        $goldTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
-
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$bronzeStarID', '$userID', '0');";
-        $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$silverStarID', '$userID', '0');";
-        $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$goldStarID', '$userID', '0');";
-        $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$bronzeTrophyID', '$userID', '0');";
-        $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$silverTrophyID', '$userID', '0');";
-        $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$goldTrophyID', '$userID', '0');";
-        $this->doQuery($query);
-
-        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Homework','$userID')";
-        $this->doQuery($query);
-        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Sports','$userID')";
-        $this->doQuery($query);
-        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Health','$userID')";
-        $this->doQuery($query);
-        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Exercise','$userID')";
-        $this->doQuery($query);
-        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Other','$userID')";
-        $this->doQuery($query);
-        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Special Tasks','$userID')";
+            ."VALUES "
+                ."('$accountID', '$username', '$password', '$profilePic_ID', '$email', '$phoneNumber', '$adminID');";
         $this->doQuery($query);
     }
 
