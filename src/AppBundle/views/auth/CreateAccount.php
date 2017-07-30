@@ -25,6 +25,19 @@ if(isset($_POST['signup-password'])) {
                 .'<span>'
                     .'Your password does not meet the requirements.'
                 .'</span>'
+            .'</div>'
+            .'<div class="alert alert-danger alert-dismissible" role="alert">'
+                .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                .'<span aria-hidden="true">&times;</span>'
+             .'</button>'
+                .'<div class="list-group">'
+                    .'<h5 class="mb-1">'
+                        .'Passwords must:'
+                    .'</h5>'
+                    .'<li class="list-group-item">Contain at least one capital letter</li>'
+                    .'<li class="list-group-item">Contain at least one lower case letter</li>'
+                    .'<li class="list-group-item">Contain more than eight characters</li>'
+                .'</div>'
             .'</div>';
     }
 }
@@ -153,12 +166,13 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
         $encryptedUsername = openssl_encrypt("$username", 'RC4', 'sendVerificationEmailPassword');
         $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
         $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
-        echo "<script>window.location = '../email-sender/AccountVerificationSender.php?id=$encryptedUsername';</script>";
+        echo
+            "<script>"
+                ."window.location ='../email-sender/AccountVerificationSender.php?id="
+                    .$encryptedUsername
+                    ."';"
+            ."</script>";
     }
-}
-else {
-    echo "<script>document.getElementById(\"signup-password\").innerHTML = \"\";</script>";
-    echo "<script>document.getElementById(\"signup-repassword\").innerHTML = \"\";</script>";
 }
 
 ?>
@@ -236,22 +250,9 @@ else {
     <div class="inner-bg">
         <div class="container">
             <div class="row">
-                <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1>
-                        <font color="White"><strong>Planbook</strong> Signup Page</font>
-                    </h1>
-                    <div class="description">
-                        <p>
-                            <font color="White" >"To achieve <strong>big</strong> things, start small!"</font>
-                        </p>
-                    </div>
+                <?php if (isset($alertMessage)) echo "$alertMessage";?>
 
-                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
-
-
-                </div>
-
-            <div class="col-sm-6 col-sm-offset-3 form-box">
+                <div class="col-sm-6 col-sm-offset-3 form-box">
                 <div class="form-top">
                     <div class="form-top-left">
                         <h3>Sign up for our site</h3>
