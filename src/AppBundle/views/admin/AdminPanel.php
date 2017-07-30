@@ -11,9 +11,9 @@ if(!isset($_GET['id'])) {
 $encryptedUsername = $_GET['id'];
 $encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
 $encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
-$username = openssl_decrypt($encryptedUsername, 'bf-cfb', 'adminPanelPassword');
+$adminUsername = openssl_decrypt($encryptedUsername, 'bf-cfb', 'adminPanelPassword');
 
-$accountID = $dbcomm->getAccountIDByUsername($username);
+$accountID = $dbcomm->getAccountIDByUsername($adminUsername);
 $encryptedAccountID = openssl_encrypt($accountID, 'bf-ecb', 'makeNewUserPassword');
 $encryptedAccountID = str_replace("+", "!!!", $encryptedAccountID);
 $encryptedAccountID = str_replace("%", "$$$", $encryptedAccountID);
@@ -61,17 +61,9 @@ if(isset($_GET['delete'])) //delete the user
     <script src="../../libs/vendor/respond.min.js"></script>
     <!--[endif]-->
 
-    <style>
-        a:hover {
-            text-decoration: none;
-        }
-        td#addNewUserButton{
-            cursor: pointer;
-        }
-    </style>
 </head>
 
-<body style="background-color: #e6f7ff;">
+<body>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
@@ -111,7 +103,7 @@ if(isset($_GET['delete'])) //delete the user
     <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
 
     <h2 align="center">Manage <b>
-            <?php if (isset($username)) echo $dbcomm->getAccountNameByUsername($username);?>
+            <?php if (isset($adminUsername)) echo $dbcomm->getAccountNameByUsername($adminUsername);?>
     </b> Users</h2>
     <br>
     <table class="table table-hover" width="100%">
@@ -127,47 +119,58 @@ if(isset($_GET['delete'])) //delete the user
             </th>
         </tr>
         <?php
-        $users = $dbcomm->getAllUsersByAdminUsername($username); //formatting and echoing all the items in the checklists out
+        $users = $dbcomm->getAllUsersByAdminUsername($adminUsername); //formatting and echoing all the items in the checklists out
         $userCounter = 0;
         foreach($users as $userId=>$userValues)
         {
             $userName = $userValues['username'];
             $userPoints = $userValues['total_points'];
             if($userCounter == 0){
-                echo "<tr style='height:80px;'>
-                        <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$userName</td>
-                        <td style='vertical-align: middle;'>$userPoints</td>
-                        <td></td>
-                      </tr>";
-                $userCounter += 1;
+
+                echo "<tr id='user-row'>"
+                        ."<td class='clickUser' id='clickUser$userCounter'>"
+                            .$userName
+                        ."</td>"
+                        ."<td>"
+                            ."$userPoints"
+                        ."</td>"
+                    ."<td></td>"
+                      ."</tr>";
+                $userCounter++;
             }
             else{
-                $encryptedRewardAdminUsername = openssl_encrypt($username, 'AES-128-CFB1', 'rewardPanelAdminPassword');
+                $encryptedRewardAdminUsername = openssl_encrypt($adminUsername, 'AES-128-CFB1', 'rewardPanelAdminPassword');
                 $encryptedRewardAdminUsername = str_replace("+", "!!!", $encryptedRewardAdminUsername);
                 $encryptedRewardAdminUsername = str_replace("%", "$$$", $encryptedRewardAdminUsername);
                 $encryptedRewardUserUsername = openssl_encrypt($userName, 'aes-192-cfb', 'rewardPanelUserPassword');
                 $encryptedRewardUserUsername = str_replace("+", "!!!", $encryptedRewardUserUsername);
                 $encryptedRewardUserUsername = str_replace("%", "$$$", $encryptedRewardUserUsername);
-                echo "<tr style='height:80px;'>
-                        <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$userName</td>
-                        <td style='vertical-align: middle;'>$userPoints</td>
-                        <td style='vertical-align: middle;'>
-                            <a href=\"AddReward.php?id=$encryptedRewardAdminUsername&reward=$encryptedRewardUserUsername\" style='color: pink;' title='Rewards'>
-                                <span class='glyphicon glyphicon-piggy-bank' style='font-size: 20px; text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;'></span>
-                            </a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href=\"AdminPanel.php?id=$encryptedUsername&delete=$userName\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
-                                <span class='glyphicon glyphicon-trash' style='font-size: 20px;'></span>
-                            </a>
-                        </td>
-                      </tr>";
+                echo "<tr id='user-row'>"
+                        ."<td class='clickUser' id='clickUser$userCounter'>"
+                            ."$userName"
+                        ."</td>"
+                        ."<td >"
+                            ."$userPoints"
+                        ."</td>"
+                        ."<td>"
+                            ."<a id='rewardLink' href='AddReward.php?id=$encryptedRewardAdminUsername&reward=$encryptedRewardUserUsername\' title='Rewards'>"
+                                ."<span class='glyphicon glyphicon-piggy-bank'></span>"
+                            ."</a>"
+                            ."&nbsp;&nbsp;&nbsp;&nbsp;&n"
+                            ."<a id='adminPanelLink' href=\"AdminPanel.php?id=$encryptedUsername&delete=$userName\" class=\"confirmation\" title='Delete'>"
+                                ."<span class='glyphicon glyphicon-trash'></span>"
+                            ."</a>"
+                        ."</td>"
+                  ."</tr>";
                 $userCounter += 1;
             }
         }
         ?>
-        <tr style="height: 80px;">
-            <td colspan="3" style="vertical-align: middle;" id="addNewUserButton">
-                <div class = "glyphicon glyphicon-plus"></div> New User
+        <tr id='addNewUser'>
+            <td colspan="3" id="addNewUserButton">
+                <a class="glyphicon glyphicon-plus link_button"
+                     href="../auth/CreateUser.php?id=<?php echo $encryptedUsername;?>"
+                > New User</a>
             </td>
         </tr>
     </table>
@@ -182,8 +185,7 @@ if(isset($_GET['delete'])) //delete the user
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
 <script src="../../scripts/jquery/scripts.js"></script>
-<script>window.jQuery || document.write('<script src="../../libs/jquery/dist/jquery.min.js"><\/script>')</script>
-<script src="../https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../scripts/jquery/admin/admin-panel-bundle.js"></script>
 
 <script type="text/javascript">
     var elems = document.getElementsByClassName('confirmation');
@@ -193,11 +195,6 @@ if(isset($_GET['delete'])) //delete the user
     for (var i = 0, l = elems.length; i < l; i++) {
         elems[i].addEventListener('click', confirmIt, false);
     }
-
-    var addUserButton = document.getElementById("addNewUserButton");
-    addUserButton.addEventListener('click', function() {
-        window.location = '../auth/CreateUser.php?id=<? echo $encryptedAccountID; ?>';
-    }, false);
 
     var clickUsers = document.getElementsByClassName("clickUser");
     var accountUsernames = <?php echo json_encode($dbcomm->getEncodedUsernamesByAccountID($accountID)); ?>;
