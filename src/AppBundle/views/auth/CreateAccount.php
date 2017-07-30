@@ -4,6 +4,7 @@
 require_once "../db/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
+$dbcomm->checkDBHealth();
 
 $errorCount = 0;
 

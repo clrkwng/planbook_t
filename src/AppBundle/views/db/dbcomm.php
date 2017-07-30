@@ -103,7 +103,9 @@ class dbcomm
         //Provides the default init for database records
         //Allows for quick setup and checking of DB health
 
-        return $this->checkImageTable() && $this->checkTypeTable() && $this->checkAwardsTable();
+        $this->checkImageTable();
+        $this->checkAwardsTable();
+        $this->checkTypeTable();
     }
 
     function checkAwardsTable(){
@@ -152,15 +154,13 @@ class dbcomm
         }
         return true;
     }
+
     function checkAwardsTableHelper($doFix, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol){
         if($this->checkIfAwardExistsByName($awardName)){
             return true;
         }else{
             if($doFix){
                 $imageId = $this->getImageIdByName($imageName);
-                if(!isset($imageId)){
-                    $imageName = 'SYSTEM_DEFAULT';
-                }
                 $this->insertNewAward($awardName, $imageId, $awardAmount, $awardUnit, $awardSymbol);
                 $this->checkAwardsTableHelper(false, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol);
             }else{
@@ -366,7 +366,7 @@ class dbcomm
 
     function checkIfPhonenumberExists($phoneNumber)
     {
-        $query = "SELECT `id` FROM `User` WHERE `phone_number`=$phoneNumber;";
+        $query = "SELECT `id` FROM `User` WHERE `phone_number`='$phoneNumber';";
         $result = $this->doQuery($query);
 
         $SQLdataarray = mysqli_fetch_array($result);
@@ -394,8 +394,6 @@ class dbcomm
 
     function createNewAdmin($accountName, $username, $password, $email, $phonenumber)
     {
-
-        $this->checkDBHealth();
 
         //Register forest in Account DB
         $query =
@@ -441,17 +439,17 @@ class dbcomm
         $query = "SELECT `id` FROM `Awards` WHERE `name`='goldTrophy'";
         $goldTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($bronzeStarID, $userID, '0');";
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$bronzeStarID', '$userID', '0');";
         $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($silverStarID, $userID, '0');";
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$silverStarID', '$userID', '0');";
         $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($goldStarID, $userID, '0');";
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$goldStarID', '$userID', '0');";
         $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($bronzeTrophyID, $userID, '0');";
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$bronzeTrophyID', '$userID', '0');";
         $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($silverTrophyID, $userID, '0');";
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$silverTrophyID', '$userID', '0');";
         $this->doQuery($query);
-        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($goldTrophyID, $userID, '0');";
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ('$goldTrophyID', '$userID', '0');";
         $this->doQuery($query);
 
         $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Homework','$userID')";

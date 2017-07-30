@@ -23,17 +23,17 @@ if(isset($_GET['delete'])) //delete the user
     $deleteUsername = $_GET['delete'];
     $dbcomm->deleteUserByUsername($deleteUsername);
     $alertMessage =
-                    '<div class="alert alert-danger alert-dismissible" role="alert">'
-                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
-                            .'<span aria-hidden="true">&times;</span>'
-                        .'</button>'
-                        . '<strong>'
-                            . 'Success: '
-                        . '</strong>'
-                        . '<span>'
-                            . 'The user has been deleted'
-                        . '</span>'
-                    . '</div>';
+                '<div class="alert alert-danger alert-dismissible" role="alert">'
+                    . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                        .'<span aria-hidden="true">&times;</span>'
+                    .'</button>'
+                    . '<strong>'
+                        . 'Success: '
+                    . '</strong>'
+                    . '<span>'
+                        . 'The user has been deleted'
+                    . '</span>'
+                . '</div>';
 
 }
 ?>
