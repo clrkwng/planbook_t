@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <?php
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -8,8 +10,7 @@ if(!isset($_GET['id'])) {
     die("Error: The id was not set.");
 }
 $encryptedUsername = $_GET['id'];
-$username = openssl_decrypt($encryptedUsername, 'RC4', 'sendVerificationEmailPassword');
-
+$username = Crypto::decrypt($encryptedUsername, true);
 $email = $dbcomm->getEmailByUsername($username);
 
 if ($dbcomm->checkIfEmailExists($email)) {

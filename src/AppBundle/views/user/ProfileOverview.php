@@ -10,12 +10,7 @@ if(!isset($_GET['id']))
 }
 
 $encryptedUsername = $_GET['id'];
-$encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
-$encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
-$username = openssl_decrypt($encryptedUsername, 'DES-EDE3', 'viewUserProfilePassword');
-$encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-$encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
-
+$username = Crypto::decrypt($encryptedUsername, true);
 
 if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
     if ($_FILES['image']['size'] == 0 and $_FILES['image']['error'] == 0)

@@ -2,6 +2,8 @@
 
 <?php
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -139,14 +141,10 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
     }
     if ($errorCount == 0) {
         $encryptedAccountID = $_GET['id'];
-        $encryptedAccountID = str_replace("!!!", "+", $encryptedAccountID);
-        $encryptedAccountID = str_replace("$$$", "%", $encryptedAccountID);
-        $accountID = openssl_decrypt($encryptedAccountID, 'bf-ecb', 'makeNewUserPassword');
+        $accountID = Crypto::decrypt($encryptedAccountID, true);
         $dbcomm->createNewUser($accountID, $username, $password, $email, $phonenumber);
         $adminUsername = $dbcomm->getAdminUsernameByAccountID($accountID);
-        $encryptedUsername = openssl_encrypt($adminUsername, 'bf-cfb', 'adminPanelPassword');
-        $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-        $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+        $encryptedUsername = Crypto::encrypt($adminUsername, true);
         echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername';</script>";
     }
 }

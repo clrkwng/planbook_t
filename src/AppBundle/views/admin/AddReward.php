@@ -7,20 +7,14 @@ if (!isset($_GET['id']) or !isset($_GET['reward'])) {
     die("Error: The id or reward id was not set.");
 }
 $encryptedAdminUsername = $_GET['id'];
-$encryptedAdminUsername = str_replace("!!!", "+", $encryptedAdminUsername);
-$encryptedAdminUsername = str_replace("$$$", "%", $encryptedAdminUsername);
-$adminUsername = openssl_decrypt($encryptedAdminUsername, 'AES-128-CFB1', 'rewardPanelAdminPassword');
-$encryptedAdminUsername = str_replace("+", "!!!", $encryptedAdminUsername);
-$encryptedAdminUsername = str_replace("%", "$$$", $encryptedAdminUsername);
+$adminUsername = Crypto::decrypt($encryptedAdminUsername, true);
 
 $encryptedUserUsername = $_GET['reward'];
-$encryptedUserUsername = str_replace("!!!", "+", $encryptedUserUsername);
-$encryptedUserUsername = str_replace("$$$", "%", $encryptedUserUsername);
-$userUsername = openssl_decrypt($encryptedUserUsername, 'aes-192-cfb', 'rewardPanelUserPassword');
-$encryptedUserUsername = str_replace("+", "!!!", $encryptedUserUsername);
-$encryptedUserUsername = str_replace("%", "$$$", $encryptedUserUsername);
+$userUsername = Crypto::decrypt($encryptedUserUsername, true);
 
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -45,9 +39,7 @@ if (isset($_POST['doneButton'])) {
 if (isset($_POST['SubmitReward'])) {
     foreach($_POST['users'] as $userChecked){
         $encodedUsername = $userChecked;
-        $encodedUsername = str_replace("!!!", "+", $encodedUsername);
-        $encodedUsername = str_replace("$$$", "%", $encodedUsername);
-        $unencodedUsername = openssl_decrypt($encodedUsername, 'DES-EDE3', 'viewUserProfilePassword');
+        $unencodedUsername = Crypto::decrypt($encodedUsername, true);
         $dbcomm->addRewardByUsername($unencodedUsername,$_POST['rewardName'],$_POST['numOfPoints']);
     }
 }
@@ -98,9 +90,7 @@ if (isset($_POST['SubmitReward'])) {
             <div class="toAdminPanel" id="toAdminPanel10">L</div>
             <div style="height:30px;"></div>
             <?php
-            $encryptedUsername = openssl_encrypt($adminUsername, 'bf-cfb', 'adminPanelPassword');
-            $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-            $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+                $encryptedUsername = Crypto::encrypt($adminUsername, true);
             ?>
             <button onclick="window.location='AdminPanel.php?id=<? echo $encryptedUsername ?>'"
                     class="w3-button w3-circle w3-teal"
@@ -220,9 +210,7 @@ if (isset($_POST['SubmitReward'])) {
                                 $adminCounter = true;
                                 foreach ($users as $encodedUsername) {
                                     if(!$adminCounter){
-                                        $encodedUsername = str_replace("!!!", "+", $encodedUsername);
-                                        $encodedUsername = str_replace("$$$", "%", $encodedUsername);
-                                        $unencodedUsername = openssl_decrypt($encodedUsername, 'DES-EDE3', 'viewUserProfilePassword');
+                                        $unencodedUsername = Crypto::decrypt($encodedUsername, true);
                                         echo "<input type=\"checkbox\" name=\"users[]\" value=\"$encodedUsername\"> $unencodedUsername<br>";
                                     }
                                     else {

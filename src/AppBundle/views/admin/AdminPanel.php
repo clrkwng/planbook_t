@@ -3,20 +3,19 @@
 ini_set('display_errors',0);
 
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 $dbcomm = new dbcomm();
 
 if(!isset($_GET['id'])) {
     die("Error: The id was not set.");
 }
-$encryptedUsername = $_GET['id'];
-$encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
-$encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
-$adminUsername = openssl_decrypt($encryptedUsername, 'bf-cfb', 'adminPanelPassword');
 
+$encryptedUsername = $_GET['id'];
+$adminUsername = Crypto::decrypt($encryptedUsername, true);
 $accountID = $dbcomm->getAccountIDByUsername($adminUsername);
-$encryptedAccountID = openssl_encrypt($accountID, 'bf-ecb', 'makeNewUserPassword');
-$encryptedAccountID = str_replace("+", "!!!", $encryptedAccountID);
-$encryptedAccountID = str_replace("%", "$$$", $encryptedAccountID);
+$encryptedAccountID = Crypto::encrypt($accountID, true);
+
 
 if(isset($_GET['delete'])) //delete the user
 {
@@ -139,12 +138,9 @@ if(isset($_GET['delete'])) //delete the user
                 $userCounter++;
             }
             else{
-                $encryptedRewardAdminUsername = openssl_encrypt($adminUsername, 'AES-128-CFB1', 'rewardPanelAdminPassword');
-                $encryptedRewardAdminUsername = str_replace("+", "!!!", $encryptedRewardAdminUsername);
-                $encryptedRewardAdminUsername = str_replace("%", "$$$", $encryptedRewardAdminUsername);
-                $encryptedRewardUserUsername = openssl_encrypt($userName, 'aes-192-cfb', 'rewardPanelUserPassword');
-                $encryptedRewardUserUsername = str_replace("+", "!!!", $encryptedRewardUserUsername);
-                $encryptedRewardUserUsername = str_replace("%", "$$$", $encryptedRewardUserUsername);
+                $encryptedRewardAdminUsername = Crypto::encrypt($adminUsername, true);
+                $encryptedRewardUserUsername = Crypto::encrypt($userName, true);
+
                 echo "<tr id='user-row'>"
                         ."<td class='clickUser' id='clickUser$userCounter'>"
                             ."$userName"
@@ -169,7 +165,7 @@ if(isset($_GET['delete'])) //delete the user
         <tr id='addNewUser'>
             <td colspan="3" id="addNewUserButton">
                 <a class="glyphicon glyphicon-plus link_button"
-                     href="../auth/CreateUser.php?id=<?php echo $encryptedUsername;?>"
+                     href="../auth/CreateUser.php?id=<?php echo $encryptedAccountID;?>"
                 > New User</a>
             </td>
         </tr>

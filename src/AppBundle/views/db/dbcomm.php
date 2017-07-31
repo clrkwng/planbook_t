@@ -20,6 +20,8 @@ class dbcomm
     //connect on startup
     function __construct() {
         $this->connect();
+        $this->checkDBHealth();
+
     }
 
     //disconnect on close
@@ -756,9 +758,8 @@ class dbcomm
 
         $users = Array();
         while($row = mysqli_fetch_array($result)) {
-            $encryptedUsername = openssl_encrypt($row['username'], 'DES-EDE3', 'viewUserProfilePassword');
-            $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-            $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+            $curUsername = $row['username'];
+            $encryptedUsername = Crypto::encrypt($curUsername, true);
             array_push($users, $encryptedUsername);
         }
         return $users;

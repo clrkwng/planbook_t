@@ -7,6 +7,8 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
 
 
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -16,33 +18,30 @@ if (isset($_POST['Submit'])) {
 
             $username = $_POST['signin-username'];
 
-            if($dbcomm->isAccountVerified($_POST['signin-username'])) {
-                if($_POST['remember']=='yes'){
-                    $cookie_name_username = 'username';
-                    $cookie_value_username = $_POST['signin-username'];
-                    setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
-                    $cookie_name_password = 'password';
-                    $cookie_value_password = $_POST['signin-password'];
-                    setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
-                }
+            if($dbcomm->isAccountVerified($username)) {
+               if(isset($_POST['remember'])){
+                   if($_POST['remember']=='yes'){
+                       $cookie_name_username = 'username';
+                       $cookie_value_username = $username;
+                       setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
+                       $cookie_name_password = 'password';
+                       $cookie_value_password = $_POST['signin-password'];
+                       setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
+                   }
+               }
                 $type = $dbcomm->getTypeByUsername($_POST['signin-username']);
                 if($type == "Admin") {
-                    $encryptedUsername = openssl_encrypt($username,'bf-cfb','adminPanelPassword');
-                    $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-                    $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+                    $encryptedUsername = Crypto::encrypt($username, true);
                     echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername'</script>";
                 }
                 elseif($type == "Regular") {
-                    $encryptedUsername = openssl_encrypt($username,'RC4-40','regularUserPassword');
-                    $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-                    $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+                    $encryptedUsername = Crypto::encrypt($username, true);
                     echo "<script>window.location = '../user/Homepage.php?id=$encryptedUsername'</script>";
                 }
             }
             else {
-                $encryptedUsername = openssl_encrypt("$username", 'RC4', 'sendVerificationEmailPassword');
-                $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-                $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+                $encryptedUsername = Crypto::encrypt($username, true);
+
                 $alertMessage =
                     '<div class="alert alert-danger alert-dismissible" role="alert">'
                         .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
@@ -183,8 +182,18 @@ if (isset($_POST['Submit'])) {
                         </div>
                         <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                             <tr>
-                                <td align = "left"><div class="form-group"><input type="checkbox" name="remember" value="yes">&nbsp;&nbsp;Remember me</div></td>
-                                <td align = "right"><div class = "form-group"><a href="../email-sender/RecoveryEmail.php">Forgot login?</a></div></td>
+                                <td align = "left">
+                                    <div class="form-group">
+                                        <input type="checkbox" name="remember" value="yes" title="Remember Me"/>
+                                    </div>
+                                </td>
+                                <td align = "right">
+                                    <div class = "form-group">
+                                        <a href="../email-sender/RecoveryEmail.php">
+                                            Forgot login?
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         </table>
                         <button class = "btn" type = "submit" name="Submit">Login</button>

@@ -6,9 +6,7 @@ if(!isset($_GET['id'])){
     die("Error: The id was not set.");
 }
 $encryptedUsername = $_GET['id'];
-$encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
-$encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
-$username = openssl_decrypt($encryptedUsername,'CAST5-ECB','toMarketPassword');
+$username = Crypto::decrypt($encryptedUsername, true);
 
 require_once "../db/dbcomm.php";
 //create db connection
@@ -65,9 +63,7 @@ if (isset($_POST['doneButton'])) {
             <div class="toAwards" id="toAwards11">S</div>
             <div style="height:30px;"></div>
             <?php
-            $encryptedHomeUsername = openssl_encrypt($username,'RC4-40','regularUserPassword');
-            $encryptedHomeUsername = str_replace("+", "!!!", $encryptedHomeUsername);
-            $encryptedHomeUsername = str_replace("%", "$$$", $encryptedHomeUsername);
+                $encryptedHomeUsername = Crypto::encrypt($username, true);
             ?>
             <button onclick="window.location='Homepage.php?id=<? echo $encryptedHomeUsername ?>#3rdPage'" class="w3-button w3-circle w3-teal" style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;</button>
         </td>

@@ -1,5 +1,7 @@
 <?php
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -8,9 +10,7 @@ if (isset($_POST['Submit'])){
         $email = $_POST['recovery-email'];
         if ($dbcomm->checkIfEmailExists($email)){
             $username = $dbcomm->getUsernameByEmail($email);
-            $encryptedUsername = openssl_encrypt("$username", 'CAST5-CBC', 'resetPasswordPassword');
-            $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-            $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+            $encryptedUsername = Crypto::encrypt($username, true);
             $message =
                 "<html>"
                     ."<body>"

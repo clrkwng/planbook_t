@@ -2,9 +2,10 @@
 
 <?php
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
-$dbcomm->checkDBHealth();
 
 $errorCount = 0;
 
@@ -163,9 +164,8 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
     }
     if ($errorCount == 0) {
         $dbcomm->createNewAdmin($accountName, $username, $password, $email, $phonenumber);
-        $encryptedUsername = openssl_encrypt("$username", 'RC4', 'sendVerificationEmailPassword');
-        $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-        $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+        $encryptedUsername = Crypto::encrypt($username, true);
+
         echo
             "<script>"
                 ."window.location ='../email-sender/AccountVerificationSender.php?id="

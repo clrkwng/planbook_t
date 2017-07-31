@@ -1,5 +1,7 @@
 <?php
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -7,9 +9,7 @@ if(!isset($_GET['id'])) {
     die("Error: The id was not set.");
 }
 $encryptedUsername = $_GET['id'];
-$encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
-$encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
-$username = openssl_decrypt($encryptedUsername, 'CAST5-CBC', 'resetPasswordPassword');
+$username = Crypto::decrypt($encryptedUsername, true);
 
 if(isset($_POST['Submit'])) {
     $errorCount = 0;

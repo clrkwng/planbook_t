@@ -10,7 +10,7 @@ if (!isset($_GET['id'])) {
 $encryptedUsername = $_GET['id'];
 $encryptedUsername = str_replace("!!!", "+", $encryptedUsername);
 $encryptedUsername = str_replace("$$$", "%", $encryptedUsername);
-$username = openssl_decrypt($encryptedUsername, 'RC4-40', 'regularUserPassword');
+$username = Crypto::decrypt($encryptedUsername, true);
 
 
 if(isset($_POST['createTask'])) {
@@ -216,9 +216,7 @@ if(isset($_POST['createTask'])) {
                     <div class="toMarket" id="toMarket11">T</div>
                     <div style="height: 30px;"></div>
                     <?php
-                    $encryptedMarketUsername = openssl_encrypt($username, 'CAST5-ECB', 'toMarketPassword');
-                    $encryptedMarketUsername = str_replace("+", "!!!", $encryptedMarketUsername);
-                    $encryptedMarketUsername = str_replace("%", "$$$", $encryptedMarketUsername);
+                        $encryptedMarketUsername = Crypto::encrypt($username, true);
                     ?>
                     <button onclick="window.location='Market.php?id=<? echo $encryptedMarketUsername ?>';"
                             class="w3-button w3-circle w3-teal"
