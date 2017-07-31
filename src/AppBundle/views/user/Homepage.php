@@ -63,8 +63,8 @@ if(isset($_POST['createTask'])) {
     <script type="text/javascript" src="../../scripts/jquery/user/tasklist-config.js"></script>
     <link rel="stylesheet" type="text/css" href="../../css/user/homepage.css"/>
     <script src="../../scripts/jquery/user/createTask.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
 
 </head>
@@ -85,10 +85,10 @@ if(isset($_POST['createTask'])) {
     <div class="section" id="section1">
         <div class="slide" id="slide1">
             <div class="content">
-                <!--https://bootsnipp.com/snippets/D2kkX-->
                 <table align="center" width="80%">
                     <tr>
-                        <td colspan="2" align="right" width=67.6666666%><h1>Daily View (<? echo date("n/j"); ?>)</h1>
+                        <td colspan="2" align="right" width=67.6666666%>
+                            <h1>Daily View (<?php echo date("n/j"); ?>)</h1>
                         </td>
                         <td align="right">
                             <div class="content">
@@ -100,31 +100,35 @@ if(isset($_POST['createTask'])) {
                         </td>
                     </tr>
                     <tr>
-                        <?
+                        <?php
                         $categories = $dbcomm->getCategoriesByUsername($username);
                         for ($i = 0; $i < sizeOf($categories); $i++){
                             $category = $categories[$i];
-                            echo '<tr>';
-                            echo '<td colspan="3" align="left">';
-                            echo '<div class="panel-group">';
-                            echo '<div class="panel panel-default">';
-                            echo '<div class="panel-heading" style="background-color:#BA7FD5;">';
-                            echo '<h4 class="panel-title">';
-                            echo '<a data-toggle="collapse" href="#collapse'.($i+1).'">'.$category.'</a>';
-                            echo '</h4>';
-                            echo '</div>';
-                            echo '<div id="collapse'.($i+1).'" class="panel-collapse collapse">';
-                            echo' <ul class="list-group">';
-                            $tasks = $dbcomm->getTasksByCategory($username, $category);
-                            for ($j = 0; $j < sizeOf($tasks); $j++) {
-                                echo '<li class="list-group-item">'.$tasks[$j].'</li>';
-                            }
-                            echo '</ul>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</td>';
-                            echo '</tr>';
+                            echo
+                                '<tr>'
+                                    .'<td colspan="3" align="left">'
+                                        .'<div class="panel-group">'
+                                            .'<div class="panel panel-default">'
+                                                .'<div class="panel-heading" style="background-color:#BA7FD5;">'
+                                                    .'<h4 class="panel-title">'
+                                                        .'<a data-toggle="collapse" href="#collapse'.($i+1).'">'.$category.'</a>'
+                                                    .'</h4>'
+                                                .'</div>'
+                                                .'<div id="collapse'.($i+1).'" class="panel-collapse collapse">'
+                                                    .'<ul class="list-group">';
+                                                        $tasks = $dbcomm->getTasksByCategory($username, $category);
+                                                        for ($j = 0; $j < sizeOf($tasks); $j++) {
+                                                        echo
+                                                            '<li class="list-group-item">'
+                                                                .$tasks[$j]
+                                                            .'</li>';
+                                                        }
+                                                echo '</ul>'
+                                                .'</div>'
+                                            .'</div>'
+                                        .'</div>'
+                                    .'</td>'
+                                .'</tr>';
                         }
                         ?>
                     </tr>
@@ -191,18 +195,18 @@ if(isset($_POST['createTask'])) {
                 </td>
                 <td>
                     <h3 style="color: dimgrey; font-size: 30px; text-align: left;">
-                        Points: <? echo $dbcomm->getNumCurrentPointsByUsername($username); ?></h3>
+                        Points: <?php echo $dbcomm->getNumCurrentPointsByUsername($username); ?></h3>
                 </td>
             </tr>
             <tr id="starSymbols">
                 <td valign="bottom">
-                    <img src="<? echo $dbcomm->getBronzeStarImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbcomm->getBronzeStarImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getSilverStarImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbcomm->getSilverStarImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getGoldStarImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbcomm->getGoldStarImageSource(); ?>" width="150" height="150">
                 </td>
                 <td width="15%" rowspan="3" align="right" style="vertical-align: middle">
                     <div class="toMarket" id="toMarket1">T</div>
@@ -220,7 +224,7 @@ if(isset($_POST['createTask'])) {
                     <?php
                         $encryptedMarketUsername = Crypto::encrypt($username, true);
                     ?>
-                    <button onclick="window.location='Market.php?id=<? echo $encryptedMarketUsername ?>';"
+                    <button onclick="window.location='Market.php?id=<?php echo $encryptedMarketUsername ?>';"
                             class="w3-button w3-circle w3-teal"
                             style="transform: translateX(50%); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;
                     </button>
@@ -228,35 +232,35 @@ if(isset($_POST['createTask'])) {
             </tr>
             <tr id="starCount">
                 <td>
-                    <p><? echo $dbcomm->getNumBronzeStarsByUsername($username); ?></p>
+                    <p><?php echo $dbcomm->getNumBronzeStarsByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumSilverStarsByUsername($username); ?></p>
+                    <p><?php echo $dbcomm->getNumSilverStarsByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumGoldStarsByUsername($username); ?></p>
+                    <p><?php echo $dbcomm->getNumGoldStarsByUsername($username); ?></p>
                 </td>
             </tr>
             <tr id="trophySymbols">
                 <td>
-                    <img src="<? echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getSilverTrophyImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbcomm->getSilverTrophyImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getGoldTrophyImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbcomm->getGoldTrophyImageSource(); ?>" width="150" height="150">
                 </td>
             </tr>
             <tr id="trophyCount">
                 <td>
-                    <p><? echo $dbcomm->getNumBronzeTrophiesByUsername($username); ?></p>
+                    <p><?php echo $dbcomm->getNumBronzeTrophiesByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumSilverTrophiesByUsername($username); ?></p>
+                    <p><?php echo $dbcomm->getNumSilverTrophiesByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumGoldTrophiesByUsername($username); ?></p>
+                    <p><?php echo $dbcomm->getNumGoldTrophiesByUsername($username); ?></p>
                 </td>
                 <td width="15%"></td>
             </tr>
@@ -327,7 +331,7 @@ if(isset($_POST['createTask'])) {
 </script>
 </body>
 <div class="modal fade" id="mymodal">
-    <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#secondPage" method="post" class="task_create">
+    <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername; ?>#secondPage" method="post" class="task_create">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -353,13 +357,13 @@ if(isset($_POST['createTask'])) {
                         <tr><td height="10px"></td></tr>
                         <tr>
                             <td>
-                                <select class="form-control" name="categoryName" id="categoryName">
+                                <select class="form-control" name="categoryName" id="categoryName" title="">
                                     <option value="" disabled selected>Choose Category</option>
                                     <?php
-                                    $categories = $dbcomm->getCategoriesByUsername($username);
-                                    for($i = 0; $i < count($categories); $i++) {
-                                        echo "<option value='$categories[$i]'>$categories[$i]</option>";
-                                    }
+                                        $categories = $dbcomm->getCategoriesByUsername($username);
+                                        for($i = 0; $i < count($categories); $i++) {
+                                            echo "<option value='$categories[$i]'>$categories[$i]</option>";
+                                        }
                                     ?>
                                     <option disabled>-----------------</option>
                                     <option value="AddCategory">Add Category</option>
@@ -368,13 +372,13 @@ if(isset($_POST['createTask'])) {
                             </td>
                             <td></td>
                             <td width="40%">
-                                <select class="form-control" name="importance" id="importance">
+                                <select class="form-control" name="importance" id="importance" title="">
                                     <option value="" disabled selected>Choose Importance</option>
                                     <?php
-                                    $priorities = $dbcomm->getPriorities();
-                                    for($i = 0; $i < count($priorities); $i++) {
-                                        echo "<option value='$priorities[$i]'>$priorities[$i]</option>";
-                                    }
+                                        $priorities = $dbcomm->getPriorities();
+                                        for($i = 0; $i < count($priorities); $i++) {
+                                            echo "<option value='$priorities[$i]'>$priorities[$i]</option>";
+                                        }
                                     ?>
                                 </select>
 
