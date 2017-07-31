@@ -9,6 +9,7 @@ $encryptedUsername = $_GET['id'];
 $username = Crypto::decrypt($encryptedUsername, true);
 
 require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
 //create db connection
 $dbcomm = new dbcomm();
 

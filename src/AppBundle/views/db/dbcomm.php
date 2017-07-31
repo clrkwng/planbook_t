@@ -968,17 +968,20 @@ class dbcomm
      * Create Task FUNCTIONS ----------------------------------------------------------
      */
 
-    function createTaskByUsername($username, $taskName, $categoryName, $importance, $startDateTime, $endDateTime) {
+    function createTaskByUsername($username, $taskName, $categoryName, $priorityName, $startDateTime, $endDateTime) {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
         $userID = mysqli_fetch_array($this->doQuery($query))['id'];
 
         $query = "SELECT `id` FROM `Category` WHERE `name`='$categoryName' AND `user_id`='$userID'";
         $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "SELECT `id` FROM `Priority` WHERE `name`='$importance'";
+        $query = "SELECT `id` FROM `Priority` WHERE `name`='$priorityName'";
         $priorityID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `Task` (`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`) VALUES ('$userID', '$taskName', '$categoryID', '$priorityID', '$startDateTime', '$endDateTime')";
+        $query = "INSERT INTO `Task` "
+                    ."(`user_id`, `name`, `category_id`, `priority_id`, `start_time`, `end_time`) "
+                ."VALUES "
+                    ."('$userID', '$taskName', '$categoryID', '$priorityID', '$startDateTime', '$endDateTime')";
         $this->doQuery($query);
     }
 
@@ -1006,13 +1009,16 @@ class dbcomm
         $query = "SELECT `id` FROM `Category` WHERE `name` ='$category' AND `user_id` = '$userID'";
         $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "SELECT `task_name` FROM `Task` WHERE `category_id` = '$categoryID' AND `user_id` = '$userID'";
+        $query =
+            "SELECT `name` FROM `Task` "
+            ."WHERE `category_id` = '$categoryID' "
+                ."AND `user_id` = '$userID'";
         $result = $this->doQuery($query);
 
         $tasks = Array();
         $counter = 0;
         while($row = mysqli_fetch_array($result)){
-            $tasks[$counter]=$row['task_name'];
+            $tasks[$counter]=$row['name'];
             $counter++;
         }
         sort($tasks);
