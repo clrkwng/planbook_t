@@ -1,5 +1,7 @@
 <?php
 session_start();
+$username = $password = '';
+
 if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
     $cookieUsername = $_COOKIE['username'];
     $cookiePassword = $_COOKIE['password'];
@@ -12,70 +14,68 @@ require_once "../db/Crypto.php";
 //create db connection
 $dbcomm = new dbcomm();
 
-if (isset($_POST['Submit'])) {
-    if(isset($_POST['signin-username']) and isset($_POST['signin-password'])) {
-        if($dbcomm->verifyCredentials($_POST['signin-username'], sha1($_POST['signin-password']))) {
+if (isset($_POST['submitCredentials'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    if($dbcomm->verifyCredentials($username, sha1($password))) {
 
-            $username = $_POST['signin-username'];
-
-            if($dbcomm->isAccountVerified($username)) {
-               if(isset($_POST['remember'])){
-                   if($_POST['remember']=='yes'){
-                       $cookie_name_username = 'username';
-                       $cookie_value_username = $username;
-                       setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
-                       $cookie_name_password = 'password';
-                       $cookie_value_password = $_POST['signin-password'];
-                       setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
-                   }
+        if($dbcomm->isAccountVerified($username)) {
+           if(isset($_POST['remember'])){
+               if($_POST['remember']=='yes'){
+                   $cookie_name_username = 'username';
+                   $cookie_value_username = $username;
+                   setcookie($cookie_name_username, $cookie_value_username, time() + 60*60*24*7);
+                   $cookie_name_password = 'password';
+                   $cookie_value_password = $password;
+                   setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
                }
-                $type = $dbcomm->getTypeByUsername($_POST['signin-username']);
-                if($type == "Admin") {
-                    $encryptedUsername = Crypto::encrypt($username, true);
-                    echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername'</script>";
-                }
-                elseif($type == "Regular") {
-                    $encryptedUsername = Crypto::encrypt($username, true);
-                    echo "<script>window.location = '../user/Homepage.php?id=$encryptedUsername'</script>";
-                }
-            }
-            else {
+           }
+            $type = $dbcomm->getTypeByUsername($_POST['username']);
+            if($type == "Admin") {
                 $encryptedUsername = Crypto::encrypt($username, true);
-
-                $alertMessage =
-                    '<div class="alert alert-danger alert-dismissible" role="alert">'
-                        .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
-                            .'<span aria-hidden="true">&times;</span>'
-                        .'</button>'
-                        .'<strong>'
-                            .'Error: '
-                        .'</strong>'
-                        .'<span>'
-                            .'Please verify your account.\n'
-                        .'</span>'
-                        .'<a href="../email-sender/AccountVerificationSender.php?id=$encryptedUsername">'
-                            .'Click here'
-                        .'</a>'
-                        .'<span>'
-                            .' to resend the verification email.'
-                        .'</span>'
-                    .'</div>';
+                echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername'</script>";
+            }
+            elseif($type == "User") {
+                $encryptedUsername = Crypto::encrypt($username, true);
+                echo "<script>window.location = '../user/Homepage.php?id=$encryptedUsername'</script>";
             }
         }
         else {
+            $encryptedUsername = Crypto::encrypt($username, true);
+
             $alertMessage =
-                    '<div class="alert alert-danger alert-dismissible" role="alert">'
-                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
-                            .'<span aria-hidden="true">&times;</span>'
-                        .'</button>'
-                        . '<strong>'
-                            . 'Error: '
-                        . '</strong>'
-                        . '<span>'
-                            . 'Incorrect Username/Password'
-                        . '</span>'
-                    . '</div>';
+                '<div class="alert alert-danger alert-dismissible" role="alert">'
+                    .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                        .'<span aria-hidden="true">&times;</span>'
+                    .'</button>'
+                    .'<strong>'
+                        .'Error: '
+                    .'</strong>'
+                    .'<span>'
+                        .'Please verify your account.\n'
+                    .'</span>'
+                    .'<a href="../email-sender/AccountVerificationSender.php?id=$encryptedUsername">'
+                        .'Click here'
+                    .'</a>'
+                    .'<span>'
+                        .' to resend the verification email.'
+                    .'</span>'
+                .'</div>';
         }
+    }
+    else {
+        $alertMessage =
+                '<div class="alert alert-danger alert-dismissible" role="alert">'
+                    . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                        .'<span aria-hidden="true">&times;</span>'
+                    .'</button>'
+                    . '<strong>'
+                        . 'Error: '
+                    . '</strong>'
+                    . '<span>'
+                        . 'Incorrect Username/Password'
+                    . '</span>'
+                . '</div>';
     }
 }
 ?>
@@ -167,18 +167,18 @@ if (isset($_POST['Submit'])) {
                     </div>
                 </div>
                 <div class="form-bottom">
-                    <form role="form" action="Login.php" method="post" class="login-form">
+                    <form role="form" action="" method="post" class="login-form">
                         <div class="form-group">
-                            <label class="sr-only" for="signin-username">Username</label>
-                            <input type="text" name="signin-username" placeholder="Username..."
-                                   class="form-control" id="signin-username"
-                                    <?php if (isset($cookieUsername)) echo "value='echo $cookieUsername'";?>/>
+                            <label class="sr-only" for="username">Username</label>
+                            <input type="text" name="username" placeholder="Username..."
+                                   class="form-control" id="username"
+                                   value="<?php echo $username;?>"/>
                         </div>
                         <div class="form-group">
-                            <label class="sr-only" for="signin-password">Password</label>
-                            <input type="password" name="signin-password" placeholder="Password..."
-                                   class="form-control" id="signin-password"
-                                <?php if (isset($cookiePassword)) echo "value='echo $cookiePassword'";?>/>
+                            <label class="sr-only" for="password">Password</label>
+                            <input type="password" name="password" placeholder="Password..."
+                                   class="form-control" id="password"
+                                   value="<?php echo $password;?>"/>
                         </div>
                         <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                             <tr>
@@ -196,7 +196,7 @@ if (isset($_POST['Submit'])) {
                                 </td>
                             </tr>
                         </table>
-                        <button class = "btn" type = "submit" name="Submit">Login</button>
+                        <button class="btn" type="submit" value="postBackCredentials" name="submitCredentials">Login</button>
                     </form>
                     <div>
 
