@@ -38,9 +38,7 @@ if(isset($_POST['createTask'])) {
 
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="../../libs/bootstrap/dist/css/bootstrap.min.css">
         <script src="../../libs/jquery/dist/jquery.min.js"></script>
-        <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Planbook</title>
 
@@ -350,7 +348,11 @@ if(isset($_POST['createTask'])) {
                                 </button>
                             </td>
                         </tr>
-                        <tr><td height="10px"></td></tr>
+                        <tr>
+                            <td height="10px">
+
+                            </td>
+                        </tr>
                         <tr>
                             <td>
                                 <select class="form-control" name="categoryName" id="categoryName" title="">
@@ -366,25 +368,50 @@ if(isset($_POST['createTask'])) {
                                     <option value="DeleteCategory">Delete Category</option>
                                 </select>
                             </td>
-                            <td></td>
+                            <td>
+
+                            </td>
                             <td width="40%">
                                 <select class="form-control" name="importance" id="importance" title="">
                                     <option value="" disabled selected>Choose Importance</option>
                                     <?php
                                         $priorities = $dbcomm->getPriorities();
                                         for($i = 0; $i < count($priorities); $i++) {
-                                            echo "<option value='$priorities[$i]'>$priorities[$i]</option>";
+                                            echo
+                                                "<option value='$priorities[$i]'>"
+                                                    ."$priorities[$i]"
+                                                ."</option>";
                                         }
                                     ?>
                                 </select>
 
                             </td>
                         </tr>
-                        <tr><td height="10px"></td></tr>
-                        <tr><td>Start Time</td><td></td><td>End Time</td></tr>
                         <tr>
-                            <td><div class="input-group registration-date-time ">
-                                    <span class="input-group-addon" ><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
+                            <td height="10px">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Start Time
+                            </td>
+                            <td>
+
+                            </td>
+                            <td>
+                                End Time
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group registration-date-time ">
+                                    <span class="input-group-addon" >
+                                        <span class="glyphicon glyphicon-time" aria-hidden="true">
+
+                                        </span>
+                                    </span>
+                                    <label for="start_hour"/>
                                     <select type="text" class="form-control" id="start_hour" name="start_hour">
                                         <option value="00">00</option>
                                         <option value="01">01</option>
@@ -412,7 +439,7 @@ if(isset($_POST['createTask'])) {
                                         <option value="23">23</option>
                                     </select>
                                     <span class="input-group-addon" ><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
-                                    <select type="text" class="form-control" id="start_minute" name="start_minute">
+                                    <select type="text" class="form-control" id="start_minute" name="start_minute" title="">
                                         <option value="00">00</option>
                                         <option value="15">15</option>
                                         <option value="30">30</option>
@@ -420,10 +447,13 @@ if(isset($_POST['createTask'])) {
                                     </select>
                                 </div>
                             </td>
-                            <td></td>
-                            <td><div class="input-group registration-date-time ">
+                            <td>
+                                
+                            </td>
+                            <td>
+                                <div class="input-group registration-date-time ">
                                     <span class="input-group-addon" ><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
-                                    <select type="text" class="form-control" id="end_hour" name="end_hour">
+                                    <select type="text" class="form-control" id="end_hour" name="end_hour" title="">
                                         <option value="00">00</option>
                                         <option value="01">01</option>
                                         <option value="02">02</option>
@@ -459,20 +489,32 @@ if(isset($_POST['createTask'])) {
                                 </div>
                             </td>
                         </tr>
-                        <tr><td height="10px"></td></tr>
-                        <tr><td>Date</td></tr>
-                        <tr><td> <div class="form-group ">
+                        <tr>
+                            <td height="10px">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Date
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group ">
                                     <div class="input-group">
                                         <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
                                     </div>
-                                </div></td></tr>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
                     <table>
                         <tr>
                             <td align="left" colspan="2" width="74%">
-                                <input type="checkbox" name="vehicle" value="createTemplate" align="left"> Save as Template
+                                <input type="checkbox" name="vehicle" value="createTemplate" align="left" title=""> Save as Template
                             </td>
                             <td>
                                 <button type="submit" name="createTask" class="btn btn-primary">
@@ -496,7 +538,9 @@ if(isset($_POST['createTask'])) {
             </div>
             <div class="modal-body">
                 <table>
-                    <tr><td>template 1</td></tr>
+                    <tr>
+                        <td>template 1</td>
+                    </tr>
                 </table>
             </div>
             <div class="modal-footer">
