@@ -152,7 +152,7 @@ if (isset($_POST['doneButton'])) {
         <td width="15%" style="text-align: right" valign="center" id="awardsSideBar">
             <br>
             <p style="display: inline-block; height: 45px;">
-                <? echo $dbcomm->getNumTotalPointsByUsername($username); ?>
+                <?php echo $dbcomm->getNumTotalPointsByUsername($username); ?>
                 &nbsp;
             </p>
             <div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;">

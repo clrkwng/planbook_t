@@ -919,17 +919,20 @@ class dbcomm
         $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
         $userID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "SELECT `reward`,`points`,`completed`,`redeem_date` FROM `Redeem` WHERE `user_id`='$userID'";
+        $query = "SELECT "
+                    ."`reward`,`points`,`redeem_date` "
+                ."FROM `Redeem` "
+                    ."WHERE `user_id`='$userID'";
         $result = $this->doQuery($query);
 
-        $users = Array();
+        $awardArr = Array();
         $counter = 0;
         while($row = mysqli_fetch_array($result)) {
             $row['redeem_date'] = substr($row['redeem_date'],5,2) . '/' . substr($row['redeem_date'],8,2) . '/' . substr($row['redeem_date'],0,4);
-            $users[$counter] = Array("name"=>$row['reward'], "points"=>$row['points'], "completed"=>$row['completed'], "redeem_date"=>$row['redeem_date']);
+            $awardArr[$counter] = Array("name"=>$row['reward'], "points"=>$row['points'], "redeem_date"=>$row['redeem_date']);
             $counter += 1;
         }
-        return $users;
+        return $awardArr;
     }
 
     function redeemRewardByUsername($username, $rewardName) {
@@ -943,12 +946,21 @@ class dbcomm
         if ($totalPoints >= $pointsRequired) {
             date_default_timezone_set("America/New_York");
             $datetime = date('Y-m-d H:i:s');
-            $query = "UPDATE `Redeem` SET `completed`='1', `redeem_date`='$datetime' WHERE `user_id`='$userID' AND `reward`='$rewardName'";
+            $query =
+                "UPDATE `Redeem` "
+                    ."SET `redeem_date`='$datetime' "
+                ."WHERE `user_id`='$userID' "
+                    ."AND `reward`='$rewardName'";
             $this->doQuery($query);
 
             $pointsAfterRedemption = $totalPoints - $pointsRequired;
-            $query = "UPDATE `User` SET `total_points`='$pointsAfterRedemption' WHERE `id`='$userID'";
+
+            $query =
+                "UPDATE `User` "
+                    ."SET `total_points`='$pointsAfterRedemption' "
+                ."WHERE `id`='$userID'";
             $this->doQuery($query);
+
             return true;
         }
         else {
