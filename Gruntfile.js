@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
 
-    var isApple = false; //This flag needs to be set based on the dev environment's base OS
+    var isApple = true; //This flag needs to be set based on the dev environment's base OS
     var target;
     if(isApple){
         target = grunt.option('target') || 'devApple';

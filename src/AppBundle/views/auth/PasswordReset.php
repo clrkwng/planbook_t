@@ -1,6 +1,6 @@
 <?php
-require_once "../db/dbcomm.php";
-require_once "../db/Crypto.php";
+require_once "../../scripts/dbcomm.php";
+require_once "../../scripts/Crypto.php";
 
 //create db connection
 $dbcomm = new dbcomm();
@@ -146,7 +146,7 @@ if(isset($_POST['Submit'])) {
                         </p>
                     </div>
 
-                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+                    <?php if (isset($alertMessage)) echo '<div>'; echo $alertMessage; echo '</div>'?>
 
                 </div>
 

@@ -5,8 +5,8 @@
 if(!isset($_GET['id'])){
     die("Error: The id was not set.");
 }
-require_once "../db/dbcomm.php";
-require_once "../db/Crypto.php";
+require_once "../../scripts/dbcomm.php";
+require_once "../../scripts/Crypto.php";
 
 $encryptedUsername = $_GET['id'];
 $username = Crypto::decrypt($encryptedUsername, true);

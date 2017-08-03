@@ -12,8 +12,8 @@ $adminUsername = Crypto::decrypt($encryptedAdminUsername, true);
 $encryptedUserUsername = $_GET['reward'];
 $userUsername = Crypto::decrypt($encryptedUserUsername, true);
 
-require_once "../db/dbcomm.php";
-require_once "../db/Crypto.php";
+require_once "../../scripts/dbcomm.php";
+require_once "../../scripts/Crypto.php";
 
 //create db connection
 $dbcomm = new dbcomm();
@@ -44,6 +44,15 @@ if (isset($_POST['SubmitReward'])) {
     }
 }
 
+if(isset($_GET['delete'])) {
+    $deleteRewardID = $_GET['delete'];
+    $dbcomm->deleteRewardByRewardID($deleteRewardID);
+    $alert = '<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Success!</strong>  The reward has been deleted.</div>'; //successful deletion alert
+
+}
+
 ?>
 
 
@@ -68,7 +77,7 @@ if (isset($_POST['SubmitReward'])) {
         <td height="25%">
             <h1>Rewards</h1>
             <p style="font-size: 25px;">Manage Rewards for <b><? echo $userUsername; ?></b></p>
-            <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+            <?php if (isset($alertMessage)) echo $alertMessage;?>
         </td>
         <td width="15%" valign="bottom">
             <p style="max-width: 100%;">
@@ -101,7 +110,7 @@ if (isset($_POST['SubmitReward'])) {
             <br><br>
             <table id="rewardsTable" border="1px solid black">
                 <tr id="tableHeader">
-                    <td width="50%">
+                    <td width="40%">
                         <p>Reward</p>
                     </td>
                     <td width="20%">
@@ -113,12 +122,16 @@ if (isset($_POST['SubmitReward'])) {
                     <td width="15%">
                         <p>Date</p>
                     </td>
+                    <td width="10%">
+                        <p>Delete</p>
+                    </td>
                 </tr>
 
                 <?php
                 $rewards = $dbcomm->getAllRewardsByUsername($userUsername);
                 $userCounter = 0;
                 foreach ($rewards as $rewardId => $rewardValues) {
+                    $rewardID = $rewardValues['rewardID'];
                     $rewardName = $rewardValues['name'];
                     $rewardPoints = $rewardValues['points'];
                     $rewardCompleted = $rewardValues['completed'];
@@ -139,11 +152,16 @@ if (isset($_POST['SubmitReward'])) {
                         echo "<td>
                                     <form role='form' action=\"AddReward.php?id=$encryptedAdminUsername&reward=$encryptedUserUsername\" method='post'>
                                         <input type='text' name='rewardName' value='$encyptedRewardName' style='display: none;'>
-                                        <button type='submit' name='doneButton' id='doneButton' class='confirmRedeem'>Redeem?</button>
+                                        <button type='submit' name='doneButton' id='doneButton' class='confirmRedeem' title='Redeem'>Redeem?</button>
                                     </form>
                               </td>";
                     }
-                    echo "      <td>$rewardRedeemDate</td>
+                    echo "    <td>$rewardRedeemDate</td>
+                              <td>
+                                  <a href=\"AddReward.php?id=$encryptedAdminUsername&reward=$encryptedUserUsername&delete=$rewardID\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
+                                    <span class='glyphicon glyphicon-trash' style='font-size: 20px;'></span>
+                                  </a>
+                              </td>
                           </tr>";
                 }
                 ?>
@@ -151,7 +169,7 @@ if (isset($_POST['SubmitReward'])) {
                     <td style="border-right-style:hidden;" valign="middle">
                         &nbsp;&nbsp;&nbsp;<div class = "glyphicon glyphicon-plus" style="font-size: 16px; color: green;"></div> Add Award
                     </td>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                 </tr>
             </table>
         </td>

@@ -8,8 +8,8 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
 }
 
 
-require_once "../db/dbcomm.php";
-require_once "../db/Crypto.php";
+require_once "../../scripts/dbcomm.php";
+require_once "../../scripts/Crypto.php";
 
 //create db connection
 $dbcomm = new dbcomm();
@@ -153,6 +153,14 @@ if (isset($_POST['submitCredentials'])) {
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
+                    <h1>
+                        <font color="White"><strong>Planbook</strong> Login Page</font>
+                    </h1>
+                    <div class="description">
+                        <p>
+                            <font color="White" >"To achieve <strong>big</strong> things, start small!"</font>
+                        </p>
+                    </div>
                     <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
                 </div>
 
@@ -167,7 +175,7 @@ if (isset($_POST['submitCredentials'])) {
                     </div>
                 </div>
                 <div class="form-bottom">
-                    <form role="form" action="" method="post" class="login-form">
+                    <form role="form" action="Login.php" method="post" class="login-form">
                         <div class="form-group">
                             <label class="sr-only" for="username">Username</label>
                             <input type="text" name="username" placeholder="Username..."

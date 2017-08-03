@@ -1,17 +1,4 @@
 <?php
-
-/*
- * Stuff to do when setting up db
- * 1. run script
- * 2. Add award images in `Image` table
- *      a. name -> bronzeStar
- *      b. description -> awards
- *      c. link -> ../resources/img/bronzeStar.png
- * 3. Add awards to `Awards` table
- *      a. name -> bronzeStar
- *      b. image_id -> reference `Image` table
- */
-
 class dbcomm
 {
     //connection that others can't modify
@@ -20,8 +7,6 @@ class dbcomm
     //connect on startup
     function __construct() {
         $this->connect();
-        $this->checkDBHealth();
-
     }
 
     //disconnect on close
@@ -36,6 +21,7 @@ class dbcomm
 
     //connect to db or die
     function connect() {
+        //$this->sqlconn = mysqli_connect('mysql.planbook.xyz','pb_dev1','4FEF!j1w3KUSz0M','planbook_db1');
         $this->sqlconn = mysqli_connect('{db.host}','{db.user}','{db.password}','{db.name}');
         if (mysqli_connect_errno()) {
             die("Connection failed: " . mysqli_connect_error());
@@ -66,380 +52,73 @@ class dbcomm
     }
 
     function deleteAccountByUsername($username) {
-        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
-        $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $accountID = $this->getAccountIDByUsername($username);
 
-        $query = "SELECT `id`,`image_id` FROM `User` WHERE `account_id`='$accountID'";
+        $query = "SELECT `username`,`image_id` FROM `User` WHERE `account_id`='$accountID'";
         $result = $this->doQuery($query);
         while($row = mysqli_fetch_array($result)) {
-            $userID = $row['id'];
-            $userImageID = $row['image_id'];
-            echo "Deleting userID:" . $userID . " and userImageID:" . $userImageID;
-            $query = "DELETE FROM `User_Awards` WHERE `user_id` = '$userID'";
-            $this->doQuery($query);
-            $query = "DELETE FROM `Image` WHERE `id` = '$userImageID'";
-            $this->doQuery($query);
-            $query = "DELETE FROM `Task` WHERE `user_id` = '$userID'";
-            $this->doQuery($query);
-            $query = "DELETE FROM `Category` WHERE `user_id` = '$userID'";
-            $this->doQuery($query);
-            $query = "DELETE FROM `Redeem` WHERE `user_id` = '$userID'";
-            $this->doQuery($query);
-            $query = "DELETE FROM `User` WHERE `id` = '$userID'";
-            $this->doQuery($query);
+            $userUsername = $row['username'];
+            $this->deleteUserByUsername($userUsername);
         }
         $query = "DELETE FROM `Account` WHERE `id` = '$accountID'";
         $this->doQuery($query);
     }
 
-    /*
-     * DB Setup Functions
-     */
-
-
-    /*
-     * @param $doFix: boolean: if this is true, then the function will attempt
-     *                  to create the missing records
-     */
-    function checkDBHealth(){
-        //Provides the default init for database records
-        //Allows for quick setup and checking of DB health
-
-        $this->checkImageTable();
-        $this->checkAwardsTable();
-        $this->checkTypeTable();
-        $this->checkPriorityTable();
-        $this->checkStatusTable();
-    }
-
-    function checkStatusTable(){
-        $statusNames =
-            array(
-                "Completed",
-                "In Progress",
-                "Not Started",
-            );
-
-        foreach ($statusNames as $curStatusName){
-            $this->checkStatusTableHelper(true, $curStatusName);
-        }
-        return true;
-    }
-
-    function checkStatusTableHelper($doFix, $statusName){
-        if($this->checkIfStatusExistsByName($statusName)){
-            return true;
-        }else{
-            if($doFix){
-                $this->insertNewStatus($statusName);
-                $this->checkStatusTableHelper(false, $statusName);
-            }else{
-                return false;
-            }
-        }
-        return false;
-    }
-
-    function checkIfStatusExistsByName($statusName)
-    {
-        $query = "SELECT `id` FROM `Status` WHERE `name`='$statusName';";
-        $result = $this->doQuery($query);
-
-        $SQLdataarray = mysqli_fetch_array($result);
-        if(count($SQLdataarray) < 1) {
-            return FALSE;
-        }
-        else {
-            return TRUE;
-        }
-    }
-
-    function insertNewStatus($statusName)
-    {
-        $query =
-            "INSERT INTO `Status` "
-            ."(`name`) "
-            ."VALUES "
-            ."('$statusName')";
-        $this->doQuery($query);
-        return true;
-    }
-
-    function checkPriorityTable(){
-        $priorityNames =
-            array(
-                "High",
-                "Medium",
-                "Low",
-            );
-
-        foreach ($priorityNames as $curPriorityName){
-            $this->checkPriorityTableHelper(true, $curPriorityName);
-        }
-        return true;
-    }
-
-    function checkPriorityTableHelper($doFix, $priorityName){
-        if($this->checkIfPriorityExistsByName($priorityName)){
-            return true;
-        }else{
-            if($doFix){
-                $this->insertNewPriority($priorityName);
-                $this->checkPriorityTableHelper(false, $priorityName);
-            }else{
-                return false;
-            }
-        }
-        return false;
-    }
-
-    function checkIfPriorityExistsByName($priorityName)
-    {
-        $query = "SELECT `id` FROM `Priority` WHERE `name`='$priorityName';";
-        $result = $this->doQuery($query);
-
-        $SQLdataarray = mysqli_fetch_array($result);
-        if(count($SQLdataarray) < 1) {
-            return FALSE;
-        }
-        else {
-            return TRUE;
-        }
-    }
-
-    function insertNewPriority($priorityName)
-    {
-        $query =
-            "INSERT INTO `Priority` "
-            ."(`name`) "
-            ."VALUES "
-            ."('$priorityName')";
-        $this->doQuery($query);
-        return true;
-    }
-
-    function checkAwardsTable(){
-        $awardNames =
-            array(
-                "bronzeStar",
-                "silverStar",
-                "goldStar",
-                "bronzeTrophy",
-                "silverTrophy",
-                "goldTrophy"
-            );
-        $awardsUnits =
-            array(
-                'star',
-                'star',
-                'star',
-                'trophy',
-                'trophy',
-                'trophy'
-            );
-        $awardsSymbols =
-            array(
-                '★',
-                '★',
-                '★',
-                '🏆',
-                '🏆',
-                '🏆'
-            );
-        $awardsAmount =
-            array(
-                "10",
-                "10",
-                "10",
-                "10",
-                "10",
-                "10"
-            );
-
-        $i = 0;
-        foreach ($awardNames as $awardName){
-            //NOTE: Assumes that $awardName == $imageName
-            $this->checkAwardsTableHelper(true, $awardName, $awardName, $awardsAmount[$i], $awardsUnits[$i], $awardsSymbols[$i]);
-            $i++;
-        }
-        return true;
-    }
-
-    function checkAwardsTableHelper($doFix, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol){
-        if($this->checkIfAwardExistsByName($awardName)){
-            return true;
-        }else{
-            if($doFix){
-                $imageId = $this->getImageIdByName($imageName);
-                $this->insertNewAward($awardName, $imageId, $awardAmount, $awardUnit, $awardSymbol);
-                $this->checkAwardsTableHelper(false, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol);
-            }else{
-                return false;
-            }
-        }
-        return false;
-    }
-
-    function checkIfAwardExistsByName($awardName)
-    {
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='$awardName';";
-        $result = $this->doQuery($query);
-
-        $SQLdataarray = mysqli_fetch_array($result);
-        if(count($SQLdataarray) < 1) {
-            return FALSE;
-        }
-        else {
-            return TRUE;
-        }
-    }
-
-    function insertNewAward($awardName, $imageId, $awardAmount, $awardUnit, $awardSymbol)
-    {
-        $query =
-            "INSERT INTO `Awards` "
-            ."(`name`,`image_id`,`amount`, `unit`, `symbol`) "
-            ."VALUES "
-            ."('$awardName', '$imageId', '$awardAmount', '$awardUnit', '$awardSymbol')";
-        $this->doQuery($query);
-        return true;
-    }
-
-    function checkImageTable(){
-        $imageFileNames =
-            array(
-                "SYSTEM_DEFAULT",
-                "bronzeStar",
-                "silverStar",
-                "goldStar",
-                "bronzeTrophy",
-                "silverTrophy",
-                "goldTrophy"
-            );
-        $rootImgDir = '../../resources/img/';
-        $imageFileLinks =
-            array(
-                $rootImgDir . 'profile.png',
-                $rootImgDir . 'awards/bronzeStar.png',
-                $rootImgDir . 'awards/silverStar.png',
-                $rootImgDir . 'awards/goldStar.png',
-                $rootImgDir . 'awards/bronzeTrophy.png',
-                $rootImgDir . 'awards/silverTrophy.png',
-                $rootImgDir . 'awards/goldTrophy.png'
-            );
-        $imageFileDescriptions =
-            array(
-                "System provided default image.",
-                "System provided default image.",
-                "System provided default image.",
-                "System provided default image.",
-                "System provided default image.",
-                "System provided default image.",
-                "System provided default image."
-            );
-        $i = 0;
-        foreach ($imageFileNames as $imageName){
-            $this->checkImageTableHelper(true, $imageName, $imageFileDescriptions[$i], $imageFileLinks[$i]);
-            $i++;
-        }
-    }
-
-    function checkImageTableHelper($doFix, $imageName, $imageDescription, $imageLink){
-        if($this->checkIfImageExistsByName($imageName)){
-            return true;
-        }else{
-            if($doFix){
-                $this->insertNewImage($imageName, $imageDescription, $imageLink);
-                $this->checkImageTableHelper(false, $imageName, $imageDescription, $imageLink);
-            }else{
-                return false;
-            }
-        }
-        return false;
-    }
-
-    function checkIfImageExistsByName($imageName)
-    {
-        $query = "SELECT `id` FROM `Image` WHERE `name`='$imageName';";
-        $result = $this->doQuery($query);
-
-        $SQLdataarray = mysqli_fetch_array($result);
-        if(count($SQLdataarray) < 1) {
-            return FALSE;
-        }
-        else {
-            return TRUE;
-        }
-    }
-
-    function getImageIdByName($imageName){
-        $query = "SELECT `id` FROM `Image` WHERE `name`='$imageName'";
+    function getRegularTypeID() {
+        $query = "SELECT `id` FROM `Type` WHERE `name`='Regular'";
         return mysqli_fetch_array($this->doQuery($query))['id'];
     }
 
+    function getAdminTypeID() {
+        $query = "SELECT `id` FROM `Type` WHERE `name`='Admin'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
 
-    function insertNewImage($imageName, $imageDescription, $imageLink)
+    function getBronzeStarAwardID() {
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeStar'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getSilverStarAwardID() {
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverStar'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getGoldStarAwardID() {
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldStar'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getBronzeTrophyAwardID() {
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeTrophy'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getSilverTrophyAwardID() {
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverTrophy'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getGoldTrophyAwardID() {
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldTrophy'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+    function getAccountIDByUsername($username)
     {
-        $query =
-            "INSERT INTO `Image` "
-            ."(`name`,`description`,`link`) "
-            ."VALUES "
-            ."('$imageName', '$imageDescription', '$imageLink')";
-        $this->doQuery($query);
-        return true;
+        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        return mysqli_fetch_array($this->doQuery($query))['account_id'];
     }
 
-
-    function checkTypeTable(){
-        return $this->checkTypeTableAdmin(true) && $this->checkTypeTableUser(true);
-    }
-
-    function checkTypeTableAdmin($doFix){
-        if($this->checkIfTypeExistsInDB('Admin')){
-            return true;
-        }else{
-            if($doFix){
-                $this->insertNewType('Admin');
-                return $this->checkTypeTableAdmin(false);
-            }else{
-                return false;
-            }
-        }
-    }
-    function checkTypeTableUser($doFix){
-        if($this->checkIfTypeExistsInDB('User')){
-            return true;
-        }else{
-            if($doFix){
-                $this->insertNewType('User');
-                return $this->checkTypeTableUser(false);
-            }else{
-                return false;
-            }
-        }
-    }
-
-    function checkIfTypeExistsInDB($typeName)
+    function getUserIDFromUsername($username)
     {
-        $query = "SELECT `id` FROM `Type` WHERE `name`='$typeName';";
-        $result = $this->doQuery($query);
-
-        $SQLdataarray = mysqli_fetch_array($result);
-        if(count($SQLdataarray) < 1) {
-            return FALSE;
-        }
-        else {
-            return TRUE;
-        }
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
     }
-    function insertNewType($typeName)
-    {
-        $query =
-            "INSERT INTO `Type` "
-            ."(`name`) "
-            ."VALUES "
-            ."('$typeName')";
-        $this->doQuery($query);
+
+    function getImageIDFromUsername($username) {
+        $query = "SELECT `id` FROM `Image` WHERE `name`='$username'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
     }
 
     /*
@@ -474,9 +153,9 @@ class dbcomm
         }
     }
 
-    function checkIfPhonenumberExists($phoneNumber)
+    function checkIfPhonenumberExists($phonenumber)
     {
-        $query = "SELECT `id` FROM `User` WHERE `phone_number`='$phoneNumber';";
+        $query = "SELECT `id` FROM `User` WHERE `phone_number`='$phonenumber';";
         $result = $this->doQuery($query);
 
         $SQLdataarray = mysqli_fetch_array($result);
@@ -502,116 +181,73 @@ class dbcomm
         }
     }
 
-    function createNewAdmin($accountName, $username, $password, $email, $phoneNumber)
+    function createNewAdmin($accountName, $username, $password, $email, $phonenumber)
     {
-        //Register forest in Account DB
-        $query =
-            "INSERT INTO  `Account` "
-                ."(`name`, `password`, `email`, `phone_number`) "
-            ."VALUES "
-                ."('$accountName', '$password', '$email', '$phoneNumber');";
+        $query = "INSERT INTO  `Account` (`name`, `password`, `email`, `phonenumber`) VALUES ('$accountName', '$password', '$email', '$phonenumber');";
         $this->doQuery($query);
 
-        //Fetch the corresponding Id for the newly created record
         $query = "SELECT `id` FROM `Account` WHERE `name`='$accountName'";
         $accountID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        //Fetch the Type.id corresponding to the "Admin" role
-        $query = "SELECT `id` FROM `Type` WHERE `name`='Admin'";
-        $adminID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $query = "INSERT INTO `Image` (`name`,`description`,`link`) VALUES ('$username','profile picture','../../resources/img/profile.png')";
+        $this->doQuery($query);
 
-        //Fetch the default Image.id for the profile picture
-        $query = "SELECT `id` FROM `image` WHERE `name`='SYSTEM_DEFAULT'";
-        $profilePic_ID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $imageID = $this->getImageIDFromUsername($username);
 
-        //Register a user with Admin status in the forest
-        $query =
-            "INSERT INTO `User` "
-                ."(`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`, `type_id`) "
-            ."VALUES "
-                ."('$accountID', '$username', '$password', '$profilePic_ID', '$email', '$phoneNumber', '$adminID');";
+        $typeID = $this->getAdminTypeID();
+
+
+        $query = "INSERT INTO `User` (`account_id`, `username`, `password`, `image_id`, `type_id`, `email`, `phone_number`) VALUES ('$accountID', '$username', '$password', '$imageID', '$typeID', '$email', '$phonenumber');";
         $this->doQuery($query);
     }
 
-    function getAccountIDByUsername($username)
+    function createNewUser($accountID, $username, $password, $email, $phonenumber)
     {
-        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
-        return mysqli_fetch_array($this->doQuery($query))['account_id'];
-    }
-
-    function createNewUser($accountID, $username, $password, $email, $phoneNumber)
-    {
-        //Fetch Default ImageId
-        $query = "SELECT `id` FROM `Image` WHERE `name`='SYSTEM_DEFAULT'";
-        $imageID = mysqli_fetch_array($this->doQuery($query))['id'];
-
-        //Fetch User Type Id
-        $query = "SELECT `id` FROM `Type` WHERE `name`='User'";
-        $typeID = mysqli_fetch_array($this->doQuery($query))['id'];
-
-        //Create User Record in forest
-        $query =
-            "INSERT INTO `User` "
-                ."(`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`, `type_id`) "
-            ."VALUES "
-            ."('$accountID', '$username', '$password', '$imageID', '$email', '$phoneNumber', '$typeID');";
+        $query = "INSERT INTO `Image` (`name`,`description`,`link`) VALUES ('$username','profile picture','../../resources/img/profile.png')";
         $this->doQuery($query);
 
-        //Get the newly created user's corresponding id
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $imageID = $this->getImageIDFromUsername($username);
 
-        //Get the id's corresponding to the default awards
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeStar'";
-        $bronzeStarID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverStar'";
-        $silverStarID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldStar'";
-        $goldStarID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeTrophy'";
-        $bronzeTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverTrophy'";
-        $silverTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldTrophy'";
-        $goldTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $query = "INSERT INTO `User` (`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`) VALUES ('$accountID', '$username', '$password', '$imageID', '$email', '$phonenumber');";
+        $this->doQuery($query);
 
-        $awardIds =
-            array(
-                $bronzeStarID,
-                $silverStarID,
-                $goldStarID,
-                $bronzeTrophyID,
-                $silverTrophyID,
-                $goldTrophyID
-            );
+        $userID = $this->getUserIDFromUsername($username);
 
-        foreach ($awardIds as $curAwardId){
-            //Create Records for each of the awards available for the user
-            $query =
-                "INSERT INTO `User_Awards` "
-                ."(`award_id`, `user_id`, `quantity`) "
-                ."VALUES ($curAwardId, $userID, '0');";
-            $this->doQuery($query);
-        }
+        $bronzeStarID = $this->getBronzeStarAwardID();
+        $silverStarID = $this->getSilverStarAwardID();
+        $goldStarID = $this->getGoldStarAwardID();
+        $bronzeTrophyID = $this->getBronzeTrophyAwardID();
+        $silverTrophyID = $this->getSilverTrophyAwardID();
+        $goldTrophyID = $this->getGoldTrophyAwardID();
 
-        $defaultCategories =
-            array(
-                'Homework',
-                'Sports',
-                'Health',
-                'Exercise',
-                'Other',
-                'Special Tasks'
-            );
-        foreach ($defaultCategories as $curCategory){
-            //Create Records for each of the categories available for the user
-            $query =
-                "INSERT INTO `Category` "
-                ."(`name`,`user_id`) "
-                ."VALUES ('$curCategory', '$userID')";
-            $this->doQuery($query);
-        }
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($bronzeStarID, $userID, '0');";
+        $this->doQuery($query);
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($silverStarID, $userID, '0');";
+        $this->doQuery($query);
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($goldStarID, $userID, '0');";
+        $this->doQuery($query);
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($bronzeTrophyID, $userID, '0');";
+        $this->doQuery($query);
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($silverTrophyID, $userID, '0');";
+        $this->doQuery($query);
+        $query = "INSERT INTO `User_Awards` (`award_id`, `user_id`, `quantity`) VALUES ($goldTrophyID, $userID, '0');";
+        $this->doQuery($query);
 
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Homework','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Sports','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Health','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Exercise','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Other','$userID')";
+        $this->doQuery($query);
+        $query = "INSERT INTO `Category` (`name`,`user_id`) VALUES ('Special Tasks','$userID')";
+        $this->doQuery($query);
+
+        $query = "INSERT INTO `Date` (`user_id`) VALUES ('$userID')";
+        $this ->doQuery($query);
     }
 
     function verifyAccountByAccountID($accountID)
@@ -640,8 +276,7 @@ class dbcomm
 
     function isAccountVerified($username)
     {
-        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
-        $accountID =  mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $accountID = $this->getAccountIDByUsername($username);
         $query = "SELECT `verified` FROM `Account` WHERE `id`='$accountID'";
         $verified  = mysqli_fetch_array($this->doQuery($query))['verified'];
         if ($verified > 0){
@@ -652,17 +287,11 @@ class dbcomm
         }
     }
 
-    function getUserIDFromUsername($username)
-    {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
-        return mysqli_fetch_array($this->doQuery($query))['id'];
-    }
-
     function getTypeByUsername($username)
     {
         $query = "SELECT `type_id` FROM `User` WHERE `username`='$username'";
-        $type = mysqli_fetch_array($this->doQuery($query))['type_id'];
-        $query = "SELECT `name` FROM `Type` WHERE `id`='$type'";
+        $typeID = mysqli_fetch_array($this->doQuery($query))['type_id'];
+        $query = "SELECT `name` FROM `Type` WHERE `id`='$typeID'";
         return mysqli_fetch_array($this->doQuery($query))['name'];
     }
 
@@ -683,8 +312,7 @@ class dbcomm
     }
 
     function verifyAccountByUsername($username) {
-        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
-        $accountID =  mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $accountID = $this->getAccountIDByUsername($username);
         $this->verifyAccountByAccountID($accountID);
     }
 
@@ -709,17 +337,17 @@ class dbcomm
      * */
 
     function getAccountNameByUsername($username) {
-        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
-        $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $accountID = $this->getAccountIDByUsername($username);
         $query = "SELECT `name` FROM `Account` WHERE `id`='$accountID'";
         return mysqli_fetch_array($this->doQuery($query))['name'];
     }
 
     function getAllUsersByAdminUsername($username) {
-        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
-        $accountID = mysqli_fetch_array($this->doQuery($query))['account_id'];
+        $accountID = $this->getAccountIDByUsername($username);
 
-        $query = "SELECT * FROM `User` WHERE `account_id`='$accountID' AND `type_id`='2'";
+        $typeID = $this->getRegularTypeID();
+
+        $query = "SELECT * FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$typeID'";
         $result = $this->doQuery($query);
 
         $users = Array();
@@ -731,16 +359,32 @@ class dbcomm
     }
 
     function deleteUserByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
 
         $query = "DELETE FROM `User_Awards` WHERE `user_id`='$userID'";
         $this->doQuery($query);
 
-        $query = "SELECT `image_id` FROM `User` WHERE `username`='$username'";
-        $imageID = mysqli_fetch_array($this->doQuery($query))['image_id'];
+        $imageID = $this->getImageIDFromUsername($username);
 
         $query = "DELETE FROM `Image` WHERE `id`='$imageID'";
+        $this->doQuery($query);
+
+        $query = "DELETE FROM `Redeem` WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+
+        $query = "DELETE FROM `Date` WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+
+        $query = "DELETE FROM `Category` WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+
+        $query = "DELETE FROM `Task` WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+
+        $query = "DELETE FROM `Template` WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+
+        $query = "DELETE FROM `Theme` WHERE `user_id`='$userID'";
         $this->doQuery($query);
 
         $query = "DELETE FROM `User` WHERE `username`='$username'";
@@ -748,18 +392,28 @@ class dbcomm
     }
 
     function getAdminUsernameByAccountID($accountID) {
-        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='1'";
+        $adminTypeID = $this->getAdminTypeID();
+
+        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$adminTypeID'";
         return mysqli_fetch_array($this->doQuery($query))['username'];
     }
 
     function getEncodedUsernamesByAccountID($accountID) {
-        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID'";
+        $regularTypeID = $this->getRegularTypeID();
+
+        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$regularTypeID'";
         $result = $this->doQuery($query);
 
         $users = Array();
         while($row = mysqli_fetch_array($result)) {
+            /*
+            $encryptedUsername = openssl_encrypt($row['username'], 'DES-EDE3', 'viewUserProfilePassword');
+            $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
+            $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
+            */
             $curUsername = $row['username'];
             $encryptedUsername = Crypto::encrypt($curUsername, true);
+
             array_push($users, $encryptedUsername);
         }
         return $users;
@@ -780,60 +434,48 @@ class dbcomm
     }
 
     function getNumBronzeStarsByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeStar'";
-        $awardID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
+        $awardID = $this->getBronzeStarAwardID();
 
         $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
     function getNumSilverStarsByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverStar'";
-        $awardID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
+        $awardID = $this->getSilverStarAwardID();
 
         $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
     function getNumGoldStarsByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldStar'";
-        $awardID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
+        $awardID = $this->getGoldStarAwardID();
 
         $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
     function getNumBronzeTrophiesByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeTrophy'";
-        $awardID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
+        $awardID = $this->getBronzeTrophyAwardID();
 
         $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
     function getNumSilverTrophiesByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverTrophy'";
-        $awardID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
+        $awardID = $this->getSilverTrophyAwardID();
 
         $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
     function getNumGoldTrophiesByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldTrophy'";
-        $awardID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
+        $awardID = $this->getGoldTrophyAwardID();
 
         $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
@@ -896,16 +538,14 @@ class dbcomm
     }
 
     function getProfileImageByUsername($username) {
-        $query = "SELECT `image_id` FROM `User` WHERE `username`='$username'";
-        $imageID = mysqli_fetch_array($this->doQuery($query))['image_id'];
+        $imageID = $this->getImageIDFromUsername($username);
 
         $query = "SELECT `link` FROM `Image` WHERE `id`='$imageID'";
         return mysqli_fetch_array($this->doQuery($query))['link'];
     }
 
     function updateProfileImageByUsername($username, $imageSource) {
-        $query = "SELECT `image_id` FROM `User` WHERE `username`='$username'";
-        $imageID = mysqli_fetch_array($this->doQuery($query))['image_id'];
+        $imageID = $this->getImageIDFromUsername($username);
 
         $query = "UPDATE `Image` SET `link`='$imageSource' WHERE `id`='$imageID'";
         $this->doQuery($query);
@@ -916,23 +556,24 @@ class dbcomm
      * */
 
     function getAllRewardsByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
 
-        $query = "SELECT "
-                    ."`reward`,`points`,`redeem_date` "
-                ."FROM `Redeem` "
-                    ."WHERE `user_id`='$userID'";
+        $query = "SELECT `id`, `reward`,`points`,`completed`,`redeem_date` FROM `Redeem` WHERE `user_id`='$userID'";
         $result = $this->doQuery($query);
 
-        $awardArr = Array();
+        $users = Array();
         $counter = 0;
         while($row = mysqli_fetch_array($result)) {
             $row['redeem_date'] = substr($row['redeem_date'],5,2) . '/' . substr($row['redeem_date'],8,2) . '/' . substr($row['redeem_date'],0,4);
-            $awardArr[$counter] = Array("name"=>$row['reward'], "points"=>$row['points'], "redeem_date"=>$row['redeem_date']);
+            $users[$counter] = Array("rewardID"=>$row['id'], "name"=>$row['reward'], "points"=>$row['points'], "completed"=>$row['completed'], "redeem_date"=>$row['redeem_date']);
             $counter += 1;
         }
-        return $awardArr;
+        return $users;
+    }
+
+    function deleteRewardByRewardID($rewardID) {
+        $query = "DELETE FROM `Redeem` WHERE `id`='$rewardID'";
+        $this->doQuery($query);
     }
 
     function redeemRewardByUsername($username, $rewardName) {
@@ -946,21 +587,12 @@ class dbcomm
         if ($totalPoints >= $pointsRequired) {
             date_default_timezone_set("America/New_York");
             $datetime = date('Y-m-d H:i:s');
-            $query =
-                "UPDATE `Redeem` "
-                    ."SET `redeem_date`='$datetime' "
-                ."WHERE `user_id`='$userID' "
-                    ."AND `reward`='$rewardName'";
+            $query = "UPDATE `Redeem` SET `completed`='1', `redeem_date`='$datetime' WHERE `user_id`='$userID' AND `reward`='$rewardName'";
             $this->doQuery($query);
 
             $pointsAfterRedemption = $totalPoints - $pointsRequired;
-
-            $query =
-                "UPDATE `User` "
-                    ."SET `total_points`='$pointsAfterRedemption' "
-                ."WHERE `id`='$userID'";
+            $query = "UPDATE `User` SET `total_points`='$pointsAfterRedemption' WHERE `id`='$userID'";
             $this->doQuery($query);
-
             return true;
         }
         else {
@@ -969,8 +601,7 @@ class dbcomm
     }
 
     function addRewardByUsername($username, $rewardName, $points) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
 
         $query = "INSERT INTO `Redeem` (`user_id`,`reward`,`points`) VALUES ('$userID','$rewardName','$points')";
         $this->doQuery($query);
@@ -980,26 +611,36 @@ class dbcomm
      * Create Task FUNCTIONS ----------------------------------------------------------
      */
 
-    function createTaskByUsername($username, $taskName, $categoryName, $priorityName, $startDateTime, $endDateTime) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+    function createTaskByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime, $date) {
+        $userID = $this->getUserIDFromUsername($username);
 
         $query = "SELECT `id` FROM `Category` WHERE `name`='$categoryName' AND `user_id`='$userID'";
         $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "SELECT `id` FROM `Priority` WHERE `name`='$priorityName'";
+        $query = "SELECT `id` FROM `Priority` WHERE `name`='$importance'";
         $priorityID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `Task` "
-                    ."(`user_id`, `name`, `category_id`, `priority_id`, `start_time`, `end_time`) "
-                ."VALUES "
-                    ."('$userID', '$taskName', '$categoryID', '$priorityID', '$startDateTime', '$endDateTime')";
+        $query = "INSERT INTO `Task` (`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`, `date`) VALUES ('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime', '$date')";
         $this->doQuery($query);
     }
 
     function getCategoriesByUsername($username) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `name`, `id` FROM `Category` WHERE `user_id`='$userID'";
+        $result = $this->doQuery($query);
+
+        $categories = Array();
+        $counter = 0;
+        while($row = mysqli_fetch_array($result)) {
+            $categories[$counter] = Array('name'=>$row['name'], 'id'=>$row['id']);
+            $counter++;
+        }
+        return $categories;
+    }
+
+    function getCategoryNamesByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
 
         $query = "SELECT `name` FROM `Category` WHERE `user_id`='$userID'";
         $result = $this->doQuery($query);
@@ -1014,28 +655,24 @@ class dbcomm
         return $categories;
     }
 
-    function getTasksByCategory($username, $category){
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+    /*function getTasksByCategory($username, $category){
+        $userID = $this->getUserIDFromUsername($username);
 
         $query = "SELECT `id` FROM `Category` WHERE `name` ='$category' AND `user_id` = '$userID'";
         $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query =
-            "SELECT `name` FROM `Task` "
-            ."WHERE `category_id` = '$categoryID' "
-                ."AND `user_id` = '$userID'";
+        $query = "SELECT `task_name` FROM `Task` WHERE `category_id` = '$categoryID' AND `user_id` = '$userID'";
         $result = $this->doQuery($query);
 
         $tasks = Array();
         $counter = 0;
         while($row = mysqli_fetch_array($result)){
-            $tasks[$counter]=$row['name'];
+            $tasks[$counter]=$row['task_name'];
             $counter++;
         }
         sort($tasks);
         return $tasks;
-    }
+    }*/
 
     function getPriorities() {
         $query = "SELECT `name` FROM `Priority`";
@@ -1051,19 +688,373 @@ class dbcomm
     }
 
     function createNewCategoryByUsername($username, $categoryName) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
 
         $query = "INSERT INTO `Category` (`user_id`, `name`) VALUES ('$userID', '$categoryName')";
         $this->doQuery($query);
     }
 
-    function deleteCategoryByUsername($username, $categoryName) {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-
-        $query = "DELETE FROM `Category` WHERE `user_id`='$userID' AND `name`='$categoryName'";
+    function deleteCategoryByCategoryID($categoryID) {
+        $query = "DELETE FROM `Category` WHERE `id`='$categoryID'";
         $this->doQuery($query);
+    }
+
+    function deleteTaskByTaskID($taskID){
+        $query = "DELETE FROM `Task` WHERE `id`='$taskID'";
+        $this->doQuery($query);
+    }
+
+    function getPriorityValue($priority_id){
+        $query = "SELECT `name` FROM `Priority` WHERE `id` = '$priority_id'";
+        return mysqli_fetch_array($this->doQuery($query))['name'];
+    }
+
+    function getTaskInfoByCategory($username, $category){
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `date` FROM `Date` WHERE `user_id`='$userID'";
+        $currentDate = mysqli_fetch_array($this->doQuery($query))['date'];
+
+        $query = "SELECT `id` FROM `Category` WHERE `name` ='$category' AND `user_id` = '$userID'";
+        $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "SELECT `task_name`, `priority_id`, `start_time`, `end_time`, `date`, `id` FROM `Task`  WHERE `category_id` = '$categoryID' AND `user_id` = '$userID' AND `date`='$currentDate'";
+        $result = $this->doQuery($query);
+        $tasks = Array();
+        $counter = 0;
+        while($row = mysqli_fetch_array($result)){
+            $tasks[$counter] = Array("taskName"=>$row['task_name'], "date"=>$row['date'], "priority"=>$this->getPriorityValue($row['priority_id']), "startTime"=>$row['start_time'], "endTime"=>$row['end_time'], "id"=>$row['id']);
+            $counter++;
+        }
+        return $tasks;
+    }
+
+    /*
+     * Date FUNCTIONS ------------------------------------------------------------
+     * */
+
+    function checkIfDateIsToday($date, $currentDate){
+        if ($date == $currentDate)  return true;
+        else                        return false;
+    }
+
+    function setCurrentDateByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $currentDate = date('Y-m-d');
+        $query = "UPDATE `Date` SET `date`='$currentDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    function setDateByDate($username, $newDate) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    function getDateByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `date` FROM `Date` WHERE `user_id`='$userID'";
+        return mysqli_fetch_array($this->doQuery($query))['date'];
+    }
+
+    function getDayByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `date` FROM `Date` WHERE `user_id`='$userID'";
+        return substr(mysqli_fetch_array($this->doQuery($query))['date'],8,2);
+    }
+
+    function incrementDateByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+        $currentDate = $this->getDateByUsername($username);
+
+        $newDate = date('Y-m-d', strtotime($currentDate . ' +1 day'));
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    function decrementDateByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+        $currentDate = $this->getDateByUsername($username);
+
+        $newDate = date('Y-m-d', strtotime($currentDate . ' -1 day'));
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    /*
+     * Week FUNCTIONS ------------------------------------------------------------
+     * */
+
+    function getDatesofCurrentWeekByUsername($username) {
+        $numDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if($this->isCurrentYearALeapYear($username)) $numDaysInMonth[1] = 29;
+
+        $userID = $this->getUserIDFromUsername($username);
+
+        $currentDate = $this->getDateByUsername($username);
+        $currentDay = $this->getDayByUsername($username);
+        $currentMonth = $this->getMonthByUsername($username);
+        $currentYear = $this->getYearByUsername($username);
+
+        $firstDOTW = $this->getDOTWofFirstDayofCurrentMonth($username);
+        $datesOfTheWeek = Array(Array(),Array(),Array());
+
+        if($currentDay > 7-$firstDOTW || $currentDate == 0) {
+            $weekStartDate = 1;
+            for($i = 1; $i <= $numDaysInMonth[intval($currentMonth)-1]; $i++) {
+                if(($i+$firstDOTW-1)%7 == 0) {
+                    $weekStartDate = $i;
+                }
+                if($i == $currentDay) {
+                    break;
+                }
+            }
+
+            $this->setDayOfMonthByUsername($username, $weekStartDate);
+
+            for($i = 0; $i < 7; $i++) {
+                $date = $this->getDayByUsername($username);
+                $month = $this->getMonthByUsername($username);
+                $year = $this->getYearByUsername($username);
+
+                array_push($datesOfTheWeek[0],intval($date));
+                array_push($datesOfTheWeek[1],intval($month));
+                array_push($datesOfTheWeek[2],intval($year));
+
+                $this->incrementDateByUsername($username);
+            }
+            for($i = 0; $i < 7; $i++) {
+                $this->decrementDateByUsername($username);
+            }
+        }
+        else {
+            $this->setDayOfMonthByUsername($username, 1);
+
+            for($i = 1; $i <= 7-$firstDOTW; $i++) {
+                array_push($datesOfTheWeek[0], intval($i));
+                array_push($datesOfTheWeek[1], intval($currentMonth));
+                array_push($datesOfTheWeek[2], intval($currentYear));
+            }
+
+            for ($i = 0; $i < $firstDOTW; $i++) {
+                $this->decrementDateByUsername($username);
+
+                $date = $this->getDayByUsername($username);
+                $month = $this->getMonthByUsername($username);
+                $year = $this->getYearByUsername($username);
+
+                array_unshift($datesOfTheWeek[0], intval($date));
+                array_unshift($datesOfTheWeek[1], intval($month));
+                array_unshift($datesOfTheWeek[2], intval($year));
+            }
+            for($i = 0; $i < $firstDOTW; $i++) {
+                $this->incrementDateByUsername($username);
+            }
+        }
+
+        $this->setDateByDate($username, $currentDate);
+
+        return $datesOfTheWeek;
+    }
+
+    /*function getNumberOfTasksInCategoryByDate($username, $category, $date){
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `task_name` FROM `Task` WHERE `user_id`='$userID' AND `category_id`='$category' AND `date` = $date";
+        $result = $this->doQuery($query);
+
+        $taskCountInCategory = 0;
+        while($row = mysqli_fetch_array($result)){
+            $taskCountInCategory++;
+        }
+        return $taskCountInCategory;
+    }*/
+
+    function incrementWeekByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+        $currentDate = $this->getDateByUsername($username);
+
+        $newDate = date('Y-m-d', strtotime($currentDate . ' +7 day'));
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    function decrementWeekByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+        $currentDate = $this->getDateByUsername($username);
+
+        $newDate = date('Y-m-d', strtotime($currentDate . ' -7 day'));
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    /*
+     * Month FUNCTIONS ------------------------------------------------------------
+     * */
+
+    function getMonthByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `date` FROM `Date` WHERE `user_id`='$userID'";
+        return substr(mysqli_fetch_array($this->doQuery($query))['date'],5,2);
+    }
+
+    function getYearByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `date` FROM `Date` WHERE `user_id`='$userID'";
+        return substr(mysqli_fetch_array($this->doQuery($query))['date'],0,4);
+    }
+
+    function incrementMonthByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+        $currentDate = $this->getDateByUsername($username);
+
+        $newDate = date('Y-m-d', strtotime($currentDate . ' +1 month'));
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    function decrementMonthByUsername($username) {
+        $userID = $this->getUserIDFromUsername($username);
+        $currentDate = $this->getDateByUsername($username);
+
+        $newDate = date('Y-m-d', strtotime($currentDate . ' -1 month'));
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    function getDOTWofFirstDayofCurrentMonth($username) {
+        $currentDate = $this->getDayByUsername($username);
+
+        $this->setDayOfMonthByUsername($username, 1);
+        $dotw = date('w',strtotime($this->getDateByUsername($username)));
+        $this->setDayOfMonthByUsername($username, $currentDate);
+
+        return $dotw;
+    }
+
+    function isCurrentYearALeapYear($username) {
+        $currentDate = $this->getDateByUsername($username);
+        return date('L', $currentDate);
+    }
+
+    function getNumTasksPerDayOfCurrentMonthByUsername($username) {
+        $numDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if($this->isCurrentYearALeapYear($username)) $numDaysInMonth[1] = 29;
+
+        $userID = $this->getUserIDFromUsername($username);
+        $currentDate = $this->getDateByUsername($username);
+
+        $currentYear = intval(substr($currentDate,0,4));
+        $currentMonth = intval(substr($currentDate,5,2));
+
+        $tasksperDay = Array();
+        for($i = 1; $i <= $numDaysInMonth[$currentMonth-1]; $i++) {
+            $checkDate = $currentYear;
+            if (strlen($checkDate) < 4) $checkDate = "0" . $checkDate;
+            $checkDate .= "-".$currentMonth;
+            if (strlen($checkDate) < 7) $checkDate = substr($checkDate,0,5) . "0" . substr($checkDate,5);
+            $checkDate .= "-".$i;
+            if (strlen($checkDate) < 10) $checkDate = substr($checkDate,0,8) . "0" . substr($checkDate,8);
+
+            $query = "SELECT `id` FROM `Task` WHERE `user_id`='$userID' AND `date`='$checkDate'";
+            $result = $this->doQuery($query);
+
+            $taskCount = 0;
+            while($row = mysqli_fetch_array($result)){
+                $taskCount++;
+            }
+            array_push($tasksperDay,$taskCount);
+        }
+        return $tasksperDay;
+    }
+
+    function setDayOfMonthByUsername($username, $newDayInt) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $currentDate = $this->getDayByUsername($username);
+        $difference = $newDayInt - $currentDate;
+        $newDate = date('Y-m-d',strtotime($this->getDateByUsername($username) . ' ' . $difference . ' day'));
+
+        $query = "UPDATE `Date` SET `date`='$newDate' WHERE `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
+    /*
+     * Template FUNCTIONS ------------------------------------------------------------
+     * */
+
+    function getAllTemplatesByUsername($username){
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time` FROM `Template`  WHERE `user_id` = '$userID'";
+        $result = $this->doQuery($query);
+        $tasks = Array();
+        $counter = 0;
+        while($row = mysqli_fetch_array($result)){
+            $categoryID = $row['category_id'];
+            $query = "SELECT `name` FROM `Category` WHERE `id`='$categoryID'";
+            $categoryName = mysqli_fetch_array($this->doQuery($query))['name'];
+            $tasks[$counter] = Array("templateID"=>$row['id'], "templateName"=>$row['task_name'], "startHour"=>substr($row['start_time'], 0, 2), "startMin"=>substr($row['start_time'],3,2), "startAMPM"=>substr($row['start_time'],6,2), "endHour"=>substr($row['end_time'], 0, 2), "endMin"=>substr($row['end_time'],3,2), "endAMPM"=>substr($row['end_time'],6,2), "priority"=>$this->getPriorityValue($row['priority_id']), "category"=>$categoryName);
+            $counter++;
+        }
+        return $tasks;
+    }
+
+    function addTemplateByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `id` FROM `Category` WHERE `name`='$categoryName' AND `user_id`='$userID'";
+        $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "SELECT `id` FROM `Priority` WHERE `name`='$importance'";
+        $priorityID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "INSERT INTO `Template` (`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`) VALUES ('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime')";
+        $this->doQuery($query);
+    }
+
+    function deleteTemplateByUsername($username, $templateID) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "DELETE FROM `Template` WHERE `user_id`='$userID' AND `task_name`='$templateID'";
+        $this->doQuery($query);
+    }
+
+    /*
+     * Theme Functions ------------------------------------------------------------
+     */
+
+    function setDefaultThemeByUsername($username){
+        $userID = $this->getUserIDFromUsername($username);
+
+        $colors = Array("#F9E79F", "#EADA9B", "#DBCD97", "#CBC093", "#BCB38F", "#ADA68B", "#9E9987", "#8F8C83");
+        $query = "INSERT INTO `Theme` (`color1`, `color2`, `color3`, `color4`, `color5`, `color6`, `color7`, `color8`, `user_id`) VALUES ('$colors[0]', '$colors[1]', '$colors[2]', '$colors[3]', '$colors[4]', '$colors[5]', '$colors[6]', '$colors[7]', '$userID')";
+        $this->doQuery($query);
+    }
+
+    function getThemeByUsername($username){
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "SELECT `color1`, `color2`, `color3`, `color4`, `color5`, `color6`, `color7`, `color8` FROM `Theme` WHERE $userID = `user_id`";
+        $result = $this->doQuery($query);
+        $colors = Array();
+        while($row = mysqli_fetch_array($result)){
+            array_push($colors, $row['color1']);
+            array_push($colors, $row['color2']);
+            array_push($colors, $row['color3']);
+            array_push($colors, $row['color4']);
+            array_push($colors, $row['color5']);
+            array_push($colors, $row['color6']);
+            array_push($colors, $row['color7']);
+            array_push($colors, $row['color8']);
+        }
+        return $colors;
     }
 
 }

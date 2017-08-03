@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors',0);
-require_once "../db/dbcomm.php";
+require_once "../../scripts/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -267,7 +267,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 </h1>
             </div>
             <div class="row">
-                <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+                <?php if (isset($alertMessage)) echo "$alertMessage";?>
             </div>
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 text">
