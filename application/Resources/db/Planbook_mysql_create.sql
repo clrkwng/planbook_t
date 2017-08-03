@@ -1,261 +1,397 @@
-CREATE SCHEMA `planbook_db1` ;
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 4541
+#
+# http://www.sequelpro.com/
+# https://github.com/sequelpro/sequelpro
+#
+# Host: mysql.planbook.xyz (MySQL 5.6.34-log)
+# Database: planbook_db1
+# Generation Time: 2017-08-03 20:29:20 +0000
+# ************************************************************
 
-use planbook_db1;
 
-CREATE TABLE `Frequency` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`)
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE TABLE `Frequency_Meta` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`frequency_id` int NOT NULL,
-	`meta_key` varchar(255) NOT NULL,
-	`meta_value` varchar(50) NOT NULL,
-	PRIMARY KEY (`id`)
-);
 
-CREATE TABLE `Special_Goal` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`award_id` int NOT NULL,
-	`title` varchar(255) NOT NULL,
-	`image_id` int NOT NULL,
-	`start_date` DATETIME NOT NULL,
-	`end_date` DATETIME NOT NULL,
-	`repeat_on_list` bit NOT NULL DEFAULT 0,
-	`description` varchar(255) NOT NULL,
-	`result` varchar(255),
-	`default_points` varchar(255),
-	PRIMARY KEY (`id`)
-);
+# Dump of table Account
+# ------------------------------------------------------------
 
-CREATE TABLE `Redeem` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`user_id` int NOT NULL,
-	`points` int NOT NULL,
-	`reward` varchar(255) NOT NULL,
-	`unit` varchar(50) NOT NULL,
-	`symbol` varchar(50) NOT NULL,
-	`redeem_date` DATE,
-	PRIMARY KEY (`id`)
-);
+DROP TABLE IF EXISTS `Account`;
 
 CREATE TABLE `Account` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`password` varchar(255) NOT NULL,
-	`name` varchar(255),
-	`email` varchar(255),
-	`phone_number` varchar(255),
-	`verified` bit NOT NULL DEFAULT 0,
-	PRIMARY KEY (`id`)
-);
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(11) NOT NULL DEFAULT '',
+  `verified` tinyint(1) NOT NULL DEFAULT '0',
+  `password` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `phonenumber` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `Special_Goal_List` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`user_id` int NOT NULL,
-	`date_achieved` DATETIME,
-	`description_ov` varchar(255),
-	`reminder_time` DATETIME,
-	PRIMARY KEY (`id`)
-);
 
-CREATE TABLE `Theme` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`image_id` int NOT NULL,
-	`color` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
 
-CREATE TABLE `User` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`account_id` int NOT NULL,
-	`demographic_id` int,
-	`theme_id` int,
-	`username` varchar(255) NOT NULL,
-	`password` varchar(255) NOT NULL,
-	`image_id` int NOT NULL,
-	`type_id` int NOT NULL,
-	`total_points` int NOT NULL DEFAULT '0',
-	`current_points` int NOT NULL DEFAULT '0',
-	`email` varchar(255) NOT NULL,
-	`phone_number` varchar(255),
-	`school` varchar(255),
-	PRIMARY KEY (`id`)
-);
+# Dump of table Awards
+# ------------------------------------------------------------
 
-CREATE TABLE `Demographics` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`theme_id` int NOT NULL,
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `Special_Done` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`user_id` int NOT NULL,
-	`special_goal_id` int NOT NULL,
-	`period` varchar(255) NOT NULL,
-	`total_listed` varchar(255) NOT NULL,
-	`achieved` bit NOT NULL DEFAULT 0,
-	PRIMARY KEY (`id`)
-);
-
-CREATE TABLE `User_Awards` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`award_id` int NOT NULL,
-	`user_id` int NOT NULL,
-	`quantity` int NOT NULL DEFAULT 0,
-	PRIMARY KEY (`id`)
-);
+DROP TABLE IF EXISTS `Awards`;
 
 CREATE TABLE `Awards` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`image_id` int NOT NULL,
-	`amount` int NOT NULL,
-	`unit` varchar(255) NOT NULL,
-	`symbol` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `image_id` int(11) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `unit` varchar(255) NOT NULL,
+  `symbol` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `Task` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`priority_id` int NOT NULL,
-	`category_id` int NOT NULL,
-	`image_id` int NOT NULL,
-	`user_id` int NOT NULL,
-	`description` varchar(255) NOT NULL,
-	`length` varchar(255) NOT NULL,
-	`repeat` bit NOT NULL DEFAULT 0,
-	`start_time` DATETIME NOT NULL,
-	`end_time` DATETIME NOT NULL,
-	PRIMARY KEY (`id`)
-);
 
-CREATE TABLE `Priority` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
 
-CREATE TABLE `Image` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`description` varchar(255),
-	`link` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
+# Dump of table Category
+# ------------------------------------------------------------
 
-CREATE TABLE `Common_Task_Goal` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`title` varchar(255) NOT NULL,
-	`image_id` int NOT NULL,
-	`category_id` int NOT NULL,
-	`priority_id` int NOT NULL,
-	PRIMARY KEY (`id`)
-);
+DROP TABLE IF EXISTS `Category`;
 
 CREATE TABLE `Category` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	`user_id` int,
-	`image_id` int,
-	`color` varchar(255),
-	PRIMARY KEY (`id`)
-);
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `image_id` int(11) DEFAULT NULL,
+  `color` varchar(255) DEFAULT '',
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `Task_Done` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`user_id` int NOT NULL,
-	`period` varchar(255) NOT NULL,
-	`completed_timestamp` DATETIME NOT NULL,
-	`total_task` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
+
+
+# Dump of table Daily_Task_List
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Daily_Task_List`;
 
 CREATE TABLE `Daily_Task_List` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`task_id` int NOT NULL,
-	`priority_id` int NOT NULL,
-	`user_id` int NOT NULL,
-	`start_time` DATETIME NOT NULL,
-	`end_time` DATETIME NOT NULL,
-	`status_id` int NOT NULL,
-	PRIMARY KEY (`id`)
-);
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_id` int(11) NOT NULL,
+  `priority_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `start_time` datetime NOT NULL,
+  `end_time` datetime NOT NULL,
+  `length` varchar(255) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Date
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Date`;
+
+CREATE TABLE `Date` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `date` varchar(10) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Demographics
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Demographics`;
+
+CREATE TABLE `Demographics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `theme_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Frequency
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Frequency`;
+
+CREATE TABLE `Frequency` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Frequency_Meta
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Frequency_Meta`;
+
+CREATE TABLE `Frequency_Meta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `frequency_id` int(11) NOT NULL,
+  `meta_key` varchar(255) NOT NULL,
+  `meta_value` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Image
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Image`;
+
+CREATE TABLE `Image` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `link` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Priority
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Priority`;
+
+CREATE TABLE `Priority` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Redeem
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Redeem`;
+
+CREATE TABLE `Redeem` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `points` int(11) NOT NULL,
+  `reward` varchar(255) NOT NULL,
+  `redeem_date` datetime DEFAULT NULL,
+  `completed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Special_Done
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Special_Done`;
+
+CREATE TABLE `Special_Done` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `special_goal_id` int(11) NOT NULL,
+  `period` varchar(255) NOT NULL,
+  `total_listed` varchar(255) NOT NULL,
+  `achieved` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Special_Goal
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Special_Goal`;
+
+CREATE TABLE `Special_Goal` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `award_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `image_id` int(11) NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `repeat_on_list` bit(1) NOT NULL DEFAULT b'0',
+  `description` varchar(255) NOT NULL,
+  `result` varchar(255) DEFAULT NULL,
+  `default_points` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Special_Goal_List
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Special_Goal_List`;
+
+CREATE TABLE `Special_Goal_List` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `date_achieved` datetime DEFAULT NULL,
+  `description_ov` varchar(255) DEFAULT NULL,
+  `reminder_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Status
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Status`;
 
 CREATE TABLE `Status` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Task
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Task`;
+
+CREATE TABLE `Task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `priority_id` int(11) NOT NULL DEFAULT '1',
+  `category_id` int(11) NOT NULL,
+  `image_id` int(11) DEFAULT NULL,
+  `task_name` varchar(255) NOT NULL DEFAULT '',
+  `length` varchar(255) DEFAULT '',
+  `repeat` bit(1) DEFAULT b'0',
+  `start_time` varchar(8) NOT NULL DEFAULT '',
+  `end_time` varchar(8) NOT NULL DEFAULT '',
+  `user_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Task_Done
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Task_Done`;
+
+CREATE TABLE `Task_Done` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `period` varchar(255) NOT NULL,
+  `start_date` datetime NOT NULL,
+  `total_task` varchar(255) NOT NULL,
+  `completed` bit(1) NOT NULL DEFAULT b'0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Template
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Template`;
+
+CREATE TABLE `Template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `image_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `priority_id` int(11) NOT NULL,
+  `task_name` varchar(255) NOT NULL DEFAULT '',
+  `start_time` varchar(8) NOT NULL DEFAULT '',
+  `end_time` varchar(8) NOT NULL DEFAULT '',
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Theme
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Theme`;
+
+CREATE TABLE `Theme` (
+  `id` int(11) NOT NULL,
+  `color1` varchar(7) NOT NULL DEFAULT '',
+  `color2` varchar(7) NOT NULL DEFAULT '',
+  `user_id` int(11) NOT NULL,
+  `color3` varchar(7) NOT NULL DEFAULT '',
+  `color4` varchar(7) NOT NULL DEFAULT '',
+  `color5` varchar(7) NOT NULL DEFAULT '',
+  `color6` varchar(7) NOT NULL DEFAULT '',
+  `color7` varchar(7) NOT NULL DEFAULT '',
+  `color8` varchar(7) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table Type
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `Type`;
 
 CREATE TABLE `Type` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) NOT NULL,
-	PRIMARY KEY (`id`)
-);
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `Special_Goal` ADD CONSTRAINT `Special_Goal_fk0` FOREIGN KEY (`award_id`) REFERENCES `Awards`(`id`);
 
-ALTER TABLE `Special_Goal` ADD CONSTRAINT `Special_Goal_fk1` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
 
-ALTER TABLE `Redeem` ADD CONSTRAINT `Redeem_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+# Dump of table User
+# ------------------------------------------------------------
 
-ALTER TABLE `Special_Goal_List` ADD CONSTRAINT `Special_Goal_List_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+DROP TABLE IF EXISTS `User`;
 
-ALTER TABLE `User` ADD CONSTRAINT `User_fk0` FOREIGN KEY (`account_id`) REFERENCES `Account`(`id`);
+CREATE TABLE `User` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `account_id` int(11) NOT NULL,
+  `demographic_id` int(11) NOT NULL,
+  `theme_id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `image_id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL DEFAULT '2',
+  `total_points` int(11) NOT NULL DEFAULT '0',
+  `current_points` int(11) NOT NULL DEFAULT '0',
+  `email` varchar(255) NOT NULL,
+  `phone_number` varchar(255) NOT NULL,
+  `school` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `User` ADD CONSTRAINT `User_fk1` FOREIGN KEY (`demographic_id`) REFERENCES `Demographics`(`id`);
 
-ALTER TABLE `User` ADD CONSTRAINT `User_fk2` FOREIGN KEY (`theme_id`) REFERENCES `Theme`(`id`);
 
-ALTER TABLE `User` ADD CONSTRAINT `User_fk3` FOREIGN KEY (`type_id`) REFERENCES `Type`(`id`);
+# Dump of table User_Awards
+# ------------------------------------------------------------
 
-ALTER TABLE `User` ADD CONSTRAINT `User_fk4` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+DROP TABLE IF EXISTS `User_Awards`;
 
-ALTER TABLE `Demographics` ADD CONSTRAINT `Demographics_fk0` FOREIGN KEY (`theme_id`) REFERENCES `Theme`(`id`);
+CREATE TABLE `User_Awards` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `award_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `Special_Done` ADD CONSTRAINT `Special_Done_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
 
-ALTER TABLE `Special_Done` ADD CONSTRAINT `Special_Done_fk1` FOREIGN KEY (`special_goal_id`) REFERENCES `Special_Goal`(`id`);
 
-ALTER TABLE `User_Awards` ADD CONSTRAINT `User_Awards_fk0` FOREIGN KEY (`award_id`) REFERENCES `Awards`(`id`);
 
-ALTER TABLE `User_Awards` ADD CONSTRAINT `User_Awards_fk1` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
-
-ALTER TABLE `Awards` ADD CONSTRAINT `Awards_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
-
-ALTER TABLE `Category` ADD CONSTRAINT `Category_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
-
-ALTER TABLE `Category` ADD CONSTRAINT `Category_fk1` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
-
-ALTER TABLE `Theme` ADD CONSTRAINT `Theme_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
-
-ALTER TABLE `Task` ADD CONSTRAINT `Task_fk0` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
-
-ALTER TABLE `Task` ADD CONSTRAINT `Task_fk1` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`);
-
-ALTER TABLE `Task` ADD CONSTRAINT `Task_fk2` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
-
-ALTER TABLE `Task` ADD CONSTRAINT `Task_fk3` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
-
-ALTER TABLE `Common_Task_Goal` ADD CONSTRAINT `Common_Task_Goal_fk0` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`);
-
-ALTER TABLE `Common_Task_Goal` ADD CONSTRAINT `Common_Task_Goal_fk1` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
-
-ALTER TABLE `Common_Task_Goal` ADD CONSTRAINT `Common_Task_Goal_fk2` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
-
-ALTER TABLE `Task_Done` ADD CONSTRAINT `Task_Done_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
-
-ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk0` FOREIGN KEY (`task_id`) REFERENCES `Task`(`id`);
-
-ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk1` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
-
-ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk2` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
-
-ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk3` FOREIGN KEY (`status_id`) REFERENCES `Status`(`id`);
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
