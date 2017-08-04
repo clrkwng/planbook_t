@@ -3,8 +3,8 @@
 
 ini_set('display_errors',0);
 
-require_once "../../scripts/dbcomm.php";
-require_once "../../scripts/Crypto.php";
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
 
 $dbcomm = new dbcomm();
 
@@ -109,7 +109,9 @@ if(isset($_GET['delete'])) //delete the user
 
     <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
 
-    <h2 align="center">Manage <b><? echo $dbcomm->getAccountNameByUsername($adminUsername); ?></b> Users</h2>
+    <h2 align="center">Manage <b>
+            <?php if (isset($adminUsername)) echo $dbcomm->getAccountNameByUsername($adminUsername); ?>
+    </b> Users</h2>
     <br>
     <table class="table table-hover" width="100%">
         <tr>
@@ -131,17 +133,8 @@ if(isset($_GET['delete'])) //delete the user
             $userName = $userValues['username'];
             $userPoints = $userValues['total_points'];
 
-            $encryptedRewardAdminUsername = openssl_encrypt($adminUsername, 'AES-128-CFB1', 'rewardPanelAdminPassword');
-            $encryptedRewardAdminUsername = str_replace("+", "!!!", $encryptedRewardAdminUsername);
-            $encryptedRewardAdminUsername = str_replace("%", "$$$", $encryptedRewardAdminUsername);
-
-            $encryptedRewardUserUsername = openssl_encrypt($userName, 'aes-192-cfb', 'rewardPanelUserPassword');
-            $encryptedRewardUserUsername = str_replace("+", "!!!", $encryptedRewardUserUsername);
-            $encryptedRewardUserUsername = str_replace("%", "$$$", $encryptedRewardUserUsername);
-
-            $encryptedHomepageUsername = openssl_encrypt($userName, 'RC4-40', 'regularUserPassword');
-            $encryptedHomepageUsername = str_replace("+", "!!!", $encryptedHomepageUsername);
-            $encryptedHomepageUsername = str_replace("%", "$$$", $encryptedHomepageUsername);
+            $encryptedRewardAdminUsername = Crypto::encrypt($adminUsername, true);
+            $encryptedRewardUserUsername = Crypto::encrypt($userName, true);
 
             $userEmail = $dbcomm->getEmailByUsername($userName);
 
@@ -169,9 +162,11 @@ if(isset($_GET['delete'])) //delete the user
             $userCounter++;
         }
         ?>
-        <tr style="height: 80px;">
-            <td colspan="3" style="vertical-align: middle;" id="addNewUserButton">
-                <div class = "glyphicon glyphicon-plus"></div> New User
+        <tr id='addNewUser'>
+            <td colspan="3" id="addNewUserButton">
+                <a class="glyphicon glyphicon-plus link_button"
+                     href="../auth/CreateUser.php?id=<?php echo $encryptedAccountID;?>"
+                > New User</a>
             </td>
         </tr>
     </table>
@@ -186,8 +181,7 @@ if(isset($_GET['delete'])) //delete the user
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
 <script src="../../scripts/jquery/scripts.js"></script>
-<script>window.jQuery || document.write('<script src="../../libs/jquery/dist/jquery.min.js"><\/script>')</script>
-<script src="../https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../scripts/jquery/admin/admin-panel-bundle.js"></script>
 
 <script type="text/javascript">
     var elems = document.getElementsByClassName('confirmation');

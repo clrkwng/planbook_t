@@ -1,6 +1,6 @@
 <?php
 ini_set('display_errors',0);
-require_once "../../scripts/dbcomm.php";
+require_once "../db/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 

@@ -8,8 +8,8 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
 }
 
 
-require_once "../../scripts/dbcomm.php";
-require_once "../../scripts/Crypto.php";
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
 
 //create db connection
 $dbcomm = new dbcomm();
@@ -175,7 +175,7 @@ if (isset($_POST['submitCredentials'])) {
                     </div>
                 </div>
                 <div class="form-bottom">
-                    <form role="form" action="Login.php" method="post" class="login-form">
+                    <form role="form" action="" method="post" class="login-form">
                         <div class="form-group">
                             <label class="sr-only" for="username">Username</label>
                             <input type="text" name="username" placeholder="Username..."

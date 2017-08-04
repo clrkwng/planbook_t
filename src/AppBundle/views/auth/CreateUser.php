@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
 <?php
-require_once "../../scripts/dbcomm.php";
-require_once "../../scripts/Crypto.php";
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
 
 //create db connection
 $dbcomm = new dbcomm();
@@ -225,13 +225,15 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-3 text">
-                    <h1 align="left" style="font-size: 3em; color">
-                        <font color="white">Create a New User</font>
+                    <h1 align="left">
+                        <font color="White">Create a New User</font>
                     </h1>
-
-                    <?php if (isset($alertMessage)) echo '<div>' ;echo $alertMessage; echo
-                    '</div>'?>
-
+        <?php
+            if (isset($alertMessage))
+                echo "<div>"
+                        .$alertMessage
+                    ."</div>"
+        ?>
                 </div>
 
             <div class="col-sm-6 col-sm-offset-3 form-box">

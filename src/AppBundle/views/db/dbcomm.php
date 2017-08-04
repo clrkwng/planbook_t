@@ -7,6 +7,8 @@ class dbcomm
     //connect on startup
     function __construct() {
         $this->connect();
+        $this->checkDBHealth();
+
     }
 
     //disconnect on close
@@ -21,7 +23,6 @@ class dbcomm
 
     //connect to db or die
     function connect() {
-        //$this->sqlconn = mysqli_connect('mysql.planbook.xyz','pb_dev1','4FEF!j1w3KUSz0M','planbook_db1');
         $this->sqlconn = mysqli_connect('{db.host}','{db.user}','{db.password}','{db.name}');
         if (mysqli_connect_errno()) {
             die("Connection failed: " . mysqli_connect_error());
@@ -63,6 +64,359 @@ class dbcomm
         $query = "DELETE FROM `Account` WHERE `id` = '$accountID'";
         $this->doQuery($query);
     }
+
+    /*
+    * DB Setup Functions
+    */
+
+
+    /*
+     * @param $doFix: boolean: if this is true, then the function will attempt
+     *                  to create the missing records
+     */
+    function checkDBHealth(){
+        //Provides the default init for database records
+        //Allows for quick setup and checking of DB health
+
+        $this->checkImageTable();
+        $this->checkAwardsTable();
+        $this->checkTypeTable();
+        $this->checkPriorityTable();
+        $this->checkStatusTable();
+    }
+
+    function checkStatusTable(){
+        $statusNames =
+            array(
+                "Completed",
+                "In Progress",
+                "Not Started",
+            );
+
+        foreach ($statusNames as $curStatusName){
+            $this->checkStatusTableHelper(true, $curStatusName);
+        }
+        return true;
+    }
+
+    function checkStatusTableHelper($doFix, $statusName){
+        if($this->checkIfStatusExistsByName($statusName)){
+            return true;
+        }else{
+            if($doFix){
+                $this->insertNewStatus($statusName);
+                $this->checkStatusTableHelper(false, $statusName);
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+
+    function checkIfStatusExistsByName($statusName)
+    {
+        $query = "SELECT `id` FROM `Status` WHERE `name`='$statusName';";
+        $result = $this->doQuery($query);
+
+        $SQLdataarray = mysqli_fetch_array($result);
+        if(count($SQLdataarray) < 1) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
+    }
+
+    function insertNewStatus($statusName)
+    {
+        $query =
+            "INSERT INTO `Status` "
+            ."(`name`) "
+            ."VALUES "
+            ."('$statusName')";
+        $this->doQuery($query);
+        return true;
+    }
+
+    function checkPriorityTable(){
+        $priorityNames =
+            array(
+                "High",
+                "Medium",
+                "Low",
+            );
+
+        foreach ($priorityNames as $curPriorityName){
+            $this->checkPriorityTableHelper(true, $curPriorityName);
+        }
+        return true;
+    }
+
+    function checkPriorityTableHelper($doFix, $priorityName){
+        if($this->checkIfPriorityExistsByName($priorityName)){
+            return true;
+        }else{
+            if($doFix){
+                $this->insertNewPriority($priorityName);
+                $this->checkPriorityTableHelper(false, $priorityName);
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+
+    function checkIfPriorityExistsByName($priorityName)
+    {
+        $query = "SELECT `id` FROM `Priority` WHERE `name`='$priorityName';";
+        $result = $this->doQuery($query);
+
+        $SQLdataarray = mysqli_fetch_array($result);
+        if(count($SQLdataarray) < 1) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
+    }
+
+    function insertNewPriority($priorityName)
+    {
+        $query =
+            "INSERT INTO `Priority` "
+            ."(`name`) "
+            ."VALUES "
+            ."('$priorityName')";
+        $this->doQuery($query);
+        return true;
+    }
+
+    function checkAwardsTable(){
+        $awardNames =
+            array(
+                "bronzeStar",
+                "silverStar",
+                "goldStar",
+                "bronzeTrophy",
+                "silverTrophy",
+                "goldTrophy"
+            );
+        $awardsUnits =
+            array(
+                'star',
+                'star',
+                'star',
+                'trophy',
+                'trophy',
+                'trophy'
+            );
+        $awardsSymbols =
+            array(
+                '★',
+                '★',
+                '★',
+                '🏆',
+                '🏆',
+                '🏆'
+            );
+        $awardsAmount =
+            array(
+                "10",
+                "10",
+                "10",
+                "10",
+                "10",
+                "10"
+            );
+
+        $i = 0;
+        foreach ($awardNames as $awardName){
+            //NOTE: Assumes that $awardName == $imageName
+            $this->checkAwardsTableHelper(true, $awardName, $awardName, $awardsAmount[$i], $awardsUnits[$i], $awardsSymbols[$i]);
+            $i++;
+        }
+        return true;
+    }
+
+    function checkAwardsTableHelper($doFix, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol){
+        if($this->checkIfAwardExistsByName($awardName)){
+            return true;
+        }else{
+            if($doFix){
+                $imageId = $this->getImageIdByName($imageName);
+                $this->insertNewAward($awardName, $imageId, $awardAmount, $awardUnit, $awardSymbol);
+                $this->checkAwardsTableHelper(false, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol);
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+
+    function checkIfAwardExistsByName($awardName)
+    {
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='$awardName';";
+        $result = $this->doQuery($query);
+
+        $SQLdataarray = mysqli_fetch_array($result);
+        if(count($SQLdataarray) < 1) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
+    }
+
+    function insertNewAward($awardName, $imageId, $awardAmount, $awardUnit, $awardSymbol)
+    {
+        $query =
+            "INSERT INTO `Awards` "
+            ."(`name`,`image_id`,`amount`, `unit`, `symbol`) "
+            ."VALUES "
+            ."('$awardName', '$imageId', '$awardAmount', '$awardUnit', '$awardSymbol')";
+        $this->doQuery($query);
+        return true;
+    }
+
+    function checkImageTable(){
+        $imageFileNames =
+            array(
+                "SYSTEM_DEFAULT",
+                "bronzeStar",
+                "silverStar",
+                "goldStar",
+                "bronzeTrophy",
+                "silverTrophy",
+                "goldTrophy"
+            );
+        $rootImgDir = '../../resources/img/';
+        $imageFileLinks =
+            array(
+                $rootImgDir . 'profile.png',
+                $rootImgDir . 'awards/bronzeStar.png',
+                $rootImgDir . 'awards/silverStar.png',
+                $rootImgDir . 'awards/goldStar.png',
+                $rootImgDir . 'awards/bronzeTrophy.png',
+                $rootImgDir . 'awards/silverTrophy.png',
+                $rootImgDir . 'awards/goldTrophy.png'
+            );
+        $imageFileDescriptions =
+            array(
+                "System provided default image.",
+                "System provided default image.",
+                "System provided default image.",
+                "System provided default image.",
+                "System provided default image.",
+                "System provided default image.",
+                "System provided default image."
+            );
+        $i = 0;
+        foreach ($imageFileNames as $imageName){
+            $this->checkImageTableHelper(true, $imageName, $imageFileDescriptions[$i], $imageFileLinks[$i]);
+            $i++;
+        }
+    }
+
+    function checkImageTableHelper($doFix, $imageName, $imageDescription, $imageLink){
+        if($this->checkIfImageExistsByName($imageName)){
+            return true;
+        }else{
+            if($doFix){
+                $this->insertNewImage($imageName, $imageDescription, $imageLink);
+                $this->checkImageTableHelper(false, $imageName, $imageDescription, $imageLink);
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+
+    function checkIfImageExistsByName($imageName)
+    {
+        $query = "SELECT `id` FROM `Image` WHERE `name`='$imageName';";
+        $result = $this->doQuery($query);
+
+        $SQLdataarray = mysqli_fetch_array($result);
+        if(count($SQLdataarray) < 1) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
+    }
+
+    function getImageIdByName($imageName){
+        $query = "SELECT `id` FROM `Image` WHERE `name`='$imageName'";
+        return mysqli_fetch_array($this->doQuery($query))['id'];
+    }
+
+
+    function insertNewImage($imageName, $imageDescription, $imageLink)
+    {
+        $query =
+            "INSERT INTO `Image` "
+            ."(`name`,`description`,`link`) "
+            ."VALUES "
+            ."('$imageName', '$imageDescription', '$imageLink')";
+        $this->doQuery($query);
+        return true;
+    }
+
+
+    function checkTypeTable(){
+        return $this->checkTypeTableAdmin(true) && $this->checkTypeTableUser(true);
+    }
+
+    function checkTypeTableAdmin($doFix){
+        if($this->checkIfTypeExistsInDB('Admin')){
+            return true;
+        }else{
+            if($doFix){
+                $this->insertNewType('Admin');
+                return $this->checkTypeTableAdmin(false);
+            }else{
+                return false;
+            }
+        }
+    }
+    function checkTypeTableUser($doFix){
+        if($this->checkIfTypeExistsInDB('User')){
+            return true;
+        }else{
+            if($doFix){
+                $this->insertNewType('User');
+                return $this->checkTypeTableUser(false);
+            }else{
+                return false;
+            }
+        }
+    }
+
+    function checkIfTypeExistsInDB($typeName)
+    {
+        $query = "SELECT `id` FROM `Type` WHERE `name`='$typeName';";
+        $result = $this->doQuery($query);
+
+        $SQLdataarray = mysqli_fetch_array($result);
+        if(count($SQLdataarray) < 1) {
+            return FALSE;
+        }
+        else {
+            return TRUE;
+        }
+    }
+    function insertNewType($typeName)
+    {
+        $query =
+            "INSERT INTO `Type` "
+            ."(`name`) "
+            ."VALUES "
+            ."('$typeName')";
+        $this->doQuery($query);
+    }
+
+
+
 
     function getRegularTypeID() {
         $query = "SELECT `id` FROM `Type` WHERE `name`='Regular'";
@@ -153,9 +507,9 @@ class dbcomm
         }
     }
 
-    function checkIfPhonenumberExists($phonenumber)
+    function checkIfPhonenumberExists($phoneNumber)
     {
-        $query = "SELECT `id` FROM `User` WHERE `phone_number`='$phonenumber';";
+        $query = "SELECT `id` FROM `User` WHERE `phone_number`='$phoneNumber';";
         $result = $this->doQuery($query);
 
         $SQLdataarray = mysqli_fetch_array($result);
@@ -181,35 +535,109 @@ class dbcomm
         }
     }
 
-    function createNewAdmin($accountName, $username, $password, $email, $phonenumber)
+    function createNewAdmin($accountName, $username, $password, $email, $phoneNumber)
     {
-        $query = "INSERT INTO  `Account` (`name`, `password`, `email`, `phonenumber`) VALUES ('$accountName', '$password', '$email', '$phonenumber');";
+        //Register forest in Account DB
+        $query =
+            "INSERT INTO  `Account` "
+                ."(`name`, `password`, `email`, `phone_number`) "
+            ."VALUES "
+                ."('$accountName', '$password', '$email', '$phoneNumber');";
         $this->doQuery($query);
 
+        //Fetch the corresponding Id for the newly created record
         $query = "SELECT `id` FROM `Account` WHERE `name`='$accountName'";
         $accountID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `Image` (`name`,`description`,`link`) VALUES ('$username','profile picture','../../resources/img/profile.png')";
-        $this->doQuery($query);
+        //Fetch the Type.id corresponding to the "Admin" role
+        $query = "SELECT `id` FROM `Type` WHERE `name`='Admin'";
+        $adminID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $imageID = $this->getImageIDFromUsername($username);
+        //Fetch the default Image.id for the profile picture
+        $query = "SELECT `id` FROM `image` WHERE `name`='SYSTEM_DEFAULT'";
+        $profilePic_ID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $typeID = $this->getAdminTypeID();
-
-
-        $query = "INSERT INTO `User` (`account_id`, `username`, `password`, `image_id`, `type_id`, `email`, `phone_number`) VALUES ('$accountID', '$username', '$password', '$imageID', '$typeID', '$email', '$phonenumber');";
+        //Register a user with Admin status in the forest
+        $query =
+            "INSERT INTO `User` "
+                ."(`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`, `type_id`) "
+            ."VALUES "
+                ."('$accountID', '$username', '$password', '$profilePic_ID', '$email', '$phoneNumber', '$adminID');";
         $this->doQuery($query);
     }
 
-    function createNewUser($accountID, $username, $password, $email, $phonenumber)
+    function createNewUser($accountID, $username, $password, $email, $phoneNumber)
     {
-        $query = "INSERT INTO `Image` (`name`,`description`,`link`) VALUES ('$username','profile picture','../../resources/img/profile.png')";
+        //Fetch Default ImageId
+        $query = "SELECT `id` FROM `Image` WHERE `name`='SYSTEM_DEFAULT'";
+        $imageID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        //Fetch User Type Id
+        $query = "SELECT `id` FROM `Type` WHERE `name`='User'";
+        $typeID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        //Create User Record in forest
+        $query =
+            "INSERT INTO `User` "
+                ."(`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`, `type_id`) "
+            ."VALUES "
+            ."('$accountID', '$username', '$password', '$imageID', '$email', '$phoneNumber', '$typeID');";
         $this->doQuery($query);
 
-        $imageID = $this->getImageIDFromUsername($username);
+        //Get the newly created user's corresponding id
+        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
+        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `User` (`account_id`, `username`, `password`, `image_id`, `email`, `phone_number`) VALUES ('$accountID', '$username', '$password', '$imageID', '$email', '$phonenumber');";
-        $this->doQuery($query);
+        //Get the id's corresponding to the default awards
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeStar'";
+        $bronzeStarID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverStar'";
+        $silverStarID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldStar'";
+        $goldStarID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeTrophy'";
+        $bronzeTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='silverTrophy'";
+        $silverTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $query = "SELECT `id` FROM `Awards` WHERE `name`='goldTrophy'";
+        $goldTrophyID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $awardIds =
+            array(
+                $bronzeStarID,
+                $silverStarID,
+                $goldStarID,
+                $bronzeTrophyID,
+                $silverTrophyID,
+                $goldTrophyID
+            );
+
+        foreach ($awardIds as $curAwardId){
+            //Create Records for each of the awards available for the user
+            $query =
+                "INSERT INTO `User_Awards` "
+                ."(`award_id`, `user_id`, `quantity`) "
+                ."VALUES ($curAwardId, $userID, '0');";
+            $this->doQuery($query);
+        }
+
+        $defaultCategories =
+            array(
+                'Homework',
+                'Sports',
+                'Health',
+                'Exercise',
+                'Other',
+                'Special Tasks'
+            );
+        foreach ($defaultCategories as $curCategory){
+            //Create Records for each of the categories available for the user
+            $query =
+                "INSERT INTO `Category` "
+                ."(`name`,`user_id`) "
+                ."VALUES ('$curCategory', '$userID')";
+            $this->doQuery($query);
+        }
 
         $userID = $this->getUserIDFromUsername($username);
 
@@ -286,6 +714,7 @@ class dbcomm
             return False;
         }
     }
+
 
     function getTypeByUsername($username)
     {

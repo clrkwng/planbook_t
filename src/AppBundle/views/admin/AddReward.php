@@ -12,8 +12,8 @@ $adminUsername = Crypto::decrypt($encryptedAdminUsername, true);
 $encryptedUserUsername = $_GET['reward'];
 $userUsername = Crypto::decrypt($encryptedUserUsername, true);
 
-require_once "../../scripts/dbcomm.php";
-require_once "../../scripts/Crypto.php";
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
 
 //create db connection
 $dbcomm = new dbcomm();
@@ -77,7 +77,7 @@ if(isset($_GET['delete'])) {
         <td height="25%">
             <h1>Rewards</h1>
             <p style="font-size: 25px;">Manage Rewards for <b><? echo $userUsername; ?></b></p>
-            <?php if (isset($alertMessage)) echo $alertMessage;?>
+            <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
         </td>
         <td width="15%" valign="bottom">
             <p style="max-width: 100%;">

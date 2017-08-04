@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <?php
-require_once "../../scripts/dbcomm.php";
-require_once "../../scripts/Crypto.php";
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -10,7 +11,6 @@ if (!isset($_GET['id'])) {
 }
 $encryptedUsername = $_GET['id'];
 $username = Crypto::decrypt($encryptedUsername, true);
-
 
 if(isset($_POST['createTask'])) {
     if (isset($_POST['taskName']) and isset($_POST['categoryName']) and isset($_POST['importance']) and isset($_POST['start_hour']) and isset($_POST['start_minute']) and isset($_POST['end_hour']) and isset($_POST['end_minute']) and isset($_POST['date'])) {
@@ -26,22 +26,6 @@ if(isset($_POST['createTask'])) {
         $end_minute = $_POST['end_minute'];
         $end_period = $_POST['endAmPm'];
         $date1 = $_POST['date'];
-
-        /*if ($end_hour < $start_hour OR !($end_hour != $start_hour AND $end_minute >= $start_minute)){
-            $errorCount++;
-            $alertMessage =
-                '<div class="alert alert-danger alert-dismissible" role="alert">'
-                .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
-                .'<span aria-hidden="true">&times;</span>'
-                .'</button>'
-                .'<strong>'
-                .'Error:'
-                .'</strong>'
-                .'<span>'
-                .'The times set are not correct.'
-                .'</div>';
-
-        }*/
 
         $year = substr($date1, 6,4);
         $month = substr($date1,0,2);
@@ -170,11 +154,13 @@ $currentYear = $dbcomm->getYearByUsername($username);
         <div class="slide" id="slide1">
             <div class="content">
                 <!--https://bootsnipp.com/snippets/D2kkX-->
-                <? if (isset($alertMessage)) {
-                    echo "<div>";
-                    echo $alertMessage;
-                    echo "</div>";
-                }?>
+                <?php
+                    if (isset($alertMessage)) {
+                        "<div>"
+                            .$alertMessage
+                        ."</div>";
+                    }
+                ?>
                 <table align="center" width="80%">
                     <tr>
                         <td width="10%" align="left">
@@ -663,63 +649,6 @@ $currentYear = $dbcomm->getYearByUsername($username);
         }
     }
 
-
-    /*
-     var elems3 = document.getElementsByClassName('createTask');
-     var confirmIt3= function (e) {
-
-     var startHour = $('#start_hour').val();
-     var startMinute = $('#start_minute').val();
-     var endHour = $('#end_hour').val();
-     var endMinute = $('#end_minute').val();
-     //if () e.preventDefault();
-     };
-     for (var i = 0, l = elems.length; i < l; i++) {
-     elems[i].addEventListener('click', confirmIt, false);
-     }*/
-
-    /*function deleteCategory(deleteElement) {
-     if (confirm('Are you sure you want to delete this category?')) {
-     var deleteID = "categories"+(deleteElement.id).substr((deleteElement.id).length-1);
-     document.getElementById(deleteID).style.display = "none";
-     }
-     $.ajax({
-     type: 'POST',
-     url: 'Homepage.php',
-     name: deleteID,
-     data: $('form').serialize(),
-     success: function () {
-     alert('form was submitted');
-     }
-     });
-     */<?php
-    /*if(isset($_POST['deleteTemplate'])) {
-        $categories = $dbcomm->getCategoriesByUsername($username);
-        $categoryName = $categories[$_POST['deleteTemplate']];
-        $dbcomm->deleteCategoryByUsername($username, $categoryName);
-    }*/
-    ?>
-    /*}*/
-    /*
-     $(function () {
-     $('#categoryForm').bind('click', function (event) {
-     event.preventDefault();// using this page stop being refreshing
-     $.ajax({
-     type: 'POST',
-     url: 'Homepage.php',
-     data: $('#categoryForm').serialize(),
-     success: function () {
-     alert('form was submitted');
-     }
-     });
-     });*/
-    <?php
-    /*if(isset($_POST['templateRadio'])) {
-
-    }*/
-    ?>
-    /*});*/
-
     function onManageCategories(selectElement) {
         if (selectElement.value === "manageCategories") {
             $('#manageCategoriesModal').modal('show');
@@ -794,9 +723,9 @@ $currentYear = $dbcomm->getYearByUsername($username);
 
                     <? if (isset($alertMessageForTask)) //if the alert for creating list is set, then echo the alert
                     {
-                        echo '<div>';
-                        echo $alertMessageForTask;
-                        echo '</div>';
+                        '<div>'
+                            .$alertMessageForTask
+                        .'</div>';
                     }
                     ?>
 
@@ -817,7 +746,11 @@ $currentYear = $dbcomm->getYearByUsername($username);
                                 </button>
                             </td>
                         </tr>
-                        <tr><td height="10px"></td></tr>
+                        <tr>
+                            <td height="10px">
+
+                            </td>
+                        </tr>
                         <tr>
                             <td>
                                 <select class="form-control" title="Category Name" name="categoryName" id="categoryName" onchange="onManageCategories(this)">
@@ -833,15 +766,20 @@ $currentYear = $dbcomm->getYearByUsername($username);
                                     <option value="manageCategories">Manage Categories</option>
                                 </select>
                             </td>
-                            <td></td>
+                            <td>
+
+                            </td>
                             <td width="40%">
                                 <select class="form-control" title="Importance" name="importance" id="importance">
                                     <option value="" disabled selected>Choose Importance</option>
                                     <?php
-                                    $priorities = $dbcomm->getPriorities();
-                                    for($i = 0; $i < count($priorities); $i++) {
-                                        echo "<option value='$priorities[$i]'>$priorities[$i]</option>";
-                                    }
+                                        $priorities = $dbcomm->getPriorities();
+                                        for($i = 0; $i < count($priorities); $i++) {
+                                            echo
+                                                "<option value='$priorities[$i]'>"
+                                                    ."$priorities[$i]"
+                                                ."</option>";
+                                        }
                                     ?>
                                 </select>
 
@@ -880,10 +818,13 @@ $currentYear = $dbcomm->getYearByUsername($username);
                                     </select>
                                 </div>
                             </td>
-                            <td></td>
-                            <td><div class="input-group registration-date-time ">
+                            <td>
+
+                            </td>
+                            <td>
+                                <div class="input-group registration-date-time ">
                                     <span class="input-group-addon" ><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
-                                    <select type="text" class="form-control" id="end_hour" name="end_hour">
+                                    <select type="text" class="form-control" id="end_hour" name="end_hour" title="">
                                         <option value="01">01</option>
                                         <option value="02">02</option>
                                         <option value="03">03</option>
@@ -912,13 +853,25 @@ $currentYear = $dbcomm->getYearByUsername($username);
                                 </div>
                             </td>
                         </tr>
-                        <tr><td height="10px"></td></tr>
-                        <tr><td>Date</td></tr>
-                        <tr><td> <div class="form-group ">
+                        <tr>
+                            <td height="10px">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Date
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-group ">
                                     <div class="input-group">
                                         <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
                                     </div>
-                                </div></td></tr>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
