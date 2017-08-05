@@ -23,7 +23,7 @@ if(isset($_GET['delete'])) //delete the user
     $deleteUsername = $_GET['delete'];
     $dbcomm->deleteUserByUsername($deleteUsername);
     $alertMessage =
-                '<div class="alert alert-danger alert-dismissible" role="alert">'
+                '<div class="alert alert-info alert-dismissible" role="alert">'
                     . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
                         .'<span aria-hidden="true">&times;</span>'
                     .'</button>'
@@ -34,7 +34,6 @@ if(isset($_GET['delete'])) //delete the user
                         . 'The user has been deleted'
                     . '</span>'
                 . '</div>';
-
 }
 ?>
 
@@ -145,8 +144,8 @@ if(isset($_GET['delete'])) //delete the user
                 $userName = $userValues['username'];
                 $userPoints = $userValues['total_points'];
 
-                $encryptedRewardAdminUsername = Crypto::encrypt($adminUsername, true);
-                $encryptedRewardUserUsername = Crypto::encrypt($userName, true);
+                $encryptedAdminUsername = Crypto::encrypt($adminUsername, true);
+                $encryptedUserUsername = Crypto::encrypt($userName, true);
 
                 $userEmail = $dbcomm->getEmailByUsername($userName);
 
@@ -154,11 +153,11 @@ if(isset($_GET['delete'])) //delete the user
                           <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$userName</td>
                           <td style='vertical-align: middle;'>$userPoints</td>
                           <td style='vertical-align: middle;'>
-                              <a href=\"../user/Homepage.php?id=$encryptedHomepageUsername\" title='Tasks' style='color: black;'>
+                              <a href=\"../user/Homepage.php?id=$encryptedUserUsername\" title='Tasks' style='color: black;'>
                                   <span class='glyphicon glyphicon-calendar' style='font-size: 20px;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <a href=\"AddReward.php?id=$encryptedRewardAdminUsername&reward=$encryptedRewardUserUsername\" style='color: pink;' title='Rewards'>
+                              <a href=\"AddReward.php?id=$encryptedAdminUsername&reward=$encryptedUserUsername\" style='color: pink;' title='Rewards'>
                                   <span class='glyphicon glyphicon-piggy-bank' style='font-size: 20px; text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

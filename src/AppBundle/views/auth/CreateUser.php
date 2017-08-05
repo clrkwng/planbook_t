@@ -11,7 +11,6 @@ if(!isset($_GET['id'])){
     die("Error: The ID was not set.");
 }
 
-
 $errorCount = 0;
 
 if(isset($_POST['user-password'])) {

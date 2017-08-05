@@ -209,6 +209,7 @@
 
 <!-- jQuery -->
 <script src="../../libs/jquery/dist/jquery.min.js"></script>
+<script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>

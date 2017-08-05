@@ -344,16 +344,8 @@ class dbcomm
         $this->doQuery($query);
     }
 
-
-
-
-    function getRegularTypeID() {
-        $query = "SELECT `id` FROM `Type` WHERE `name`='Regular'";
-        return mysqli_fetch_array($this->doQuery($query))['id'];
-    }
-
-    function getAdminTypeID() {
-        $query = "SELECT `id` FROM `Type` WHERE `name`='Admin'";
+    function getTypeIdByName($typeName) {
+        $query = "SELECT `id` FROM `Type` WHERE `name`='$typeName'";
         return mysqli_fetch_array($this->doQuery($query))['id'];
     }
 
@@ -479,8 +471,7 @@ class dbcomm
         $accountID = mysqli_fetch_array($this->doQuery($query))['id'];
 
         //Fetch the Type.id corresponding to the "Admin" role
-        $query = "SELECT `id` FROM `Type` WHERE `name`='Admin'";
-        $adminID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $adminID = $this->getTypeIdByName('Admin');
 
         //Fetch the default Image.id for the profile picture
         $query = "SELECT `id` FROM `image` WHERE `name`='SYSTEM_DEFAULT'";
@@ -502,8 +493,7 @@ class dbcomm
         $imageID = mysqli_fetch_array($this->doQuery($query))['id'];
 
         //Fetch User Type Id
-        $query = "SELECT `id` FROM `Type` WHERE `name`='User'";
-        $typeID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $typeID = $this->getTypeIdByName('User');
 
         //Create User Record in forest
         $query =
@@ -703,7 +693,7 @@ class dbcomm
     function getAllUsersByAdminUsername($username) {
         $accountID = $this->getAccountIDByUsername($username);
 
-        $typeID = $this->getRegularTypeID();
+        $typeID = $this->getTypeIdByName('User');
 
         $query = "SELECT * FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$typeID'";
         $result = $this->doQuery($query);
@@ -750,25 +740,21 @@ class dbcomm
     }
 
     function getAdminUsernameByAccountID($accountID) {
-        $adminTypeID = $this->getAdminTypeID();
+        $adminTypeID = $this->getTypeIdByName('Admin');
 
         $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$adminTypeID'";
         return mysqli_fetch_array($this->doQuery($query))['username'];
     }
 
     function getEncodedUsernamesByAccountID($accountID) {
-        $regularTypeID = $this->getRegularTypeID();
+        $userTypeID = $this->getTypeIdByName('User');
 
-        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$regularTypeID'";
+        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$userTypeID'";
         $result = $this->doQuery($query);
 
         $users = Array();
         while($row = mysqli_fetch_array($result)) {
-            /*
-            $encryptedUsername = openssl_encrypt($row['username'], 'DES-EDE3', 'viewUserProfilePassword');
-            $encryptedUsername = str_replace("+", "!!!", $encryptedUsername);
-            $encryptedUsername = str_replace("%", "$$$", $encryptedUsername);
-            */
+
             $curUsername = $row['username'];
             $encryptedUsername = Crypto::encrypt($curUsername, true);
 
