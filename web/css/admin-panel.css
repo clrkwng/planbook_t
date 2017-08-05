@@ -64,3 +64,9 @@ td#addNewUserButton{
 #adminPanelLink span {
     font-size: 20px;
 }
+a:hover {
+    text-decoration: none;
+}
+td#addNewUserButton{
+    cursor: pointer;
+}

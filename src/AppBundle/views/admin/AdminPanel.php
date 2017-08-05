@@ -52,6 +52,8 @@ if(isset($_GET['delete'])) //delete the user
     <title>Admin Panel</title>
     <link rel="stylesheet" href="../../libs/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/admin/admin.css">
+    <!-- Theme CSS -->
+    <link href="../../css/start-bootstrap-template.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="../../css/admin-panel.css" rel="stylesheet">
@@ -61,122 +63,191 @@ if(isset($_GET['delete'])) //delete the user
     <script src="../../libs/vendor/respond.min.js"></script>
     <!--[endif]-->
 
-    <style>
-        a:hover {
-            text-decoration: none;
-        }
-        td#addNewUserButton{
-            cursor: pointer;
-        }
-    </style>
+    <!-- Theme JavaScript -->
+    <script src="../../libs/freelancer/dist/freelancer.js"></script>
 </head>
 
-<body style="background-color: #e6f7ff;">
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<body style="background-color: #e6f7ff;" id="page-top" >
+
+<!-- Navigation -->
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
             </button>
+            <a class="navbar-brand" href="#page-top">Planbook</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="../index.html">Planbook</a></li>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a href ="../user/UserProfile.php">Profile</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="#manage-users">Group Settings</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="../auth/Login.php">Log out</a>
+                </li>
             </ul>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="glyphicon glyphicon-user"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="../user/UserProfile.php">Profile</a></li>
-                    <li><a href="#">Group Settings</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="../auth/Login.php">Log out</a></li>
-                </ul>
-            </div>
-        </div><!--/.nav-collapse -->
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
+    <!-- /.container-fluid -->
 </nav>
 
-<div class="container">
-
-    <div class="starter-template">
-        <h1 align="left">Admin Panel</h1>
+<!-- Header -->
+<header>
+    <div class="container" id="maincontent" tabindex="-1">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-text">
+                    <h1 class="name">Admin Panel</h1>
+                    <hr class="star-light">
+                    <span class="skills">
+                        Manage
+                        <?php if (isset($adminUsername)) echo $dbcomm->getAccountNameByUsername($adminUsername); ?>
+                         Users
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
+</header>
 
-    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+<section id="manage-users">
+    <div class="container">
 
-    <h2 align="center">Manage <b>
-            <?php if (isset($adminUsername)) echo $dbcomm->getAccountNameByUsername($adminUsername); ?>
-    </b> Users</h2>
-    <br>
-    <table class="table table-hover" width="100%">
-        <tr>
-            <th width="40%">
-                User:
-            </th>
-            <th width="20%">
-                Points:
-            </th>
-            <th width="20%">
-                Actions:
-            </th>
-        </tr>
-        <?php
-        $users = $dbcomm->getAllUsersByAdminUsername($adminUsername);
-        $userCounter = 0;
-        foreach($users as $userId=>$userValues)
-        {
-            $userName = $userValues['username'];
-            $userPoints = $userValues['total_points'];
+        <?php if (isset($alertMessage)) echo $alertMessage;?>
 
-            $encryptedRewardAdminUsername = Crypto::encrypt($adminUsername, true);
-            $encryptedRewardUserUsername = Crypto::encrypt($userName, true);
+        <table class="table table-hover" width="100%">
+            <tr>
+                <th width="40%">
+                    User:
+                </th>
+                <th width="20%">
+                    Points:
+                </th>
+                <th width="20%">
+                    Actions:
+                </th>
+            </tr>
+            <?php
+            $users = $dbcomm->getAllUsersByAdminUsername($adminUsername);
+            $userCounter = 0;
+            foreach($users as $userId=>$userValues)
+            {
+                $userName = $userValues['username'];
+                $userPoints = $userValues['total_points'];
 
-            $userEmail = $dbcomm->getEmailByUsername($userName);
+                $encryptedRewardAdminUsername = Crypto::encrypt($adminUsername, true);
+                $encryptedRewardUserUsername = Crypto::encrypt($userName, true);
 
-            echo "<tr style='height:80px;'>
-                      <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$userName</td>
-                      <td style='vertical-align: middle;'>$userPoints</td>
-                      <td style='vertical-align: middle;'>
-                          <a href=\"../user/Homepage.php?id=$encryptedHomepageUsername\" title='Tasks' style='color: black;'>
-                              <span class='glyphicon glyphicon-calendar' style='font-size: 20px;'></span>
-                          </a>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <a href=\"AddReward.php?id=$encryptedRewardAdminUsername&reward=$encryptedRewardUserUsername\" style='color: pink;' title='Rewards'>
-                              <span class='glyphicon glyphicon-piggy-bank' style='font-size: 20px; text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;'></span>
-                          </a>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <a href=\"mailto:$userEmail?subject=Planbook%20Email\" style='color: dimgrey;' title='Email'>
-                              <span class='glyphicon glyphicon-envelope' style='font-size: 20px;'></span>
-                          </a>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <a href=\"AdminPanel.php?id=$encryptedUsername&delete=$userName\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
-                              <span class='glyphicon glyphicon-trash' style='font-size: 20px;'></span>
-                          </a>
-                      </td>
-                  </tr>";
-            $userCounter++;
-        }
-        ?>
-        <tr id='addNewUser'>
-            <td colspan="3" id="addNewUserButton">
-                <a class="glyphicon glyphicon-plus link_button"
-                     href="../auth/CreateUser.php?id=<?php echo $encryptedAccountID;?>"
-                > New User</a>
-            </td>
-        </tr>
-    </table>
+                $userEmail = $dbcomm->getEmailByUsername($userName);
 
-</div><!-- /.container -->
+                echo "<tr style='height:80px;'>
+                          <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$userName</td>
+                          <td style='vertical-align: middle;'>$userPoints</td>
+                          <td style='vertical-align: middle;'>
+                              <a href=\"../user/Homepage.php?id=$encryptedHomepageUsername\" title='Tasks' style='color: black;'>
+                                  <span class='glyphicon glyphicon-calendar' style='font-size: 20px;'></span>
+                              </a>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <a href=\"AddReward.php?id=$encryptedRewardAdminUsername&reward=$encryptedRewardUserUsername\" style='color: pink;' title='Rewards'>
+                                  <span class='glyphicon glyphicon-piggy-bank' style='font-size: 20px; text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;'></span>
+                              </a>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <a href=\"mailto:$userEmail?subject=Planbook%20Email\" style='color: dimgrey;' title='Email'>
+                                  <span class='glyphicon glyphicon-envelope' style='font-size: 20px;'></span>
+                              </a>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <a href=\"AdminPanel.php?id=$encryptedUsername&delete=$userName\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
+                                  <span class='glyphicon glyphicon-trash' style='font-size: 20px;'></span>
+                              </a>
+                          </td>
+                      </tr>";
+                $userCounter++;
+            }
+            ?>
+            <tr id='addNewUser'>
+                <td colspan="3" id="addNewUserButton">
+                    <a class="glyphicon glyphicon-plus link_button"
+                         href="../auth/CreateUser.php?id=<?php echo $encryptedAccountID;?>"
+                    > New User</a>
+                </td>
+            </tr>
+        </table>
+    </div><!-- /.container -->
 
+</section>
+
+<!-- Footer -->
+<footer class="text-center">
+    <div class="footer-above">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col col-md-4">
+                    <h3>Location</h3>
+                    <p>400 Cedar Ave
+                        <br>West Long Branch, NJ 07764</p>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>Around the Web</h3>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Facebook</span><i class="fa fa-fw fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Google Plus</span><i class="fa fa-fw fa-google-plus"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Twitter</span><i class="fa fa-fw fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Linked In</span><i class="fa fa-fw fa-linkedin"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Dribble</span><i class="fa fa-fw fa-dribbble"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>About Planbook</h3>
+                    <p>Planbook is a free to use tool to help keep lives organized.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-below">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    Copyright &copy; Planbook 2017
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
+
+</body>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+<script src="//use.fontawesome.com/7d70b9fab6.js"></script>
 <script src="../../libs/jquery/dist/jquery.min.js"></script>
 <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
@@ -206,5 +277,4 @@ if(isset($_GET['delete'])) //delete the user
         }, false);
     }
 </script>
-</body>
 </html>

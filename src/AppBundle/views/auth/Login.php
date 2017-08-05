@@ -1,6 +1,6 @@
 <?php
 session_start();
-$username = $password = '';
+$username = $password = $alertMessage = '';
 
 if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
     $cookieUsername = $_COOKIE['username'];
@@ -11,7 +11,6 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
 require_once "../db/dbcomm.php";
 require_once "../db/Crypto.php";
 
-//create db connection
 $dbcomm = new dbcomm();
 
 if (isset($_POST['submitCredentials'])) {
@@ -146,6 +145,7 @@ if (isset($_POST['submitCredentials'])) {
     </div>
     <!-- /.container-fluid -->
 </nav>
+
 <!-- Top content -->
 <div class="top-content">
 
@@ -153,22 +153,13 @@ if (isset($_POST['submitCredentials'])) {
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1>
-                        <font color="White"><strong>Planbook</strong> Login Page</font>
-                    </h1>
-                    <div class="description">
-                        <p>
-                            <font color="White" >"To achieve <strong>big</strong> things, start small!"</font>
-                        </p>
-                    </div>
-                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+                    <?php if (isset($alertMessage)) echo $alertMessage;?>
                 </div>
-
             <div class="col-sm-6 col-sm-offset-3 form-box">
                 <div class="form-top">
                     <div class="form-top-left">
-                        <h3>Login to our site</h3>
-                        <p>Enter your credentials to log on:</p>
+                        <h3>Login</h3>
+                        <p>Please enter your credentials:</p>
                     </div>
                     <div class="form-top-right">
                         <i class="fa fa-key"></i>
