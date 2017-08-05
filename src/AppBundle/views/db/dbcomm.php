@@ -201,27 +201,10 @@ class dbcomm
                 "silverTrophy",
                 "goldTrophy"
             );
-        $awardsUnits =
-            array(
-                'star',
-                'star',
-                'star',
-                'trophy',
-                'trophy',
-                'trophy'
-            );
-        $awardsSymbols =
-            array(
-                '★',
-                '★',
-                '★',
-                '🏆',
-                '🏆',
-                '🏆'
-            );
+
         $awardsAmount =
             array(
-                "10",
+                "50",
                 "10",
                 "10",
                 "10",
@@ -232,20 +215,20 @@ class dbcomm
         $i = 0;
         foreach ($awardNames as $awardName){
             //NOTE: Assumes that $awardName == $imageName
-            $this->checkAwardsTableHelper(true, $awardName, $awardName, $awardsAmount[$i], $awardsUnits[$i], $awardsSymbols[$i]);
+            $this->checkAwardsTableHelper(true, $awardName, $awardName, $awardsAmount[$i]);
             $i++;
         }
         return true;
     }
 
-    function checkAwardsTableHelper($doFix, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol){
+    function checkAwardsTableHelper($doFix, $awardName, $imageName, $awardAmount){
         if($this->checkIfAwardExistsByName($awardName)){
             return true;
         }else{
             if($doFix){
                 $imageId = $this->getImageIdByName($imageName);
-                $this->insertNewAward($awardName, $imageId, $awardAmount, $awardUnit, $awardSymbol);
-                $this->checkAwardsTableHelper(false, $awardName, $imageName, $awardAmount, $awardUnit, $awardSymbol);
+                $this->insertNewAward($awardName, $imageId, $awardAmount);
+                $this->checkAwardsTableHelper(false, $awardName, $imageName, $awardAmount);
             }else{
                 return false;
             }
@@ -267,13 +250,13 @@ class dbcomm
         }
     }
 
-    function insertNewAward($awardName, $imageId, $awardAmount, $awardUnit, $awardSymbol)
+    function insertNewAward($awardName, $imageId, $awardAmount)
     {
         $query =
             "INSERT INTO `Awards` "
-            ."(`name`,`image_id`,`amount`, `unit`, `symbol`) "
+            ."(`name`,`image_id`,`amount`) "
             ."VALUES "
-            ."('$awardName', '$imageId', '$awardAmount', '$awardUnit', '$awardSymbol')";
+            ."('$awardName', '$imageId', '$awardAmount')";
         $this->doQuery($query);
         return true;
     }
