@@ -82,60 +82,6 @@ class dbcomm
         $this->checkAwardsTable();
         $this->checkTypeTable();
         $this->checkPriorityTable();
-        $this->checkStatusTable();
-    }
-
-    function checkStatusTable(){
-        $statusNames =
-            array(
-                "Completed",
-                "In Progress",
-                "Not Started",
-            );
-
-        foreach ($statusNames as $curStatusName){
-            $this->checkStatusTableHelper(true, $curStatusName);
-        }
-        return true;
-    }
-
-    function checkStatusTableHelper($doFix, $statusName){
-        if($this->checkIfStatusExistsByName($statusName)){
-            return true;
-        }else{
-            if($doFix){
-                $this->insertNewStatus($statusName);
-                $this->checkStatusTableHelper(false, $statusName);
-            }else{
-                return false;
-            }
-        }
-        return false;
-    }
-
-    function checkIfStatusExistsByName($statusName)
-    {
-        $query = "SELECT `id` FROM `Status` WHERE `name`='$statusName';";
-        $result = $this->doQuery($query);
-
-        $SQLdataarray = mysqli_fetch_array($result);
-        if(count($SQLdataarray) < 1) {
-            return FALSE;
-        }
-        else {
-            return TRUE;
-        }
-    }
-
-    function insertNewStatus($statusName)
-    {
-        $query =
-            "INSERT INTO `Status` "
-            ."(`name`) "
-            ."VALUES "
-            ."('$statusName')";
-        $this->doQuery($query);
-        return true;
     }
 
     function checkPriorityTable(){
