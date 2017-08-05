@@ -746,11 +746,7 @@ $currentYear = $dbcomm->getYearByUsername($username);
                                 </button>
                             </td>
                         </tr>
-                        <tr>
-                            <td height="10px">
-
-                            </td>
-                        </tr>
+                        <tr><td height="10px"></td></tr>
                         <tr>
                             <td>
                                 <select class="form-control" title="Category Name" name="categoryName" id="categoryName" onchange="onManageCategories(this)">
@@ -853,25 +849,13 @@ $currentYear = $dbcomm->getYearByUsername($username);
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td height="10px">
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Date
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="form-group ">
+                        <tr><td height="10px"></td></tr>
+                        <tr><td>Date</td></tr>
+                        <tr><td> <div class="form-group ">
                                     <div class="input-group">
                                         <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text"/>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
+                                </div></td></tr>
                     </table>
                 </div>
                 <div class="modal-footer">
