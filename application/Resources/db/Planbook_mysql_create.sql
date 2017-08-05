@@ -1,29 +1,5 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 4541
-#
-# http://www.sequelpro.com/
-# https://github.com/sequelpro/sequelpro
-#
-# Host: mysql.planbook.xyz (MySQL 5.6.34-log)
-# Database: planbook_db1
-# Generation Time: 2017-08-03 20:29:20 +0000
-# ************************************************************
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
-# Dump of table Account
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Account`;
+CREATE SCHEMA `planbook_db1` ;
+use planbook_db1;
 
 CREATE TABLE `Account` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -33,47 +9,27 @@ CREATE TABLE `Account` (
   `email` varchar(255) NOT NULL DEFAULT '',
   `phonenumber` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Awards
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Awards`;
 
 CREATE TABLE `Awards` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `image_id` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
-  `unit` varchar(255) NOT NULL,
-  `symbol` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Category
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Category`;
 
 CREATE TABLE `Category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `image_id` int(11) DEFAULT NULL,
-  `color` varchar(255) DEFAULT '',
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 
-
-
-# Dump of table Daily_Task_List
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Daily_Task_List`;
 
 CREATE TABLE `Daily_Task_List` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -88,25 +44,13 @@ CREATE TABLE `Daily_Task_List` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Date
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Date`;
-
 CREATE TABLE `Date` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `date` varchar(10) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
-
-
-# Dump of table Demographics
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Demographics`;
 
 CREATE TABLE `Demographics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -117,11 +61,6 @@ CREATE TABLE `Demographics` (
 
 
 
-# Dump of table Frequency
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Frequency`;
-
 CREATE TABLE `Frequency` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -130,11 +69,6 @@ CREATE TABLE `Frequency` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Frequency_Meta
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Frequency_Meta`;
 
 CREATE TABLE `Frequency_Meta` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -146,38 +80,24 @@ CREATE TABLE `Frequency_Meta` (
 
 
 
-# Dump of table Image
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Image`;
-
 CREATE TABLE `Image` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `link` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Priority
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Priority`;
 
 CREATE TABLE `Priority` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `points` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Redeem
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Redeem`;
 
 CREATE TABLE `Redeem` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -187,14 +107,9 @@ CREATE TABLE `Redeem` (
   `redeem_date` datetime DEFAULT NULL,
   `completed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Special_Done
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Special_Done`;
 
 CREATE TABLE `Special_Done` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -207,11 +122,6 @@ CREATE TABLE `Special_Done` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Special_Goal
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Special_Goal`;
 
 CREATE TABLE `Special_Goal` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -229,11 +139,6 @@ CREATE TABLE `Special_Goal` (
 
 
 
-# Dump of table Special_Goal_List
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Special_Goal_List`;
-
 CREATE TABLE `Special_Goal_List` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -245,23 +150,12 @@ CREATE TABLE `Special_Goal_List` (
 
 
 
-# Dump of table Status
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Status`;
-
 CREATE TABLE `Status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-# Dump of table Task
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Task`;
 
 CREATE TABLE `Task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -275,15 +169,12 @@ CREATE TABLE `Task` (
   `end_time` varchar(8) NOT NULL DEFAULT '',
   `user_id` int(11) NOT NULL,
   `date` date NOT NULL,
+  `completed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8;
 
 
 
-# Dump of table Task_Done
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Task_Done`;
 
 CREATE TABLE `Task_Done` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -297,11 +188,6 @@ CREATE TABLE `Task_Done` (
 
 
 
-# Dump of table Template
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Template`;
-
 CREATE TABLE `Template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `image_id` int(11) NOT NULL,
@@ -312,17 +198,12 @@ CREATE TABLE `Template` (
   `end_time` varchar(8) NOT NULL DEFAULT '',
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Theme
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Theme`;
 
 CREATE TABLE `Theme` (
-  `id` int(11) NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `color1` varchar(7) NOT NULL DEFAULT '',
   `color2` varchar(7) NOT NULL DEFAULT '',
   `user_id` int(11) NOT NULL,
@@ -331,28 +212,19 @@ CREATE TABLE `Theme` (
   `color5` varchar(7) NOT NULL DEFAULT '',
   `color6` varchar(7) NOT NULL DEFAULT '',
   `color7` varchar(7) NOT NULL DEFAULT '',
-  `color8` varchar(7) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `color8` varchar(7) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table Type
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `Type`;
 
 CREATE TABLE `Type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table User
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `User`;
 
 CREATE TABLE `User` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -369,14 +241,9 @@ CREATE TABLE `User` (
   `phone_number` varchar(255) NOT NULL,
   `school` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 
-
-# Dump of table User_Awards
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `User_Awards`;
 
 CREATE TABLE `User_Awards` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -384,14 +251,62 @@ CREATE TABLE `User_Awards` (
   `user_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=utf8;
 
 
+ALTER TABLE `Special_Goal` ADD CONSTRAINT `Special_Goal_fk0` FOREIGN KEY (`award_id`) REFERENCES `Awards`(`id`);
+
+ALTER TABLE `Special_Goal` ADD CONSTRAINT `Special_Goal_fk1` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+
+ALTER TABLE `Redeem` ADD CONSTRAINT `Redeem_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
+ALTER TABLE `Special_Goal_List` ADD CONSTRAINT `Special_Goal_List_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
+ALTER TABLE `User` ADD CONSTRAINT `User_fk0` FOREIGN KEY (`account_id`) REFERENCES `Account`(`id`);
+
+ALTER TABLE `User` ADD CONSTRAINT `User_fk1` FOREIGN KEY (`demographic_id`) REFERENCES `Demographics`(`id`);
+
+ALTER TABLE `User` ADD CONSTRAINT `User_fk2` FOREIGN KEY (`theme_id`) REFERENCES `Theme`(`id`);
+
+ALTER TABLE `User` ADD CONSTRAINT `User_fk3` FOREIGN KEY (`type_id`) REFERENCES `Type`(`id`);
+
+ALTER TABLE `User` ADD CONSTRAINT `User_fk4` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+ALTER TABLE `Demographics` ADD CONSTRAINT `Demographics_fk0` FOREIGN KEY (`theme_id`) REFERENCES `Theme`(`id`);
+
+ALTER TABLE `Special_Done` ADD CONSTRAINT `Special_Done_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
+ALTER TABLE `Special_Done` ADD CONSTRAINT `Special_Done_fk1` FOREIGN KEY (`special_goal_id`) REFERENCES `Special_Goal`(`id`);
+
+ALTER TABLE `User_Awards` ADD CONSTRAINT `User_Awards_fk0` FOREIGN KEY (`award_id`) REFERENCES `Awards`(`id`);
+
+ALTER TABLE `User_Awards` ADD CONSTRAINT `User_Awards_fk1` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
+ALTER TABLE `Awards` ADD CONSTRAINT `Awards_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+
+ALTER TABLE `Category` ADD CONSTRAINT `Category_fk0` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+
+ALTER TABLE `Category` ADD CONSTRAINT `Category_fk1` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
+ALTER TABLE `Task` ADD CONSTRAINT `Task_fk0` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
+
+ALTER TABLE `Task` ADD CONSTRAINT `Task_fk1` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`);
+
+ALTER TABLE `Task` ADD CONSTRAINT `Task_fk2` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+
+ALTER TABLE `Task` ADD CONSTRAINT `Task_fk3` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
+ALTER TABLE `Common_Task_Goal` ADD CONSTRAINT `Common_Task_Goal_fk0` FOREIGN KEY (`category_id`) REFERENCES `Category`(`id`);
+
+ALTER TABLE `Common_Task_Goal` ADD CONSTRAINT `Common_Task_Goal_fk1` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
 
 
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+ALTER TABLE `Common_Task_Goal` ADD CONSTRAINT `Common_Task_Goal_fk2` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
+
+ALTER TABLE `Task_Done` ADD CONSTRAINT `Task_Done_fk0` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+
+ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk0` FOREIGN KEY (`task_id`) REFERENCES `Task`(`id`);
+
+ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk1` FOREIGN KEY (`priority_id`) REFERENCES `Priority`(`id`);
+
+ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk2` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`);
+ALTER TABLE `Daily_Task_List` ADD CONSTRAINT `Daily_Task_List_fk3` FOREIGN KEY (`status_id`) REFERENCES `Status`(`id`);
