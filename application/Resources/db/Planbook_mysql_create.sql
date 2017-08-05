@@ -141,8 +141,6 @@ ALTER TABLE `Redeem` ADD CONSTRAINT `Redeem_fk0` FOREIGN KEY (`user_id`) REFEREN
 
 ALTER TABLE `User` ADD CONSTRAINT `User_fk0` FOREIGN KEY (`account_id`) REFERENCES `Account`(`id`);
 
-ALTER TABLE `User` ADD CONSTRAINT `User_fk2` FOREIGN KEY (`theme_id`) REFERENCES `Theme`(`id`);
-
 ALTER TABLE `User` ADD CONSTRAINT `User_fk3` FOREIGN KEY (`type_id`) REFERENCES `Type`(`id`);
 
 ALTER TABLE `User` ADD CONSTRAINT `User_fk4` FOREIGN KEY (`image_id`) REFERENCES `Image`(`id`);
