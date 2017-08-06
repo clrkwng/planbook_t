@@ -1,4 +1,7 @@
 <?php
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 session_start();
 $username = $password = '';
 
@@ -7,9 +10,6 @@ if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
     $cookieUsername = $_COOKIE['username'];
     $cookiePassword = $_COOKIE['password'];
 }
-
-require_once "../db/dbcomm.php";
-require_once "../db/Crypto.php";
 
 $dbcomm = new dbcomm();
 
@@ -29,7 +29,7 @@ if (isset($_POST['submitCredentials'])) {
                    setcookie($cookie_name_password, $cookie_value_password, time() + 60*60*24*7);
                }
            }
-            $type = $dbcomm->getTypeByUsername($_POST['username']);
+            $type = $dbcomm->getTypeNameByUsername($_POST['username']);
             if($type == "Admin") {
                 $encryptedUsername = Crypto::encrypt($username, true);
                 echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername'</script>";

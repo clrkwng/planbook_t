@@ -109,7 +109,7 @@ if ($dbcomm->checkIfEmailExists($email)) {
                         <font color="White"> Your verification email has been sent. Please check your inbox.</font>
                     </h4>
                     <p class="description">
-                        <a href = "AccountVerificationSender.php?id=<? echo $encryptedUsername ?>">Resend email?</a>
+                        <a href = "AccountVerificationSender.php?id=<?php echo $encryptedUsername ?>">Resend email?</a>
                     </p>
                 </div>
                 <br><br><br><br>

@@ -5,13 +5,14 @@ require_once "../db/dbcomm.php";
 require_once "../db/Crypto.php";
 
 //create db connection
-$dbcomm = new dbcomm();
+$dbConn = new dbcomm();
 
 if (!isset($_GET['id'])) {
     die("Error: The id was not set.");
 }
 $encryptedUsername = $_GET['id'];
 $username = Crypto::decrypt($encryptedUsername, true);
+$dbConn->convertPointsStarsTrophies($username);
 
 if(isset($_POST['createTask'])) {
     if (isset($_POST['taskName']) and isset($_POST['categoryName']) and isset($_POST['importance']) and isset($_POST['start_hour']) and isset($_POST['start_minute']) and isset($_POST['end_hour']) and isset($_POST['end_minute']) and isset($_POST['date'])) {
@@ -37,16 +38,26 @@ if(isset($_POST['createTask'])) {
 
         $endTime = $end_hour.':'.$end_minute.' '.$end_period;
 
-        $dbcomm->createTaskByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime, $date);
+        $dbConn->createTaskByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime, $date);
 
         if($_POST['createTemplate']=='yes') {
-            $dbcomm->addTemplateByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime);
+            $dbConn->addTemplateByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime);
         }
     }
 }
 
 if(isset($_POST['saveTask'])) {
-    if (isset($_POST['editTaskID']) and isset($_POST['editTaskName']) and isset($_POST['editTaskCategoryName']) and isset($_POST['editTaskImportance']) and isset($_POST['editTask_start_hour']) and isset($_POST['editTask_start_minute']) and isset($_POST['editTask_end_hour']) and isset($_POST['editTask_end_minute']) and isset($_POST['editTask_date'])) {
+    if (
+            isset($_POST['editTaskID'])
+            and isset($_POST['editTaskName'])
+            and isset($_POST['editTaskCategoryName'])
+            and isset($_POST['editTaskImportance'])
+            and isset($_POST['editTask_start_hour'])
+            and isset($_POST['editTask_start_minute'])
+            and isset($_POST['editTask_end_hour'])
+            and isset($_POST['editTask_end_minute'])
+            and isset($_POST['editTask_date'])
+    ) {
 
         $errorCount= 0;
         $taskName = $_POST['editTaskName'];
@@ -61,22 +72,6 @@ if(isset($_POST['saveTask'])) {
         $taskDate = $_POST['editTask_date'];
         $taskIdToUpdate = $_POST['editTaskID'];
 
-        /*if ($end_hour < $start_hour OR !($end_hour != $start_hour AND $end_minute >= $start_minute)){
-            $errorCount++;
-            $alertMessage =
-                '<div class="alert alert-danger alert-dismissible" role="alert">'
-                .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
-                .'<span aria-hidden="true">&times;</span>'
-                .'</button>'
-                .'<strong>'
-                .'Error:'
-                .'</strong>'
-                .'<span>'
-                .'The times set are not correct.'
-                .'</div>';
-
-        }*/
-
         $year = substr($taskDate, 6,4);
         $month = substr($taskDate,0,2);
         $day = substr($taskDate, 3,2);
@@ -86,12 +81,12 @@ if(isset($_POST['saveTask'])) {
 
         $endTime = $end_hour.':'.$end_minute.' '.$end_period;
 
-        $dbcomm->updateTaskByTaskID($taskIdToUpdate, $taskName, $categoryName, $importance, $startTime, $endTime, $date);
+        $dbConn->updateTaskByTaskID($taskIdToUpdate, $taskName, $categoryName, $importance, $startTime, $endTime, $date);
     }
 }
 
 if(isset($_GET['deleteTask'])) {
-    $dbcomm->deleteTaskByTaskID($_GET['deleteTask']);
+    $dbConn->deleteTaskByTaskID($_GET['deleteTask']);
     $alertMessage = '<div class="alert alert-success alert-dismissible col-md-10 col-md-offset-1" role="alert" align="center">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>Success!</strong>  The task has been deleted.</div>';
@@ -103,66 +98,64 @@ if (isset($_GET['weekToDay'])) {
     $weekYear = explode('**',$_GET['weekToDay'])[0];
     if(intval($weekDay) < 10) $weekDay = "0" . $weekDay;
     if(intval($weekMonth) < 10) $weekMonth = "0" . $weekMonth;
-    $dbcomm->setDateByDate($username, $weekYear . "-" . $weekMonth . "-" . $weekDay);
+    $dbConn->setDateByDate($username, $weekYear . "-" . $weekMonth . "-" . $weekDay);
 }
 
 if (isset($_GET['monthToDay'])) {
-    $dbcomm->setDayOfMonthByUsername($username, $_GET['monthToDay']);
+    $dbConn->setDayOfMonthByUsername($username, $_GET['monthToDay']);
 }
 
 if (isset($_POST['decrementDate'])){
-    $dbcomm->decrementDateByUsername($username);
+    $dbConn->decrementDateByUsername($username);
 }
 
 if (isset($_POST['incrementDate'])){
-    $dbcomm->incrementDateByUsername($username);
+    $dbConn->incrementDateByUsername($username);
 }
 
 if (isset($_POST['decrementWeek'])){
-    $dbcomm->decrementWeekByUsername($username);
+    $dbConn->decrementWeekByUsername($username);
 }
 
 if (isset($_POST['incrementWeek'])){
-    $dbcomm->incrementWeekByUsername($username);
+    $dbConn->incrementWeekByUsername($username);
 }
 
 if (isset($_POST['decrementMonth'])){
-    $dbcomm->decrementMonthByUsername($username);
+    $dbConn->decrementMonthByUsername($username);
 }
 
 if (isset($_POST['incrementMonth'])){
-    $dbcomm->incrementMonthByUsername($username);
+    $dbConn->incrementMonthByUsername($username);
 }
 
 if(isset($_GET['today']) and $_GET['today'] = 'xtxrxuxex') {
-    $dbcomm->setCurrentDateByUsername($username);
+    $dbConn->setCurrentDateByUsername($username);
 }
 
 $wordDaysOfTheWeek = Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
 $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 $numDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-if ($dbcomm->isCurrentYearALeapYear($username) == 1) {
+if ($dbConn->isCurrentYearALeapYear($username) == 1) {
     $numDaysInMonth[1] = 29;
 }
 
 
-$theDate = $dbcomm->getDateByUsername($username);
+$theDate = $dbConn->getDateByUsername($username);
 $currentDate = substr($theDate, 5,2).'/'.substr($theDate, 8,2);
-$currentDay = intval($dbcomm->getDayByUsername($username));
-$currentMonth = $dbcomm->getMonthByUsername($username);
+$currentDay = intval($dbConn->getDayByUsername($username));
+$currentMonth = $dbConn->getMonthByUsername($username);
 $currentMonthName = $months[$currentMonth-1];
-$currentYear = $dbcomm->getYearByUsername($username);
+$currentYear = $dbConn->getYearByUsername($username);
 
 
 if(isset($_GET['completeTaskID'])) {
     $todayDate = date('Y-m-d');
     if ($todayDate <= $theDate) {
-        $encryptedTaskID = $_GET['completeTaskID'];
-        $encryptedTaskID = str_replace("!!!", "+", $encryptedTaskID);
-        $encryptedTaskID = str_replace("$$$", "%", $encryptedTaskID);
-        $taskID = openssl_decrypt($encryptedTaskID, 'RC2-64-CBC', 'completeTaskPassword');
+        $encryptedTaskID = Crypto::encrypt($_GET['completeTaskID']);
+        $taskID = Crypto::decrypt($encryptedTaskID);
         $completeTaskID = intval($taskID);
-        $dbcomm->completeTaskByTaskID($username, $completeTaskID);
+        $dbConn->completeTaskByTaskID($username, $completeTaskID);
         $alertMessage .= '<div class="alert alert-success alert-dismissible col-md-10 col-md-offset-1" role="alert" align="center">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>Success!</strong>  Your task has been completed.</div>';
@@ -174,7 +167,6 @@ if(isset($_GET['completeTaskID'])) {
     }
 }
 
-$dbcomm->convertPointsStarsTrophies($username);
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -222,24 +214,24 @@ $dbcomm->convertPointsStarsTrophies($username);
             <div class="content">
                 <?php
                 if (isset($alertMessage)) {
-                    "<div>"
-                    .$alertMessage
-                    ."</div>";
+                    echo "<div>"
+                            .$alertMessage
+                        ."</div>";
                 }
                 ?>
                 <table align="center" width="80%" id="dailyTable">
                     <tr>
                         <td width="10%" align="left">
-                            <form role="form" action = "Homepage.php?id=<? echo $encryptedUsername; ?>&today=xtxrxuxex" method="post">
+                            <form role="form" action = "Homepage.php?id=<?php echo $encryptedUsername; ?>&today=xtxrxuxex" method="post">
                                 <button type="submit" class="btn btn-primary">Today</button>
                             </form>
                         </td>
                         <td align="center">
-                            <form role="form" action="Homepage.php?id=<? echo $encryptedUsername ?>#firstPage" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementDate" type="submit"></button>
                             </form>
-                            <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<? echo $currentMonthName . " " . $currentDay . ", " . $currentYear; ?>&nbsp;</h1>
-                            <form role="form" action="Homepage.php?id=<? echo $encryptedUsername ?>#firstPage" method="post" class="login-form" style="display: inline-block">
+                            <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<?php echo $currentMonthName . " " . $currentDay . ", " . $currentYear; ?>&nbsp;</h1>
+                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementDate" type="submit"></button>
                             </form>
                         </td>
@@ -252,8 +244,8 @@ $dbcomm->convertPointsStarsTrophies($username);
                         </td>
                     </tr>
                     <?php
-                    $categories = $dbcomm->getCategoryNamesByUsername($username);
-                    $colors = $dbcomm->getThemeByUsername($username);
+                    $categories = $dbConn->getCategoryNamesByUsername($username);
+                    $colors = $dbConn->getThemeByUsername($username);
                     $allTasksForDay = Array();
                     $ultimateTaskCount = 0;
                     for ($i = 0; $i < sizeOf($categories); $i++) {
@@ -261,7 +253,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                         $color = $colors[$i];
                         $j = $i + 1;
 
-                        $tasks = $dbcomm->getTaskInfoByCategory($username, $category);
+                        $tasks = $dbConn->getTaskInfoByCategory($username, $category);
                         $taskCount = count($tasks);
 
                         for ($l = 0; $l < $taskCount; $l++) {
@@ -270,20 +262,26 @@ $dbcomm->convertPointsStarsTrophies($username);
                         }
 
                         $trID = str_replace(" ","_",$category);
-                        echo "<tr id='categoryPanel$trID'>";
-                        echo '<td colspan="3" align="left">';
-                        echo '<div class="panel-group">';
-                        echo '<div class="panel panel-default">';
-                        echo "<div class='panel-heading' style='background-color:$color;'>";
-                        echo '<h4 class="panel-title">';
-                        echo "<a data-toggle='collapse' data-target='#collapse$j' style='text-decoration: none; cursor: pointer;'>";
-                        echo $category . "</a>";
-                        echo "&nbsp;&nbsp;<span class='badge' style='color: $color'>$taskCount</span>";
-                        echo '</h4>';
-                        echo '</div>';
-                        echo "<div id='collapse$j' class='panel-collapse collapse'>";
-                        echo '<form>';
-                        echo '<table class="list-group" width="100%">';
+                        echo
+                    "<tr id='categoryPanel$trID'>"
+                        ."<td colspan=\"3\" align=\"left\">"
+                            ."<div class=\"panel-group\">"
+                                ."<div class=\"panel panel-default\">"
+                                    ."<div class='panel-heading' style='background-color:$color;'>"
+                                        ."<h4 class=\"panel-title\">"
+                                            ."<a data-toggle='collapse' data-target='#collapse$j' style='text-decoration: none; cursor: pointer;'>"
+                                                .$category
+                                            ."</a>"
+                                            ."&nbsp;"
+                                            ."&nbsp;"
+                                            ."<span class='badge' style='color: $color'>"
+                                                .$taskCount
+                                            ."</span>"
+                                        ."</h4>"
+                                    ."</div>"
+                                    ."<div id='collapse$j' class='panel-collapse collapse'>"
+                                        ."<form>"
+                                            ."<table class=\"list-group\" width=\"100%\">";
                         $priorityColor = "gray";
                         foreach ($tasks as $taskID => $tasksValues) {
                             $task = $tasksValues['taskName'];
@@ -300,51 +298,78 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 $priorityStyle = 'style = "color: red"';
                             }
 
-                            $encryptedTaskID = openssl_encrypt($taskID, 'RC2-64-CBC', 'completeTaskPassword');
-                            $encryptedTaskID = str_replace("+", "!!!", $encryptedTaskID);
-                            $encryptedTaskID = str_replace("%", "$$$", $encryptedTaskID);
+                            $encryptedTaskID = Crypto::encrypt($taskID);
                             $completedTRClass = "";
-                            if ($dbcomm->isCompletedByTaskID($taskID)) {
+                            if ($dbConn->isCompletedByTaskID($taskID)) {
                                 $completedTRClass = "background-color: #DCDCDC;";
                             }
-                            echo "<tr id='closeItem'  style='border: 1px solid black; $completedTRClass'>";
-                            echo '<td style="padding: 8px" width="40%">' . $task . '</td>';
-                            echo '<td align ="center"><div class="glyphicon glyphicon-alert" ' . $priorityStyle . '></div></td>';
-                            echo '<td align = "left" width="20%">' . $priority . ' Priority </td>';
-                            echo '<td align ="center"><div class="glyphicon glyphicon-time"></div></td>';
-                            echo '<td align="right" width="7.5%">' . $startTime . '</td>';
-                            echo '<td align = "center"> to </td>';
-                            echo '<td align="left">' . $endTime . '</td>';
-                            if (!($dbcomm->isCompletedByTaskID($taskID))) {
-                                echo "<td align='center' width='2%' id='tdConfirmComplete'>
-                                        <a href='Homepage.php?id=$encryptedUsername&completeTaskID=$encryptedTaskID' class='confirmCompleteTask' title='Complete' id='confirmComplete'>
-                                            <div class='glyphicon glyphicon-ok-sign'></div>
-                                        </a>
-                                      </td>";
-                                echo "<td align='center' width='2%'>
-                                        <button style='appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none; border: 0; background: transparent;' type='button' class='glyphicon glyphicon-pencil' id = 'ultimateTaskCount$ultimateTaskCount' title='Edit' data-toggle='modal' data-target='#editTaskModal' onclick='loadEditTask(this.id)'></button>
-                                      </td>";
-                                echo "<td align='center' width='2%'>
-                                        <a href='Homepage.php?id=$encryptedUsername&deleteTask=$taskID' class='confirmation' title='Delete'>
-                                            <div class='glyphicon glyphicon-remove-sign'></div>
-                                        </a>
-                                      </td>";
+                            echo
+                                                    "<tr id='closeItem'  style='border: 1px solid black; $completedTRClass'>"
+                                                        ."<td style=\"padding: 8px\" width=\"40%\">"
+                                                            .$task
+                                                        ."</td>"
+                                                        ."<td align =\"center\">"
+                                                            ."<div class=\"glyphicon glyphicon-alert\" "
+                                                                .$priorityStyle
+                                                            .">"
+                                                            ."</div>"
+                                                        ."</td>"
+                                                        ."<td align = \"left\" width=\"20%\">"
+                                                            .$priority
+                                                            ."Priority "
+                                                        ."</td>"
+                                                        ."<td align =\"center\">"
+                                                            ."<div class=\"glyphicon glyphicon-time\">"
+                                                            ."</div>"
+                                                        ."</td>"
+                                                        ."<td align=\"right\" width=\"7.5%\">"
+                                                            .$startTime
+                                                        ."</td>"
+                                                        ."<td align = \"center\">"
+                                                            ." to "
+                                                        ."</td>"
+                                                        ."<td align=\"left\">"
+                                                            .$endTime
+                                                        .'</td>';
+                            if (!($dbConn->isCompletedByTaskID($taskID))) {
+                                echo
+                                                        "<td align='center' width='2%' id='tdConfirmComplete'>"
+                                                            ."<a href='Homepage.php?id=$encryptedUsername&completeTaskID=$encryptedTaskID' class='confirmCompleteTask' title='Complete' id='confirmComplete'>"
+                                                                ."<div class='glyphicon glyphicon-ok-sign'>"
+                                                                ."</div>"
+                                                            ."</a>"
+                                                          ."</td>"
+                                                        ."<td align='center' width='2%'>"
+                                                            ."<button style='display: none; -webkit-appearance: none; -moz-appearance: none; outline: none; border: 0; background: transparent;' type='button' class='glyphicon glyphicon-pencil' id = 'ultimateTaskCount$ultimateTaskCount' title='Edit' data-toggle='modal' data-target='#editTaskModal' onclick='loadEditTask(this.id)'>"
+                                                            ."</button>"
+                                                        ."</td>"
+                                                        ."<td align='center' width='2%'>"
+                                                            ."<a href='Homepage.php?id=$encryptedUsername&deleteTask=$taskID' class='confirmation' title='Delete'>"
+                                                                ."<div class='glyphicon glyphicon-remove-sign'>"
+                                                                ."</div>"
+                                                            ."</a>"
+                                                        ."</td>";
                             }
-                            echo '</tr>';
+                            echo
+                                                    '</tr>';
                             $ultimateTaskCount++;
                         }
                         if ($taskCount == 0) {
-                            echo '<tr>';
-                            echo '<td style="padding: 8px">No Tasks here</td>';
-                            echo '</tr>';
+                            echo
+                                                    "<tr>"
+                                                        ."<td style='padding: 8px'>"
+                                                            ."No Tasks here"
+                                                        ."</td>"
+                                                    ."</tr>";
                         }
-                        echo '</table>';
-                        echo '</form>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</td>';
-                        echo '</tr>';
+                        echo
+                                                "</table>"
+                                            ."</form>"
+                                        ."</div>"
+                                    ."</div>"
+                                ."</div>"
+                            ."</td>"
+                        ."</tr>";
                     }
                     ?>
                 </table>
@@ -355,24 +380,24 @@ $dbcomm->convertPointsStarsTrophies($username);
                 <table align="center" width="80%">
                     <tr>
                         <?php
-                        $datesOfTheWeek = $dbcomm->getDatesofCurrentWeekByUsername($username);
+                        $datesOfTheWeek = $dbConn->getDatesofCurrentWeekByUsername($username);
                         $daysOfTheWeek = $datesOfTheWeek[0];
                         $monthsOfTheWeek = $datesOfTheWeek[1];
                         $yearsOfTheWeek = $datesOfTheWeek[2];
-                        $colors = $dbcomm->getThemeByUsername($username);
+                        $colors = $dbConn->getThemeByUsername($username);
                         ?>
                         <td colspan="7" align="center">
-                            <form role="form" action="Homepage.php?id=<? echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementWeek" type="submit"></button>
                             </form>
                             <h2 style="display: inline-block; font-size: 3em;" id="dailyViewDate">
                                 &nbsp;
-                                <? echo $months[intval($monthsOfTheWeek[0])-1] . " " . $daysOfTheWeek[0] . ", " . $yearsOfTheWeek[0]; ?>
+                                <?php echo $months[intval($monthsOfTheWeek[0])-1] . " " . $daysOfTheWeek[0] . ", " . $yearsOfTheWeek[0]; ?>
                                 &nbsp;-&nbsp;
-                                <? echo $months[intval($monthsOfTheWeek[6])-1] . " " . $daysOfTheWeek[6] . ", " . $yearsOfTheWeek[6]; ?>
+                                <?php echo $months[intval($monthsOfTheWeek[6])-1] . " " . $daysOfTheWeek[6] . ", " . $yearsOfTheWeek[6]; ?>
                                 &nbsp;
                             </h2>
-                            <form role="form" action="Homepage.php?id=<? echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementWeek" type="submit"></button>
                             </form>
                         </td>
@@ -391,22 +416,23 @@ $dbcomm->convertPointsStarsTrophies($username);
                                     $dayNumberTag = "<span style='background-color: red; border-radius: 50%; color: white;'>$daysOfTheWeek[$i]</span>";
                                 }
                             }
-                            echo "<td class='weekToDay$i' width='100/7%' style='border: 1px solid black; background-color: $colors[$i]; cursor: pointer;'>
-                                      <h4>$daySubstr $dayNumberTag</h4>
-                                  </td>";
+                            echo
+                                "<td class='weekToDay$i' width='100/7%' style='border: 1px solid black; background-color: $colors[$i]; cursor: pointer;'>"
+                                  ."<h4>$daySubstr $dayNumberTag</h4>"
+                              ."</td>";
                         }
                         ?>
                     </tr>
                     <?php
-                    $categories = $dbcomm->getCategoryNamesByUsername($username);
-                    $colors = $dbcomm->getThemeByUsername($username);
+                    $categories = $dbConn->getCategoryNamesByUsername($username);
+                    $colors = $dbConn->getThemeByUsername($username);
                     for ($i = 0; $i < sizeOf($categories); $i++) {
-                        $dbcomm->setDateByDate($username, $yearsOfTheWeek[0] . "-" . $monthsOfTheWeek[0] . "-" . $daysOfTheWeek[0]);
+                        $dbConn->setDateByDate($username, $yearsOfTheWeek[0] . "-" . $monthsOfTheWeek[0] . "-" . $daysOfTheWeek[0]);
                         $categoryName = $categories[$i];
                         echo "<tr>";
 
                         for ($j = 0; $j < 7; $j++) {
-                            $tasks = $dbcomm->getTaskInfoByCategory($username, $categoryName);
+                            $tasks = $dbConn->getTaskInfoByCategory($username, $categoryName);
                             $taskCount = count($tasks);
 
                             $color = $colors[($i%8)];
@@ -415,23 +441,30 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 $styleTag = "border-bottom: 1px solid black;";
                             }
                             if($taskCount > 0) {
-                                echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; padding: 2px 10px 2px 10px; cursor: pointer;'>
-                                    <div class='badge' style='display: block; background-color: $color; color: black;'>
-                                        $categoryName&nbsp;&nbsp;
-                                        <span class='badge' style='display: inline-block; background-color: black; color: $color;'>$taskCount</span>
-                                    </div>
-                                  </td>";
+                                echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; padding: 2px 10px 2px 10px; cursor: pointer;'>"
+                                        ."<div class='badge' style='display: block; background-color: $color; color: black;'>"
+                                            .$categoryName
+                                            ."&nbsp;"
+                                            ."&nbsp;"
+                                            ."<span class='badge' style='display: inline-block; background-color: black; color: $color;'>"
+                                                .$taskCount
+                                            ."</span>"
+                                        ."</div>"
+                                      ."</td>";
                             }
                             else {
-                                echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; cursor: pointer;'></td>";
+                                echo
+                                    "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; cursor: pointer;'>"
+                                    ."</td>";
                             }
 
-                            $dbcomm->incrementDateByUsername($username);
+                            $dbConn->incrementDateByUsername($username);
                         }
-                        echo "</tr>";
+                        echo
+                                "</tr>";
                     }
 
-                    $dbcomm->setDateByDate($username, $theDate);
+                    $dbConn->setDateByDate($username, $theDate);
                     ?>
                 </table>
             </div>
@@ -441,27 +474,27 @@ $dbcomm->convertPointsStarsTrophies($username);
                 <table align="center" width="80%" id="monthlyViewTable" border="1px solid black">
                     <tr>
                         <td colspan="7" align="center">
-                            <form role="form" action="Homepage.php?id=<? echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementMonth" type="submit"></button>
                             </form>
-                            <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<? echo $currentMonthName . " " . $currentYear; ?>&nbsp;</h1>
-                            <form role="form" action="Homepage.php?id=<? echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
+                            <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<?php echo $currentMonthName . " " . $currentYear; ?>&nbsp;</h1>
+                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementMonth" type="submit"></button>
                             </form>
                         </td>
                     </tr>
                     <tr align="right">
-                        <td width="100/7%" style="padding-right: 10px; background-color: <? echo $colors[0]; ?>; height: 40px;"><h4>Sun</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <? echo $colors[1]; ?>"><h4>Mon</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <? echo $colors[2]; ?>"><h4>Tue</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <? echo $colors[3]; ?>"><h4>Wed</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <? echo $colors[4]; ?>"><h4>Thu</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <? echo $colors[5]; ?>"><h4>Fri</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <? echo $colors[6]; ?>"><h4>Sun</h4></td>
+                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[0]; ?>; height: 40px;"><h4>Sun</h4></td>
+                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[1]; ?>"><h4>Mon</h4></td>
+                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[2]; ?>"><h4>Tue</h4></td>
+                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[3]; ?>"><h4>Wed</h4></td>
+                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[4]; ?>"><h4>Thu</h4></td>
+                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[5]; ?>"><h4>Fri</h4></td>
+                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[6]; ?>"><h4>Sun</h4></td>
                     </tr>
                     <?php
-                    $firstDOTW = $dbcomm->getDOTWofFirstDayofCurrentMonth($username);
-                    $tasksperDay = $dbcomm->getNumTasksPerDayOfCurrentMonthByUsername($username);
+                    $firstDOTW = $dbConn->getDOTWofFirstDayofCurrentMonth($username);
+                    $tasksperDay = $dbConn->getNumTasksPerDayOfCurrentMonthByUsername($username);
 
                     echo "<tr>";
 
@@ -536,18 +569,18 @@ $dbcomm->convertPointsStarsTrophies($username);
                 </td>
                 <td>
                     <h3 style="color: dimgrey; font-size: 30px; text-align: left;">
-                        Total points: <? echo $dbcomm->getNumTotalPointsByUsername($username); ?></h3>
+                        Total points: <?php echo $dbConn->getUserTotalPointsByUsername($username); ?></h3>
                 </td>
             </tr>
             <tr id="starSymbols">
                 <td valign="bottom">
-                    <img src="<? echo $dbcomm->getBronzeStarImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbConn->getBronzeStarImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getSilverStarImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbConn->getSilverStarImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getGoldStarImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbConn->getGoldStarImageSource(); ?>" width="150" height="150">
                 </td>
                 <td width="15%" rowspan="3" align="right" style="vertical-align: middle">
                     <div class="toMarket" id="toMarket1">R</div>
@@ -563,9 +596,9 @@ $dbcomm->convertPointsStarsTrophies($username);
                     <div class="toMarket" id="toMarket11">E</div>
                     <div style="height: 30px;"></div>
                     <?php
-                    $encryptedMarketUsername = Crypto::encrypt($username, true);
+                        $encryptedMarketUsername = Crypto::encrypt($username, true);
                     ?>
-                    <button onclick="window.location='Redeem.php?id=<? echo $encryptedMarketUsername ?>';"
+                    <button onclick="window.location='Redeem.php?id=<?php echo $encryptedMarketUsername ?>';"
                             class="w3-button w3-circle w3-teal"
                             style="transform: translateX(50%); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;
                     </button>
@@ -573,35 +606,35 @@ $dbcomm->convertPointsStarsTrophies($username);
             </tr>
             <tr id="starCount">
                 <td>
-                    <p><? echo $dbcomm->getNumBronzeStarsByUsername($username); ?></p>
+                    <p><?php echo $dbConn->getNumBronzeStarsByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumSilverStarsByUsername($username); ?></p>
+                    <p><?php echo $dbConn->getNumSilverStarsByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumGoldStarsByUsername($username); ?></p>
+                    <p><?php echo $dbConn->getNumGoldStarsByUsername($username); ?></p>
                 </td>
             </tr>
             <tr id="trophySymbols">
                 <td>
-                    <img src="<? echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbConn->getBronzeTrophyImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getSilverTrophyImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbConn->getSilverTrophyImageSource(); ?>" width="150" height="150">
                 </td>
                 <td>
-                    <img src="<? echo $dbcomm->getGoldTrophyImageSource(); ?>" width="150" height="150">
+                    <img src="<?php echo $dbConn->getGoldTrophyImageSource(); ?>" width="150" height="150">
                 </td>
             </tr>
             <tr id="trophyCount">
                 <td>
-                    <p><? echo $dbcomm->getNumBronzeTrophiesByUsername($username); ?></p>
+                    <p><?php echo $dbConn->getNumBronzeTrophiesByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumSilverTrophiesByUsername($username); ?></p>
+                    <p><?php echo $dbConn->getNumSilverTrophiesByUsername($username); ?></p>
                 </td>
                 <td>
-                    <p><? echo $dbcomm->getNumGoldTrophiesByUsername($username); ?></p>
+                    <p><?php echo $dbConn->getNumGoldTrophiesByUsername($username); ?></p>
                 </td>
                 <td width="15%"></td>
             </tr>
@@ -624,21 +657,21 @@ $dbcomm->convertPointsStarsTrophies($username);
             if (ev.target.tagName === 'TD') {
                 var tdID = ev.target.id;
                 tdID = parseInt(tdID.substr(11));
-                window.location='Homepage.php?id=<? echo $encryptedUsername; ?>&monthToDay=' + tdID;
+                window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&monthToDay=' + tdID;
             }
             else if (ev.target.tagName === 'SPAN'){
                 var tdElement = ev.target.parentElement;
                 if (tdElement.tagName === 'TD') {
                     var tdElementID = tdElement.id;
                     tdElementID = parseInt(tdElementID.substr(11));
-                    window.location='Homepage.php?id=<? echo $encryptedUsername; ?>&monthToDay=' + tdElementID;
+                    window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&monthToDay=' + tdElementID;
                 }
                 else {
-                    //alert('tag error inside');
+                    //tag error inside
                 }
             }
             else {
-                //alert('tag error outside');
+                //tag error outside
             }
         }, false);
     }
@@ -659,7 +692,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                     day = daysOfWeek[id];
                     month = monthsOfWeek[id];
                     year = yearsOfWeek[id];
-                    window.location='Homepage.php?id=<? echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+                    window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
                 }
                 else if (ev.target.tagName === 'H4'){
                     var tdElement3 = ev.target.parentElement;
@@ -668,7 +701,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                         day = daysOfWeek[id];
                         month = monthsOfWeek[id];
                         year = yearsOfWeek[id];
-                        window.location='Homepage.php?id=<? echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+                        window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
                     }
                     else {
                         //alert('tag error inside3');
@@ -681,7 +714,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                         day = daysOfWeek[id];
                         month = monthsOfWeek[id];
                         year = yearsOfWeek[id];
-                        window.location='Homepage.php?id=<? echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+                        window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
                     }
                     else {
                         //alert('tag error inside1');
@@ -694,7 +727,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                         day = daysOfWeek[id];
                         month = monthsOfWeek[id];
                         year = yearsOfWeek[id];
-                        window.location='Homepage.php?id=<? echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+                        window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
                     }
                     else {
                         //alert('tag error inside2');
@@ -718,7 +751,7 @@ $dbcomm->convertPointsStarsTrophies($username);
     }
 
     function loadTemplate() {
-        var templates = <?php echo json_encode($dbcomm->getAllTemplatesByUsername($username)); ?>;
+        var templates = <?php echo json_encode($dbConn->getAllTemplatesByUsername($username)); ?>;
         var radioValue = $('input[name="templateRadio"]:checked').val();
         for (var i = 0; i < templates.length; i++) {
             if (templates[i]['templateID'] === radioValue) {
@@ -819,7 +852,7 @@ $dbcomm->convertPointsStarsTrophies($username);
             rowzzz.id = "categoryPanel" + newCategoryName;
 
             var cellzzz = rowzzz.insertCell(0);
-            var colorOfAddedCategory = "<? $colorIndex = (count($categories))%8; echo $colors[$colorIndex]; ?>";
+            var colorOfAddedCategory = "<?php $colorIndex = (count($categories))%8; echo $colors[$colorIndex]; ?>";
             cellzzz.innerHTML = "<div class='panel-group'>" +
                                     "<div class='panel panel-default'>" +
                                         "<div class='panel-heading' style='background-color: " + colorOfAddedCategory + ";'>" +
@@ -845,7 +878,7 @@ $dbcomm->convertPointsStarsTrophies($username);
 
     $(function () {
 
-        for (var i = 0; i < <? echo count($dbcomm->getCategoriesByUsername($username)); ?>; i++) {
+        for (var i = 0; i < <?php echo count($dbConn->getCategoriesByUsername($username)); ?>; i++) {
             $('#deleteCategoryForm' + i).on('submit', function (e) {
 
                 e.preventDefault();
@@ -919,7 +952,7 @@ $dbcomm->convertPointsStarsTrophies($username);
 
 
 <div class="modal fade" id="infoAwardsModal">
-    <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#firstPage" method="post">
+    <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername; ?>#firstPage" method="post">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding-left: 10%;">
@@ -974,13 +1007,13 @@ $dbcomm->convertPointsStarsTrophies($username);
 </div>
 
 <div class="modal fade" id="mymodal">
-    <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#firstPage" method="post" class="task_create">
+    <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername; ?>#firstPage" method="post" class="task_create">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding-left: 10%;">
                     <h2>Create New Task</h2>
 
-                    <? if (isset($alertMessageForTask)) //if the alert for creating list is set, then echo the alert
+                    <?php if (isset($alertMessageForTask)) //if the alert for creating list is set, then echo the alert
                     {
                         echo
                             '<div>'
@@ -1012,7 +1045,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 <select class="form-control" title="Category Name" name="categoryName" id="categoryName" onchange="onManageCategories(this)">
                                     <option value="defaultSelected" disabled selected>Choose Category</option>
                                     <?php
-                                    $categories = $dbcomm->getCategoriesByUsername($username);
+                                    $categories = $dbConn->getCategoriesByUsername($username);
                                     for($i = 0; $i < count($categories); $i++) {
                                         $categoryName = $categories[$i]['name'];
                                         echo "<option value='$categoryName'>$categoryName</option>";
@@ -1029,7 +1062,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 <select class="form-control" title="Importance" name="importance" id="importance">
                                     <option value="" disabled selected>Choose Importance</option>
                                     <?php
-                                        $priorities = $dbcomm->getPriorities();
+                                        $priorities = $dbConn->getPriorities();
                                         for($i = 0; $i < count($priorities); $i++) {
                                             echo
                                                 "<option value='$priorities[$i]'>"
@@ -1153,20 +1186,25 @@ $dbcomm->convertPointsStarsTrophies($username);
                     </tr>
                     <tr><td height="20px" colspan="2"></td></tr>
                     <?php
-                    $templates = $dbcomm->getAllTemplatesByUsername($username);
+                    $templates = $dbConn->getAllTemplatesByUsername($username);
                     foreach ($templates as $templateCount => $templateValues) {
                         $templateID = $templateValues['templateID'];
                         $templateName = $templateValues['templateName'];
-                        echo "<tr>",
-                        "<td width='40%'>",
-                        "<div class=\"radio\">",
-                        "<label><input type=\"radio\" name=\"templateRadio\" value=\"$templateID\">$templateName</label>",
-                        "</div>",
-                        "</td>",
-                        "<td width='60%' class='deleteTemplate'>",
-                        "<span class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete'></span>",
-                        "</td>",
-                        "</tr>";
+                        echo
+                            "<tr>"
+                                ."<td width='40%'>"
+                                    ."<div class=\'radio\'>"
+                                        ."<label>"
+                                            ."<input type=\"radio\" name=\'templateRadio\' value=\'$templateID\'>"
+                                                .$templateName
+                                            ."</label>"
+                                        ."</div>"
+                                    ."</td>"
+                                ."<td width='60%' class='deleteTemplate'>"
+                                    ."<span class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete'>"
+                                    ."</span>"
+                                ."</td>"
+                            ."</tr>";
                     }
                     ?>
                 </table>
@@ -1199,24 +1237,29 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 </tr>
                                 <tr><td height="20px" colspan="3" style="border-right: 1px solid black;"></td></tr>
                                 <?php
-                                $categories = $dbcomm->getCategoriesByUsername($username);
+                                $categories = $dbConn->getCategoriesByUsername($username);
                                 for($i = 0; $i < count($categories); $i++) {
                                     $categoryName = $categories[$i]['name'];
                                     $categoryID = $categories[$i]['id'];
-                                    echo "<tr>
-                                        <td>- $categoryName</td>
-                                        <td width='40px'></td>
-                                        <td style='border-right: 1px solid black;'>
-                                            <form id='deleteCategoryForm$i'>
-                                                <input type='text' name='deleteCategoryID'  style='display: none;' value='$categoryID'>
-                                                <input type='text' id='deleteCategoryCounter$i' style='display: none;' value='$i'>
-                                                <input type='text' id='deleteCategoryName$i' style='display: none;' value='$categoryName'>
-                                                <button type='submit' class='btn btn-default' style='appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;'>
-                                                    <div class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete'></div>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>";
+                                    echo
+                                        "<tr>"
+                                            ."<td>"
+                                                - $categoryName
+                                            ."</td>"
+                                        ."<td width='40px'>"
+                                        ."</td>"
+                                        ."<td style='border-right: 1px solid black;'>"
+                                            ."<form id='deleteCategoryForm$i'>"
+                                                ."<input type='text' name='deleteCategoryID'  style='display: none;' value='$categoryID'>"
+                                                    ."<input type='text' id='deleteCategoryCounter$i' style='display: none;' value='$i'>"
+                                                    ."<input type='text' id='deleteCategoryName$i' style='display: none;' value='$categoryName'>"
+                                                    ."<button type='submit' class='btn btn-default' style='display: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;'>"
+                                                    ."<div class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete'>"
+                                                    ."</div>"
+                                                ."</button>"
+                                            ."</form>"
+                                        ."</td>"
+                                    ."</tr>";
                                 }
                                 ?>
                             </table>
@@ -1226,7 +1269,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 Add New Category:
                                 <br><br>
                                 <form id="categoryForm">
-                                    <input type="text" name="newCategoryUsername" id="newCategoryUsername" value="<? echo $username ?>" style="display: none;">
+                                    <input type="text" name="newCategoryUsername" id="newCategoryUsername" value="<?php echo $username ?>" style="display: none;">
                                     <input maxlength="15" type="text" class="form-control" name="newCategoryName" id="newCategoryName" placeholder="Category Name...">
                                     <br>
                                     <button type="submit" name="submitAddCategory" class="btn btn-default" style="float: right;">Add Category</button>
@@ -1244,17 +1287,18 @@ $dbcomm->convertPointsStarsTrophies($username);
 </div>
 
 <div class="modal fade" id="editTaskModal">
-    <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#firstPage" method="post">
+    <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername; ?>#firstPage" method="post">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding-left: 10%;">
                     <h2>Edit Task</h2>
 
-                    <? if (isset($alertMessageForEditTask))
+                    <?php if (isset($alertMessageForEditTask))
                     {
-                        echo '<div>';
-                        echo $alertMessageForEditTask;
-                        echo '</div>';
+                        echo
+                            "<div>"
+                                .$alertMessageForEditTask
+                            ."</div>";
                     }
                     ?>
 
@@ -1269,12 +1313,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                             </td>
                             <td align="center" valign="top" width="20%"><!--<h3>-or-</h3>--></td>
                             <td>
-                                <!--
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#templateModal">
-                                    Use template
-                                </button>
-                                -->
+
                             </td>
                         </tr>
                         <tr>
@@ -1285,7 +1324,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 <select class="form-control" title="Category Name" name="editTaskCategoryName" id="editTaskCategoryName">
                                     <option value="defaultSelected" disabled selected>Choose Category</option>
                                     <?php
-                                    $categories = $dbcomm->getCategoriesByUsername($username);
+                                    $categories = $dbConn->getCategoriesByUsername($username);
                                     for($i = 0; $i < count($categories); $i++) {
                                         $categoryName = $categories[$i]['name'];
                                         echo "<option value='$categoryName'>$categoryName</option>";
@@ -1298,7 +1337,7 @@ $dbcomm->convertPointsStarsTrophies($username);
                                 <select class="form-control" title="Importance" name="editTaskImportance" id="editTaskImportance">
                                     <option value="defaultSelected" disabled selected>Choose Importance</option>
                                     <?php
-                                    $priorities = $dbcomm->getPriorities();
+                                    $priorities = $dbConn->getPriorities();
                                     for($i = 0; $i < count($priorities); $i++) {
                                         echo "<option value='$priorities[$i]'>$priorities[$i]</option>";
                                     }

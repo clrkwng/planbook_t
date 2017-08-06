@@ -10,11 +10,11 @@ $dbcomm = new dbcomm();
 if(!isset($_GET['id'])) {
     die("Error: The id was not set.");
 }
-$encryptedUsername = $_GET['id'];
-$adminUsername = Crypto::decrypt($encryptedUsername, true);
-$accountID = $dbcomm->getAccountIDByUsername($adminUsername);
-$encryptedAccountID = Crypto::encrypt($accountID, true);
 
+$adminUsernameEncrypted = $_GET['id'];
+$adminUsername = Crypto::decrypt($adminUsernameEncrypted, true);
+$accountId = $dbcomm->getAccountIDByUsername($adminUsername);
+$accountIdEncrypted = Crypto::encrypt($accountId, true);
 
 if(isset($_GET['delete'])) //delete the user
 {
@@ -115,7 +115,9 @@ if(isset($_GET['delete'])) //delete the user
                     <hr class="star-light">
                     <span class="skills">
                         Manage
-                        <?php if (isset($adminUsername)) echo $dbcomm->getAccountNameByUsername($adminUsername); ?>
+                            <?php if (isset($adminUsername))
+                                echo $dbcomm->getAccountNameByUsername($adminUsername);
+                            ?>
                          Users
                     </span>
                 </div>
@@ -142,35 +144,32 @@ if(isset($_GET['delete'])) //delete the user
                 </th>
             </tr>
             <?php
-            $users = $dbcomm->getAllUsersByAdminUsername($adminUsername);
+            $userIdList = $dbcomm->getAllUsersByAdminUsername($adminUsername);
             $userCounter = 0;
-            foreach($users as $userId=>$userValues)
+            foreach($userIdList as $curUserId=> $curUserVals)
             {
-                $userName = $userValues['username'];
-                $userPoints = $userValues['total_points'];
-
-                $encryptedAdminUsername = Crypto::encrypt($adminUsername, true);
-                $encryptedUserUsername = Crypto::encrypt($userName, true);
-
-                $userEmail = $dbcomm->getEmailByUsername($userName);
+                $curUserName = $curUserVals['username'];
+                $curUserPoints = $curUserVals['total_points'];
+                $curUserNameEncrypted = Crypto::encrypt($curUserName, true);
+                $curUserEmail = $dbcomm->getEmailByUsername($curUserName);
 
                 echo "<tr style='height:80px;'>
-                          <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$userName</td>
-                          <td style='vertical-align: middle;'>$userPoints</td>
+                          <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$curUserName</td>
+                          <td style='vertical-align: middle;'>$curUserPoints</td>
                           <td style='vertical-align: middle;'>
-                              <a href=\"../user/Homepage.php?id=$encryptedUserUsername\" title='Tasks' style='color: black;'>
+                              <a href=\"../user/Homepage.php?id=$curUserNameEncrypted\" title='Tasks' style='color: black;'>
                                   <span class='glyphicon glyphicon-calendar' style='font-size: 20px;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <a href=\"AddReward.php?id=$encryptedAdminUsername&reward=$encryptedUserUsername\" style='color: pink;' title='Rewards'>
+                              <a href=\"AddReward.php?id=$adminUsernameEncrypted&reward=$curUserNameEncrypted\" style='color: pink;' title='Rewards'>
                                   <span class='glyphicon glyphicon-piggy-bank' style='font-size: 20px; text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <a href=\"mailto:$userEmail?subject=Planbook%20Email\" style='color: dimgrey;' title='Email'>
+                              <a href=\"mailto:$curUserEmail?subject=Planbook%20Email\" style='color: dimgrey;' title='Email'>
                                   <span class='glyphicon glyphicon-envelope' style='font-size: 20px;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <a href=\"AdminPanel.php?id=$encryptedUsername&delete=$userName\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
+                              <a href=\"AdminPanel.php?id=$adminUsernameEncrypted&delete=$curUserName\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
                                   <span class='glyphicon glyphicon-trash' style='font-size: 20px;'></span>
                               </a>
                           </td>
@@ -181,7 +180,7 @@ if(isset($_GET['delete'])) //delete the user
             <tr id='addNewUser'>
                 <td colspan="3" id="addNewUserButton">
                     <a class="glyphicon glyphicon-plus link_button"
-                         href="../auth/CreateUser.php?id=<?php echo $encryptedAccountID;?>"
+                         href="../auth/CreateUser.php?id=<?php echo $accountIdEncrypted;?>"
                     > New User</a>
                 </td>
             </tr>
@@ -267,11 +266,11 @@ if(isset($_GET['delete'])) //delete the user
 
     var addUserButton = document.getElementById("addNewUserButton");
     addUserButton.addEventListener('click', function() {
-        window.location = '../auth/CreateUser.php?id=<? echo $encryptedAccountID; ?>';
+        window.location = '../auth/CreateUser.php?id=<?php echo $accountIdEncrypted; ?>';
     }, false);
 
     var clickUsers = document.getElementsByClassName("clickUser");
-    var accountUsernames = <?php echo json_encode($dbcomm->getEncodedUsernamesByAccountID($accountID)); ?>;
+    var accountUsernames = <?php echo json_encode($dbcomm->getEncodedUsernamesByAccountID($accountId)); ?>;
     for (var i = 0; i < clickUsers.length; i++) {
         clickUsers[i].addEventListener('click', function() {
             var userNum = Number((this.id).substring(9));

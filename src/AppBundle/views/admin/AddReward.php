@@ -1,26 +1,20 @@
 <!DOCTYPE html>
 
 <?php
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
+
 ini_set('display_errors', 0);
 
 if (!isset($_GET['id']) or !isset($_GET['reward'])) {
     die("Error: The id or reward id was not set.");
 }
 $encryptedAdminUsername = $_GET['id'];
-$encryptedAdminUsername = str_replace("!!!", "+", $encryptedAdminUsername);
-$encryptedAdminUsername = str_replace("$$$", "%", $encryptedAdminUsername);
-$adminUsername = openssl_decrypt($encryptedAdminUsername, 'AES-128-CFB1', 'rewardPanelAdminPassword');
-$encryptedAdminUsername = str_replace("+", "!!!", $encryptedAdminUsername);
-$encryptedAdminUsername = str_replace("%", "$$$", $encryptedAdminUsername);
+$adminUsername = Crypto::decrypt($encryptedAdminUsername);
 
 $encryptedUserUsername = $_GET['reward'];
-$encryptedUserUsername = str_replace("!!!", "+", $encryptedUserUsername);
-$encryptedUserUsername = str_replace("$$$", "%", $encryptedUserUsername);
-$userUsername = openssl_decrypt($encryptedUserUsername, 'aes-192-cfb', 'rewardPanelUserPassword');
-$encryptedUserUsername = str_replace("+", "!!!", $encryptedUserUsername);
-$encryptedUserUsername = str_replace("%", "$$$", $encryptedUserUsername);
+$userUsername = Crypto::decrypt($encryptedUserUsername);
 
-require_once "../../scripts/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 
@@ -36,9 +30,8 @@ if (isset($_POST['doneButton'])) {
 if (isset($_POST['SubmitReward'])) {
     foreach($_POST['users'] as $userChecked){
         $encodedUsername = $userChecked;
-        $encodedUsername = str_replace("!!!", "+", $encodedUsername);
-        $encodedUsername = str_replace("$$$", "%", $encodedUsername);
-        $unencodedUsername = openssl_decrypt($encodedUsername, 'DES-EDE3', 'viewUserProfilePassword');
+
+        $unencodedUsername = Crypto::decrypt($encodedUsername);
         $dbcomm->addRewardByUsername($unencodedUsername,$_POST['rewardName'],$_POST['numOfPoints']);
     }
 }
@@ -75,12 +68,12 @@ if(isset($_GET['delete'])) {
         <td width="15%"></td>
         <td height="25%">
             <h1>Rewards</h1>
-            <p style="font-size: 25px;">Manage Rewards for <b><? echo $userUsername; ?></b></p>
-            <? if (isset($alert))  echo $alert; ?>
+            <p style="font-size: 25px;">Manage Rewards for <b><?php echo $userUsername; ?></b></p>
+            <?php if (isset($alert))  echo $alert; ?>
         </td>
         <td width="15%" valign="bottom">
             <p style="max-width: 100%;">
-                <? echo $userUsername; ?>'s
+                <?php echo $userUsername; ?>'s
             </p>
         </td>
     </tr>
@@ -100,7 +93,7 @@ if(isset($_GET['delete'])) {
             <?php
                 $encryptedUsername = Crypto::encrypt($adminUsername, true);
             ?>
-            <button onclick="window.location='AdminPanel.php?id=<? echo $encryptedUsername ?>'"
+            <button onclick="window.location='AdminPanel.php?id=<?php echo $encryptedUsername ?>'"
                     class="w3-button w3-circle w3-teal"
                     style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;
             </button>
@@ -175,13 +168,13 @@ if(isset($_GET['delete'])) {
         <td width="15%" style="text-align: right" valign="center" id="awardsSideBar">
             <p align="center" style="vertical-align: top;"><u>Awards</u></p>
 
-            <p style="display: inline-block; height: 45px;"><? echo $dbcomm->getNumTotalPointsByUsername($userUsername); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;"> Total Points&nbsp;</div>
-            <p><? echo $dbcomm->getNumBronzeStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getBronzeStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
-            <p><? echo $dbcomm->getNumSilverStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getSilverStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
-            <p><? echo $dbcomm->getNumGoldStarsByUsername($userUsername); ?> <img src="<? echo $dbcomm->getGoldStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
-            <p><? echo $dbcomm->getNumBronzeTrophiesByUsername($userUsername); ?> <img src="<? echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="50" height="50">&nbsp;</p>
-            <p><? echo $dbcomm->getNumSilverTrophiesByUsername($userUsername); ?> <img src="<? echo $dbcomm->getSilverTrophyImageSource(); ?>" width="50" height="50">&nbsp;</p>
-            <p><? echo $dbcomm->getNumGoldTrophiesByUsername($userUsername); ?> <img src="<? echo $dbcomm->getGoldTrophyImageSource(); ?>" width="50" height="50">&nbsp;</p>
+            <p style="display: inline-block; height: 45px;"><?php echo $dbcomm->getUserTotalPointsByUsername($userUsername); ?>&nbsp;</p><div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;"> Total Points&nbsp;</div>
+            <p><?php echo $dbcomm->getNumBronzeStarsByUsername($userUsername); ?> <img src="<?php echo $dbcomm->getBronzeStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
+            <p><?php echo $dbcomm->getNumSilverStarsByUsername($userUsername); ?> <img src="<?php echo $dbcomm->getSilverStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
+            <p><?php echo $dbcomm->getNumGoldStarsByUsername($userUsername); ?> <img src="<?php echo $dbcomm->getGoldStarImageSource(); ?>" width="50" height="50">&nbsp;</p>
+            <p><?php echo $dbcomm->getNumBronzeTrophiesByUsername($userUsername); ?> <img src="<?php echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="50" height="50">&nbsp;</p>
+            <p><?php echo $dbcomm->getNumSilverTrophiesByUsername($userUsername); ?> <img src="<?php echo $dbcomm->getSilverTrophyImageSource(); ?>" width="50" height="50">&nbsp;</p>
+            <p><?php echo $dbcomm->getNumGoldTrophiesByUsername($userUsername); ?> <img src="<?php echo $dbcomm->getGoldTrophyImageSource(); ?>" width="50" height="50">&nbsp;</p>
             <br>
         </td>
     </tr>
@@ -223,7 +216,7 @@ if(isset($_GET['delete'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td align="left">
-                            <form enctype="multipart/form-data" action="AddReward.php?id=<? echo $encryptedAdminUsername; ?>&reward=<? echo $encryptedUserUsername; ?>" method="post">
+                            <form enctype="multipart/form-data" action="AddReward.php?id=<?php echo $encryptedAdminUsername; ?>&reward=<?php echo $encryptedUserUsername; ?>" method="post">
                                 <input type="text" name="rewardName" placeholder="Reward Name...">
                                 <br><br>
                                 <input type="number" name="numOfPoints" placeholder="Points Required...">

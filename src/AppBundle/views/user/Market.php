@@ -8,16 +8,15 @@ if(!isset($_GET['id'])){
 require_once "../db/dbcomm.php";
 require_once "../db/Crypto.php";
 
-$encryptedUsername = $_GET['id'];
-$username = Crypto::decrypt($encryptedUsername, true);
-$encryptedHomeUsername = Crypto::encrypt($username, true);
+$adminUsernameEncrypted = $_GET['id'];
+$adminUsername = Crypto::decrypt($adminUsernameEncrypted, true);
 
 //create db connection
 $dbcomm = new dbcomm();
 
 if (isset($_POST['doneButton'])) {
     $unencryptedRewardName = str_replace("XyzYx", " ", $_POST['rewardName']);
-    if (!$dbcomm->redeemRewardByUsername($userUsername, $unencryptedRewardName)) {
+    if (!$dbcomm->redeemRewardByUsername($username, $unencryptedRewardName)) {
         $alert =
             "<div class='alert alert-danger alert-dismissible' role='alert'>"
                 ."<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
@@ -90,14 +89,11 @@ if (isset($_POST['doneButton'])) {
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
-                <li>
-                    <a href ="../user/UserProfile.php">Profile</a>
-                </li>
                 <li class="page-scroll">
                     <a href="#main-content">Market</a>
                 </li>
                 <li>
-                    <a href="../user/Homepage.php?id=<?php echo $encryptedHomeUsername ?>#3rdPage'">Awards</a>
+                    <a href="../admin/AdminPanel.php?id=<?php echo $adminUsernameEncrypted ?>">Admin Panel</a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
@@ -152,39 +148,39 @@ if (isset($_POST['doneButton'])) {
                 </tr>
 
                 <?php
-                    $rewards = $dbcomm->getAllRewardsByUsername($username);
+                    $rewardList = $dbcomm->getAllRewardsByUsername($adminUsername);
                     $userCounter = 0;
-                    foreach ($rewards as $rewardId => $rewardValues) {
-                        $rewardName = $rewardValues['name'];
-                        $rewardPoints = $rewardValues['points'];
-                        $rewardCompleted = $rewardValues['completed'];
-                        $rewardRedeemDate = $rewardValues['redeem_date'];
+                    foreach ($rewardList as $curRewardId => $curRewardVals) {
+                        $curRewardName = $curRewardVals['name'];
+                        $curRewardPoints = $curRewardVals['points'];
+                        $curRewardCompleted = $curRewardVals['completed'];
+                        $curRewardRedeemDate = $curRewardVals['redeem_date'];
 
-                        if ($rewardRedeemDate == "//") {
-                            $rewardRedeemDate = "---";
+                        if ($curRewardRedeemDate == "//") {
+                            $curRewardRedeemDate = "---";
                         }
 
                         echo
                             "<tr style='height: 40px;'>"
                                 ."<td>"
-                                    .$rewardName
+                                    .$curRewardName
                                 ."</td>"
                                 ."<td>"
-                                    .$rewardPoints
+                                    .$curRewardPoints
                                 ."</td>";
 
-                        if ($rewardCompleted == 1) {
+                        if ($curRewardCompleted == 1) {
                             echo
                                 "<td>"
                                     ."<span class='glyphicon glyphicon-ok' style='font-size: 25px; color: green;'>"
                                     ."</span>"
                                 ."</td>";
                         } else {
-                            $encyptedRewardName = str_replace(" ", "XyzYx", $rewardName);
+                            $curRewardNameEncrypted = str_replace(" ", "XyzYx", $curRewardName);
                             echo
                                 "<td>"
-                                    ."<form role='form' action=\"Market.php?id=$encryptedUsername\" method='post'>"
-                                        ."<input type='text' name='rewardName' value='$encyptedRewardName' style='display: none;'/>"
+                                    ."<form role='form' action=\"Market.php?id=$adminUsernameEncrypted\" method='post'>"
+                                        ."<input type='text' name='rewardName' value='$curRewardNameEncrypted' style='display: none;'/>"
                                         ."<button type='submit' name='doneButton' id='doneButton' class='confirmRedeem'>"
                                             ."Redeem?"
                                         ."</button>"
@@ -193,7 +189,7 @@ if (isset($_POST['doneButton'])) {
                         }
                         echo
                                 "<td>"
-                                    .$rewardRedeemDate
+                                    .$curRewardRedeemDate
                                 ."</td>"
                             ."</tr>";
                     }
@@ -204,7 +200,7 @@ if (isset($_POST['doneButton'])) {
         <td width="15%" style="text-align: right" valign="center" id="awardsSideBar">
             <br>
             <p style="display: inline-block; height: 45px;">
-                <?php echo $dbcomm->getNumTotalPointsByUsername($username); ?>
+                <?php echo $dbcomm->getUserTotalPointsByUsername($adminUsername); ?>
                 &nbsp;
             </p>
             <div style="font-size: 18px; display:inline-block; max-width: 60px; text-align: left;">
@@ -214,32 +210,32 @@ if (isset($_POST['doneButton'])) {
                 </span>
             </div>
             <p>
-                <?php echo $dbcomm->getNumBronzeStarsByUsername($username); ?>
+                <?php echo $dbcomm->getNumBronzeStarsByUsername($adminUsername); ?>
                 <img src="<?php echo $dbcomm->getBronzeStarImageSource();?>" width="50" height="50"/>
                 &nbsp;
             </p>
             <p>
-                <?php echo $dbcomm->getNumSilverStarsByUsername($username); ?>
+                <?php echo $dbcomm->getNumSilverStarsByUsername($adminUsername); ?>
                 <img src="<?php echo $dbcomm->getSilverStarImageSource(); ?>" width="50" height="50">
                 &nbsp;
             </p>
             <p>
-                <?php echo $dbcomm->getNumGoldStarsByUsername($username); ?>
+                <?php echo $dbcomm->getNumGoldStarsByUsername($adminUsername); ?>
                 <img src="<?php echo $dbcomm->getGoldStarImageSource(); ?>" width="50" height="50">
                 &nbsp;
             </p>
             <p>
-                <?php echo $dbcomm->getNumBronzeTrophiesByUsername($username); ?>
+                <?php echo $dbcomm->getNumBronzeTrophiesByUsername($adminUsername); ?>
                 <img src="<?php echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="50" height="50">
                 &nbsp;
             </p>
             <p>
-                <?php echo $dbcomm->getNumSilverTrophiesByUsername($username); ?>
+                <?php echo $dbcomm->getNumSilverTrophiesByUsername($adminUsername); ?>
                 <img src="<?php echo $dbcomm->getSilverTrophyImageSource(); ?>" width="50" height="50">
                 &nbsp;
             </p>
             <p>
-                <?php echo $dbcomm->getNumGoldTrophiesByUsername($username); ?>
+                <?php echo $dbcomm->getNumGoldTrophiesByUsername($adminUsername); ?>
                 <img src="<?php echo $dbcomm->getGoldTrophyImageSource(); ?>" width="50" height="50">
                 &nbsp;
             </p>

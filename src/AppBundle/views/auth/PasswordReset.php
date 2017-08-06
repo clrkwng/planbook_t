@@ -139,7 +139,7 @@ if(isset($_POST['Submit'])) {
                     <div class="">
                         <p align="left">
                             <font color="#696969">
-                                Enter your new password for <b><? echo $username; ?></b>.<br>
+                                Enter your new password for <b><?php echo $username; ?></b>.<br>
                                 Make sure your password has at least one uppercase letter, one lowercase letter,
                                 one number, and at least 8 characters long.
                             </font>

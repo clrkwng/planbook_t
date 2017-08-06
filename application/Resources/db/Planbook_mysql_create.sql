@@ -65,6 +65,7 @@ CREATE TABLE `Task` (
 	`description` varchar(255),
 	`start_time` varchar(8) NOT NULL,
 	`end_time` varchar(8) DEFAULT '',
+	`date` date NOT NULL,
 	PRIMARY KEY (`id`)
 );
 

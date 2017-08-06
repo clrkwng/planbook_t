@@ -11,9 +11,8 @@ if(!isset($_GET['id'])){
     die("Error: The ID was not set.");
 }
 $encryptedAccountID = $_GET['id'];
-$encryptedAccountID = str_replace("!!!", "+", $encryptedAccountID);
-$encryptedAccountID = str_replace("$$$", "%", $encryptedAccountID);
-$accountID = openssl_decrypt($encryptedAccountID, 'bf-ecb', 'makeNewUserPassword');
+
+$accountID = Crypto::decrypt($encryptedAccountID);
 
 $errorCount = 0;
 
@@ -112,21 +111,7 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
                 .'</span>'
             .'</div>';
     }
-    /*if($dbcomm->checkIfPhonenumberExists($phonenumber)) {
-        $errorCount += 1;
-        $alertMessage =
-            '<div class="alert alert-danger alert-dismissible" role="alert">'
-                .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
-                    .'<span aria-hidden="true">&times;</span>'
-                .'</button>'
-                .'<strong>'
-                    .'Error: '
-                .'</strong>'
-                .'<span>'
-                    .'Phone number is already associated with an account.'
-                .'</span>'
-            .'</div>';
-    }*/
+
     if($dbcomm->checkIfEmailExists($email)) {
         $errorCount += 1;
         $alertMessage =

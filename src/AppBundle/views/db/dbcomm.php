@@ -1,4 +1,6 @@
 <?php
+require_once "Crypto.php";
+
 class dbcomm
 {
     //connection that others can't modify
@@ -117,9 +119,9 @@ class dbcomm
     {
         $query =
             "INSERT INTO `Priority` "
-            ."(`name`) "
+                ."(`name`) "
             ."VALUES "
-            ."('$priorityName')";
+                ."('$priorityName')";
         $this->doQuery($query);
         return true;
     }
@@ -367,14 +369,34 @@ class dbcomm
 
     function getAccountIDByUsername($username)
     {
-        $query = "SELECT `account_id` FROM `User` WHERE `username`='$username'";
+        $userId = $this->getUserIDFromUsername($username);
+        return $this->getAccountIDByUserId($userId);
+    }
+
+    function getAccountIDByUserId($userId)
+    {
+        $query = "SELECT `account_id` FROM `User` WHERE `id`='$userId'";
         return mysqli_fetch_array($this->doQuery($query))['account_id'];
     }
 
-    function getUserIDFromUsername($username)
+    function getUserIDFromUsername($username, $isCallback = false)
     {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
-        return mysqli_fetch_array($this->doQuery($query))['id'];
+        $result = mysqli_fetch_array($this->doQuery($query))['id'];
+        if(count($result) < 1 && !$isCallback) {
+            //if it fails to find a username, then the passed in string may be encrypted
+            $decryptedUsername = Crypto::decrypt($username);
+            return $this->getUserIDFromUsername($decryptedUsername, true);
+        }
+        else {
+            return $result;
+        }
+    }
+
+    function getUserPhoneNumberByUserId($userId)
+    {
+        $query = "SELECT `phone_number` FROM `User` WHERE `id`='$userId';";
+        return mysqli_fetch_array($this->doQuery($query))['phone_number'];
     }
 
     function getImageIDFromUsername($username) {
@@ -402,7 +424,7 @@ class dbcomm
 
     function checkIfUsernameExists($username)
     {
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
+        $query = $this->getUserIDFromUsername($username);
         $result = $this->doQuery($query);
 
         $SQLdataarray = mysqli_fetch_array($result);
@@ -416,6 +438,7 @@ class dbcomm
 
     function checkIfPhonenumberExists($phoneNumber)
     {
+
         $query = "SELECT `id` FROM `User` WHERE `phone_number`='$phoneNumber';";
         $result = $this->doQuery($query);
 
@@ -490,8 +513,7 @@ class dbcomm
         $this->doQuery($query);
 
         //Get the newly created user's corresponding id
-        $query = "SELECT `id` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
+        $userID = $this->getUserIDFromUsername($username);
 
         //Get the id's corresponding to the default awards
         $query = "SELECT `id` FROM `Awards` WHERE `name`='bronzeStar'";
@@ -628,10 +650,15 @@ class dbcomm
         }
     }
 
-    function getTypeByUsername($username)
+    function getTypeNameByUsername($username)
     {
-        $query = "SELECT `type_id` FROM `User` WHERE `username`='$username'";
-        $typeID = mysqli_fetch_array($this->doQuery($query))['type_id'];
+        $userId = $this->getUserIDFromUsername($username);
+        return $this->getTypeNameByUserId($userId);
+    }
+
+    function getTypeNameByUserId($userId)
+    {
+        $typeID = $this->getUserTypeIdByUserId($userId);
         $query = "SELECT `name` FROM `Type` WHERE `id`='$typeID'";
         return mysqli_fetch_array($this->doQuery($query))['name'];
     }
@@ -643,6 +670,11 @@ class dbcomm
     function getEmailByUsername($username) {
         $query = "SELECT `email` FROM `User` WHERE `username`='$username'";
         return mysqli_fetch_array($this->doQuery($query))['email'];
+    }
+
+    function getUserTypeIdByUserId($userId) {
+        $query = "SELECT `type_id` FROM `User` WHERE `id`='$userId'";
+        return mysqli_fetch_array($this->doQuery($query))['type_id'];
     }
 
     function getPhoneNumberByUsername($username) {
@@ -748,14 +780,22 @@ class dbcomm
     function getAdminUsernameByAccountID($accountID) {
         $adminTypeID = $this->getTypeIdByName('Admin');
 
-        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$adminTypeID'";
+        $query =
+            "SELECT `username` "
+                ."FROM `User` "
+            ."WHERE `account_id`='$accountID' "
+                ."AND `type_id`='$adminTypeID'";
         return mysqli_fetch_array($this->doQuery($query))['username'];
     }
 
     function getEncodedUsernamesByAccountID($accountID) {
         $userTypeID = $this->getTypeIdByName('User');
 
-        $query = "SELECT `username` FROM `User` WHERE `account_id`='$accountID' AND `type_id`='$userTypeID'";
+        $query =
+            "SELECT `username` "
+                ."FROM `User` "
+            ."WHERE `account_id`='$accountID' "
+                ."AND `type_id`='$userTypeID'";
         $result = $this->doQuery($query);
 
         $users = Array();
@@ -773,21 +813,35 @@ class dbcomm
      * Awards FUNCTIONS ------------------------------------------------------------
      * */
 
-    function getNumCurrentPointsByUsername($username) {
-        $query = "SELECT `current_points` FROM `User` WHERE `username`='$username'";
+    function getUserCurrentPointsByUsername($username) {
+        $userId = $this->getUserIDFromUsername($username);
+        return $this->getUserCurrentPointsByUserId($userId);
+    }
+
+    function getUserCurrentPointsByUserId($userId) {
+        $query = "SELECT `current_points` FROM `User` WHERE `id`='$userId'";
         return mysqli_fetch_array($this->doQuery($query))['current_points'];
     }
 
-    function getNumTotalPointsByUsername($username) {
-        $query = "SELECT `total_points` FROM `User` WHERE `username`='$username'";
+    function getUserTotalPointsByUserId($userId) {
+        $query = "SELECT `total_points` FROM `User` WHERE `id`='$userId'";
         return mysqli_fetch_array($this->doQuery($query))['total_points'];
+    }
+
+    function getUserTotalPointsByUsername($username) {
+        $userId = $this->getUserIDFromUsername($username);
+        return $this->getUserTotalPointsByUserId($userId);
     }
 
     function getNumBronzeStarsByUsername($username) {
         $userID = $this->getUserIDFromUsername($username);
         $awardID = $this->getBronzeStarAwardID();
 
-        $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
+        $query =
+            "SELECT `quantity` "
+                ."FROM `User_Awards` "
+            ."WHERE `user_id`='$userID' "
+                ."AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
@@ -795,7 +849,11 @@ class dbcomm
         $userID = $this->getUserIDFromUsername($username);
         $awardID = $this->getSilverStarAwardID();
 
-        $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
+        $query =
+            "SELECT `quantity` "
+                ."FROM `User_Awards` "
+            ."WHERE `user_id`='$userID' "
+                ."AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
@@ -803,7 +861,11 @@ class dbcomm
         $userID = $this->getUserIDFromUsername($username);
         $awardID = $this->getGoldStarAwardID();
 
-        $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
+        $query =
+            "SELECT `quantity` "
+                ."FROM `User_Awards` "
+            ."WHERE `user_id`='$userID' "
+                ."AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
@@ -811,7 +873,11 @@ class dbcomm
         $userID = $this->getUserIDFromUsername($username);
         $awardID = $this->getBronzeTrophyAwardID();
 
-        $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
+        $query =
+            "SELECT `quantity` "
+                ."FROM `User_Awards` "
+            ."WHERE `user_id`='$userID' "
+                ."AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
@@ -819,7 +885,11 @@ class dbcomm
         $userID = $this->getUserIDFromUsername($username);
         $awardID = $this->getSilverTrophyAwardID();
 
-        $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
+        $query =
+            "SELECT `quantity` "
+                ."FROM `User_Awards` "
+            ."WHERE `user_id`='$userID' "
+                ."AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
@@ -827,7 +897,11 @@ class dbcomm
         $userID = $this->getUserIDFromUsername($username);
         $awardID = $this->getGoldTrophyAwardID();
 
-        $query = "SELECT `quantity` FROM `User_Awards` WHERE `user_id`='$userID' AND `award_id`='$awardID'";
+        $query =
+            "SELECT `quantity` "
+                ."FROM `User_Awards` "
+            ."WHERE `user_id`='$userID' "
+                ."AND `award_id`='$awardID'";
         return mysqli_fetch_array($this->doQuery($query))['quantity'];
     }
 
@@ -883,7 +957,7 @@ class dbcomm
         $silverTrophyID = $this->getSilverTrophyAwardID();
         $goldTrophyID = $this->getGoldTrophyAwardID();
 
-        $numCurrentPoints = $this->getNumCurrentPointsByUsername($username);
+        $numCurrentPoints = $this->getUserCurrentPointsByUsername($username);
         $numBronzeStars = $this->getNumBronzeStarsByUsername($username);
         $numSilverStars = $this->getNumSilverStarsByUsername($username);
         $numGoldStars = $this->getNumGoldStarsByUsername($username);
@@ -1006,21 +1080,20 @@ class dbcomm
     }
 
     function redeemRewardByUsername($username, $rewardName) {
-        $query = "SELECT `id`,`total_points` FROM `User` WHERE `username`='$username'";
-        $userID = mysqli_fetch_array($this->doQuery($query))['id'];
-        $totalPoints = mysqli_fetch_array($this->doQuery($query))['total_points'];
+        $userId = $this->getUserIDFromUsername($username);
+        $totalPoints = $this->getUserTotalPointsByUserId($userId);
 
-        $query = "SELECT `points` FROM `Redeem` WHERE `user_id`='$userID' AND `reward`='$rewardName'";
+        $query = "SELECT `points` FROM `Redeem` WHERE `user_id`='$userId' AND `reward`='$rewardName'";
         $pointsRequired = mysqli_fetch_array($this->doQuery($query))['points'];
 
         if ($totalPoints >= $pointsRequired) {
             date_default_timezone_set("America/New_York");
             $datetime = date('Y-m-d H:i:s');
-            $query = "UPDATE `Redeem` SET `completed`='1', `redeem_date`='$datetime' WHERE `user_id`='$userID' AND `reward`='$rewardName'";
+            $query = "UPDATE `Redeem` SET `completed`='1', `redeem_date`='$datetime' WHERE `user_id`='$userId' AND `reward`='$rewardName'";
             $this->doQuery($query);
 
             $pointsAfterRedemption = $totalPoints - $pointsRequired;
-            $query = "UPDATE `User` SET `total_points`='$pointsAfterRedemption' WHERE `id`='$userID'";
+            $query = "UPDATE `User` SET `total_points`='$pointsAfterRedemption' WHERE `id`='$userId'";
             $this->doQuery($query);
             return true;
         }
@@ -1083,10 +1156,10 @@ class dbcomm
         $query = "SELECT `points` FROM `Priority` WHERE `id`='$priorityID'";
         $addPoints = mysqli_fetch_array($this->doQuery($query))['points'];
 
-        $currentPoints = $this->getNumCurrentPointsByUsername($username);
+        $currentPoints = $this->getUserCurrentPointsByUsername($username);
         $finalCurrentPoints = $currentPoints + $addPoints;
 
-        $totalPoints = $this->getNumTotalPointsByUsername($username);
+        $totalPoints = $this->getUserTotalPointsByUsername($username);
         $finalTotalPoints = $totalPoints + $addPoints;
 
         $query = "UPDATE `User` SET `current_points`='$finalCurrentPoints', `total_points`='$finalTotalPoints' WHERE `id`='$userID'";
@@ -1514,14 +1587,20 @@ class dbcomm
         $userID = $this->getUserIDFromUsername($username);
 
         $colors = Array("#F9E79F", "#EADA9B", "#DBCD97", "#CBC093", "#BCB38F", "#ADA68B", "#9E9987", "#8F8C83");
-        $query = "INSERT INTO `Theme` (`color1`, `color2`, `color3`, `color4`, `color5`, `color6`, `color7`, `color8`, `user_id`) VALUES ('$colors[0]', '$colors[1]', '$colors[2]', '$colors[3]', '$colors[4]', '$colors[5]', '$colors[6]', '$colors[7]', '$userID')";
+        $query =
+            "INSERT INTO `Theme` "
+                ."(`color1`, `color2`, `color3`, `color4`, `color5`, `color6`, `color7`, `color8`, `user_id`) "
+            ."VALUES "
+                ."('$colors[0]', '$colors[1]', '$colors[2]', '$colors[3]', '$colors[4]', '$colors[5]', '$colors[6]', '$colors[7]', '$userID')";
         $this->doQuery($query);
     }
 
     function getThemeByUsername($username){
         $userID = $this->getUserIDFromUsername($username);
 
-        $query = "SELECT `color1`, `color2`, `color3`, `color4`, `color5`, `color6`, `color7`, `color8` FROM `Theme` WHERE $userID = `user_id`";
+        $query =
+            "SELECT `color1`, `color2`, `color3`, `color4`, `color5`, `color6`, `color7`, `color8` "
+                ."FROM `Theme` WHERE `user_id` = '$userID'";
         $result = $this->doQuery($query);
         $colors = Array();
         while($row = mysqli_fetch_array($result)){
