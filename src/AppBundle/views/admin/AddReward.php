@@ -110,7 +110,7 @@ if(isset($_GET['delete'])) {
             <div class="toAdminPanel" id="toAdminPanel10">L</div>
             <div style="height:30px;"></div>
 
-            <button onclick="window.location='AdminPanel.php?adminToken=<?php echo Crypto::encrypt($adminUsername) ?>'"
+            <button onclick="window.location='AdminPanel.php?adminToken=<?php echo Crypto::encrypt($adminUsername, true) ?>'"
                     class="w3-button w3-circle w3-teal"
                     style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;
             </button>
@@ -166,7 +166,7 @@ if(isset($_GET['delete'])) {
                                 ."</span>"
                             ."</td>";
                     } else {
-                        $curRewardNameEncrypted = Crypto::encrypt($curRewardName);
+                        $curRewardNameEncrypted = Crypto::encrypt($curRewardName, true);
                         echo
                             "<td>"
                                 ."<form role='form' action=\"AddReward.php?adminToken=$adminUsernameEncrypted&userToken=$userUsernameEncrypted\" method='post'>"

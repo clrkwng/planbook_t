@@ -7,15 +7,25 @@ require_once "../db/Crypto.php";
 //create db connection
 $dbConn = new dbcomm();
 
-if (!isset($_GET['id'])) {
-    die("Error: The id was not set.");
+if (!isset($_GET['userToken'])) {
+    die("Error: The user token was not set.");
 }
-$encryptedUsername = $_GET['id'];
+
+$encryptedUsername = $_GET['userToken'];
 $username = Crypto::decrypt($encryptedUsername, true);
 $dbConn->convertPointsStarsTrophies($username);
 
 if(isset($_POST['createTask'])) {
-    if (isset($_POST['taskName']) and isset($_POST['categoryName']) and isset($_POST['importance']) and isset($_POST['start_hour']) and isset($_POST['start_minute']) and isset($_POST['end_hour']) and isset($_POST['end_minute']) and isset($_POST['date'])) {
+    if (
+            isset($_POST['taskName'])
+            and isset($_POST['categoryName'])
+            and isset($_POST['importance'])
+            and isset($_POST['start_hour'])
+            and isset($_POST['start_minute'])
+            and isset($_POST['end_hour'])
+            and isset($_POST['end_minute'])
+            and isset($_POST['date'])
+    ) {
 
         $errorCount= 0;
         $taskName = $_POST['taskName'];
@@ -152,7 +162,7 @@ $currentYear = $dbConn->getYearByUsername($username);
 if(isset($_GET['completeTaskID'])) {
     $todayDate = date('Y-m-d');
     if ($todayDate <= $theDate) {
-        $encryptedTaskID = Crypto::encrypt($_GET['completeTaskID']);
+        $encryptedTaskID = Crypto::encrypt($_GET['completeTaskID'], true);
         $taskID = Crypto::decrypt($encryptedTaskID);
         $completeTaskID = intval($taskID);
         $dbConn->completeTaskByTaskID($username, $completeTaskID);
@@ -222,16 +232,16 @@ if(isset($_GET['completeTaskID'])) {
                 <table align="center" width="80%" id="dailyTable">
                     <tr>
                         <td width="10%" align="left">
-                            <form role="form" action = "Homepage.php?id=<?php echo $encryptedUsername; ?>&today=xtxrxuxex" method="post">
+                            <form role="form" action = "Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&today=xtxrxuxex" method="post">
                                 <button type="submit" class="btn btn-primary">Today</button>
                             </form>
                         </td>
                         <td align="center">
-                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?userToken=<?php echo Crypto::encrypt($username, true) ?>#firstPage" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementDate" type="submit"></button>
                             </form>
                             <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<?php echo $currentMonthName . " " . $currentDay . ", " . $currentYear; ?>&nbsp;</h1>
-                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?userToken=<?php echo Crypto::encrypt($username, true) ?>#firstPage" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementDate" type="submit"></button>
                             </form>
                         </td>
@@ -244,6 +254,7 @@ if(isset($_GET['completeTaskID'])) {
                         </td>
                     </tr>
                     <?php
+                    $encryptedUsername = Crypto::encrypt($username, true);
                     $categories = $dbConn->getCategoryNamesByUsername($username);
                     $colors = $dbConn->getThemeByUsername($username);
                     $allTasksForDay = Array();
@@ -332,9 +343,10 @@ if(isset($_GET['completeTaskID'])) {
                                                             .$endTime
                                                         .'</td>';
                             if (!($dbConn->isCompletedByTaskID($taskID))) {
+                                $encryptedUsername = Crypto::encrypt($username, true);
                                 echo
                                                         "<td align='center' width='2%' id='tdConfirmComplete'>"
-                                                            ."<a href='Homepage.php?id=$encryptedUsername&completeTaskID=$encryptedTaskID' class='confirmCompleteTask' title='Complete' id='confirmComplete'>"
+                                                            ."<a href='Homepage.php?userToken=$encryptedUsername&completeTaskID=$encryptedTaskID' class='confirmCompleteTask' title='Complete' id='confirmComplete'>"
                                                                 ."<div class='glyphicon glyphicon-ok-sign'>"
                                                                 ."</div>"
                                                             ."</a>"
@@ -344,7 +356,7 @@ if(isset($_GET['completeTaskID'])) {
                                                             ."</button>"
                                                         ."</td>"
                                                         ."<td align='center' width='2%'>"
-                                                            ."<a href='Homepage.php?id=$encryptedUsername&deleteTask=$taskID' class='confirmation' title='Delete'>"
+                                                            ."<a href='Homepage.php?userToken=$encryptedUsername&deleteTask=$taskID' class='confirmation' title='Delete'>"
                                                                 ."<div class='glyphicon glyphicon-remove-sign'>"
                                                                 ."</div>"
                                                             ."</a>"
@@ -380,6 +392,8 @@ if(isset($_GET['completeTaskID'])) {
                 <table align="center" width="80%">
                     <tr>
                         <?php
+                        $encryptedUsername = Crypto::encrypt($username, true);
+
                         $datesOfTheWeek = $dbConn->getDatesofCurrentWeekByUsername($username);
                         $daysOfTheWeek = $datesOfTheWeek[0];
                         $monthsOfTheWeek = $datesOfTheWeek[1];
@@ -387,7 +401,7 @@ if(isset($_GET['completeTaskID'])) {
                         $colors = $dbConn->getThemeByUsername($username);
                         ?>
                         <td colspan="7" align="center">
-                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementWeek" type="submit"></button>
                             </form>
                             <h2 style="display: inline-block; font-size: 3em;" id="dailyViewDate">
@@ -397,7 +411,7 @@ if(isset($_GET['completeTaskID'])) {
                                 <?php echo $months[intval($monthsOfTheWeek[6])-1] . " " . $daysOfTheWeek[6] . ", " . $yearsOfTheWeek[6]; ?>
                                 &nbsp;
                             </h2>
-                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementWeek" type="submit"></button>
                             </form>
                         </td>
@@ -474,11 +488,11 @@ if(isset($_GET['completeTaskID'])) {
                 <table align="center" width="80%" id="monthlyViewTable" border="1px solid black">
                     <tr>
                         <td colspan="7" align="center">
-                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementMonth" type="submit"></button>
                             </form>
                             <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<?php echo $currentMonthName . " " . $currentYear; ?>&nbsp;</h1>
-                            <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
+                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
                                 <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementMonth" type="submit"></button>
                             </form>
                         </td>
@@ -657,14 +671,14 @@ if(isset($_GET['completeTaskID'])) {
             if (ev.target.tagName === 'TD') {
                 var tdID = ev.target.id;
                 tdID = parseInt(tdID.substr(11));
-                window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&monthToDay=' + tdID;
+                window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&monthToDay=' + tdID;
             }
             else if (ev.target.tagName === 'SPAN'){
                 var tdElement = ev.target.parentElement;
                 if (tdElement.tagName === 'TD') {
                     var tdElementID = tdElement.id;
                     tdElementID = parseInt(tdElementID.substr(11));
-                    window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&monthToDay=' + tdElementID;
+                    window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&monthToDay=' + tdElementID;
                 }
                 else {
                     //tag error inside
@@ -692,7 +706,7 @@ if(isset($_GET['completeTaskID'])) {
                     day = daysOfWeek[id];
                     month = monthsOfWeek[id];
                     year = yearsOfWeek[id];
-                    window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+                    window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
                 }
                 else if (ev.target.tagName === 'H4'){
                     var tdElement3 = ev.target.parentElement;
@@ -701,7 +715,7 @@ if(isset($_GET['completeTaskID'])) {
                         day = daysOfWeek[id];
                         month = monthsOfWeek[id];
                         year = yearsOfWeek[id];
-                        window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
                     }
                     else {
                         //alert('tag error inside3');
@@ -714,7 +728,8 @@ if(isset($_GET['completeTaskID'])) {
                         day = daysOfWeek[id];
                         month = monthsOfWeek[id];
                         year = yearsOfWeek[id];
-                        window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+
+                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
                     }
                     else {
                         //alert('tag error inside1');
@@ -727,7 +742,7 @@ if(isset($_GET['completeTaskID'])) {
                         day = daysOfWeek[id];
                         month = monthsOfWeek[id];
                         year = yearsOfWeek[id];
-                        window.location='Homepage.php?id=<?php echo $encryptedUsername; ?>&weekToDay=' + year + "**" + month + "**" + day;
+                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
                     }
                     else {
                         //alert('tag error inside2');
@@ -952,7 +967,7 @@ if(isset($_GET['completeTaskID'])) {
 
 
 <div class="modal fade" id="infoAwardsModal">
-    <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername; ?>#firstPage" method="post">
+    <form role="form" action="Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>#firstPage" method="post">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding-left: 10%;">
@@ -1007,7 +1022,7 @@ if(isset($_GET['completeTaskID'])) {
 </div>
 
 <div class="modal fade" id="mymodal">
-    <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername; ?>#firstPage" method="post" class="task_create">
+    <form role="form" action="Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>#firstPage" method="post" class="task_create">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding-left: 10%;">
@@ -1287,7 +1302,7 @@ if(isset($_GET['completeTaskID'])) {
 </div>
 
 <div class="modal fade" id="editTaskModal">
-    <form role="form" action="Homepage.php?id=<?php echo $encryptedUsername; ?>#firstPage" method="post">
+    <form role="form" action="Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>#firstPage" method="post">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding-left: 10%;">

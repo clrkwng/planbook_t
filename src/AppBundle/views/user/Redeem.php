@@ -75,7 +75,7 @@ if (isset($_GET['rewardName'])) {
             <div class="toAwards" id="toAwards11">S</div>
             <div style="height:30px;"></div>
 
-            <button onclick="window.location='Homepage.php?id=<?php echo $usernameEncrypted ?>#3rdPage'" class="w3-button w3-circle w3-teal" style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;</button>
+            <button onclick="window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true) ?>#3rdPage'" class="w3-button w3-circle w3-teal" style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;</button>
         </td>
         <td rowspan="2" valign="top" style="overflow-y: auto;">
             <br><br>
@@ -119,7 +119,7 @@ if (isset($_GET['rewardName'])) {
                                 <span class='glyphicon glyphicon-ok' style='font-size: 25px; color: green;'></span>
                               </td>";
                     } else {
-                        $curRewardNameEncrypted = Crypto::encrypt($curRewardName);
+                        $curRewardNameEncrypted = Crypto::encrypt($curRewardName, true);
                         echo "<td>
                                     <a href='Redeem.php?id=$usernameEncrypted&rewardName=$curRewardNameEncrypted'>
                                         <button type='button' id='doneButton' class='confirmRedeem' title='Redeem'>Redeem?</button>
