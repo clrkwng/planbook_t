@@ -1315,7 +1315,6 @@ class dbcomm
     /*
      * Template FUNCTIONS ------------------------------------------------------------
      * */
-
     function getAllTemplatesByUsername($username){
         $userID = $this->getUserIDFromUsername($username);
 
