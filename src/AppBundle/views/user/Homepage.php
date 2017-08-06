@@ -99,7 +99,6 @@ if ($dbcomm->isCurrentYearALeapYear($username) == 1) {
     $numDaysInMonth[1] = 29;
 }
 
-
 $theDate = $dbcomm->getDateByUsername($username);
 $currentDate = substr($theDate, 5,2).'/'.substr($theDate, 8,2);
 $currentDay = intval($dbcomm->getDayByUsername($username));

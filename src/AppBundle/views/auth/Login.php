@@ -1,12 +1,11 @@
 <?php
 session_start();
-$username = $password = $alertMessage = '';
+$username = $password = '';
 
 if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
     $cookieUsername = $_COOKIE['username'];
     $cookiePassword = $_COOKIE['password'];
 }
-
 
 require_once "../db/dbcomm.php";
 require_once "../db/Crypto.php";
@@ -148,7 +147,6 @@ if (isset($_POST['submitCredentials'])) {
 
 <!-- Top content -->
 <div class="top-content">
-
     <div class="inner-bg">
         <div class="container">
             <div class="row">

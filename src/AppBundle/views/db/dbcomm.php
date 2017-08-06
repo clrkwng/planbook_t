@@ -279,7 +279,6 @@ class dbcomm
         return mysqli_fetch_array($this->doQuery($query))['id'];
     }
 
-
     function insertNewImage($imageName, $imageDescription, $imageLink)
     {
         $query =
@@ -964,7 +963,11 @@ class dbcomm
         $query = "SELECT `id` FROM `Priority` WHERE `name`='$importance'";
         $priorityID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `Task` (`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`, `date`) VALUES ('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime', '$date')";
+        $query =
+            "INSERT INTO `Task` "
+                ."(`user_id`, `name`, `category_id`, `priority_id`, `start_time`, `end_time`, `date`) "
+            ."VALUES "
+                ."('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime', '$date')";
         $this->doQuery($query);
     }
 
@@ -998,25 +1001,6 @@ class dbcomm
         sort($categories);
         return $categories;
     }
-
-    /*function getTasksByCategory($username, $category){
-        $userID = $this->getUserIDFromUsername($username);
-
-        $query = "SELECT `id` FROM `Category` WHERE `name` ='$category' AND `user_id` = '$userID'";
-        $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
-
-        $query = "SELECT `task_name` FROM `Task` WHERE `category_id` = '$categoryID' AND `user_id` = '$userID'";
-        $result = $this->doQuery($query);
-
-        $tasks = Array();
-        $counter = 0;
-        while($row = mysqli_fetch_array($result)){
-            $tasks[$counter]=$row['task_name'];
-            $counter++;
-        }
-        sort($tasks);
-        return $tasks;
-    }*/
 
     function getPriorities() {
         $query = "SELECT `name` FROM `Priority`";
@@ -1062,12 +1046,24 @@ class dbcomm
         $query = "SELECT `id` FROM `Category` WHERE `name` ='$category' AND `user_id` = '$userID'";
         $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "SELECT `task_name`, `priority_id`, `start_time`, `end_time`, `date`, `id` FROM `Task`  WHERE `category_id` = '$categoryID' AND `user_id` = '$userID' AND `date`='$currentDate'";
+        $query = "SELECT `name`, `priority_id`, `start_time`, `end_time`, `date`, `id` "
+                    ."FROM `Task`  "
+                ."WHERE `category_id` = '$categoryID' "
+                    ."AND `user_id` = '$userID' "
+                    ."AND `date`='$currentDate'";
         $result = $this->doQuery($query);
         $tasks = Array();
         $counter = 0;
         while($row = mysqli_fetch_array($result)){
-            $tasks[$counter] = Array("taskName"=>$row['task_name'], "date"=>$row['date'], "priority"=>$this->getPriorityValue($row['priority_id']), "startTime"=>$row['start_time'], "endTime"=>$row['end_time'], "id"=>$row['id']);
+            $tasks[$counter] =
+                Array(
+                    "taskName"=>$row['name'],
+                    "date"=>$row['date'],
+                    "priority"=>$this->getPriorityValue($row['priority_id']),
+                    "startTime"=>$row['start_time'],
+                    "endTime"=>$row['end_time'],
+                    "id"=>$row['id']
+                );
             $counter++;
         }
         return $tasks;
@@ -1205,19 +1201,6 @@ class dbcomm
         return $datesOfTheWeek;
     }
 
-    /*function getNumberOfTasksInCategoryByDate($username, $category, $date){
-        $userID = $this->getUserIDFromUsername($username);
-
-        $query = "SELECT `task_name` FROM `Task` WHERE `user_id`='$userID' AND `category_id`='$category' AND `date` = $date";
-        $result = $this->doQuery($query);
-
-        $taskCountInCategory = 0;
-        while($row = mysqli_fetch_array($result)){
-            $taskCountInCategory++;
-        }
-        return $taskCountInCategory;
-    }*/
-
     function incrementWeekByUsername($username) {
         $userID = $this->getUserIDFromUsername($username);
         $currentDate = $this->getDateByUsername($username);
@@ -1336,7 +1319,9 @@ class dbcomm
     function getAllTemplatesByUsername($username){
         $userID = $this->getUserIDFromUsername($username);
 
-        $query = "SELECT `id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time` FROM `Template`  WHERE `user_id` = '$userID'";
+        $query = "SELECT `id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time` "
+                    ."FROM `Template`  "
+                ."WHERE `user_id` = '$userID'";
         $result = $this->doQuery($query);
         $tasks = Array();
         $counter = 0;
@@ -1344,7 +1329,19 @@ class dbcomm
             $categoryID = $row['category_id'];
             $query = "SELECT `name` FROM `Category` WHERE `id`='$categoryID'";
             $categoryName = mysqli_fetch_array($this->doQuery($query))['name'];
-            $tasks[$counter] = Array("templateID"=>$row['id'], "templateName"=>$row['task_name'], "startHour"=>substr($row['start_time'], 0, 2), "startMin"=>substr($row['start_time'],3,2), "startAMPM"=>substr($row['start_time'],6,2), "endHour"=>substr($row['end_time'], 0, 2), "endMin"=>substr($row['end_time'],3,2), "endAMPM"=>substr($row['end_time'],6,2), "priority"=>$this->getPriorityValue($row['priority_id']), "category"=>$categoryName);
+            $tasks[$counter] =
+                Array(
+                    "templateID"=>$row['id'],
+                    "templateName"=>$row['task_name'],
+                    "startHour"=>substr($row['start_time'],0,2),
+                    "startMin"=>substr($row['start_time'],3,2),
+                    "startAMPM"=>substr($row['start_time'],6,2),
+                    "endHour"=>substr($row['end_time'], 0, 2),
+                    "endMin"=>substr($row['end_time'],3,2),
+                    "endAMPM"=>substr($row['end_time'],6,2),
+                    "priority"=>$this->getPriorityValue($row['priority_id']),
+                    "category"=>$categoryName
+                );
             $counter++;
         }
         return $tasks;
@@ -1359,14 +1356,19 @@ class dbcomm
         $query = "SELECT `id` FROM `Priority` WHERE `name`='$importance'";
         $priorityID = mysqli_fetch_array($this->doQuery($query))['id'];
 
-        $query = "INSERT INTO `Template` (`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`) VALUES ('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime')";
+        $query = "INSERT INTO `Template` "
+                    ."(`user_id`, `task_name`, `category_id`, `priority_id`, `start_time`, `end_time`) "
+                ."VALUES "
+                    ."('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime')";
         $this->doQuery($query);
     }
 
     function deleteTemplateByUsername($username, $templateID) {
         $userID = $this->getUserIDFromUsername($username);
 
-        $query = "DELETE FROM `Template` WHERE `user_id`='$userID' AND `task_name`='$templateID'";
+        $query = "DELETE FROM `Template` "
+                    ."WHERE `user_id`='$userID' "
+                    ."AND `task_name`='$templateID'";
         $this->doQuery($query);
     }
 
