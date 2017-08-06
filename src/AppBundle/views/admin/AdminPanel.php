@@ -181,7 +181,7 @@ if(isset($_GET['delete'])) //delete the user
             <tr id='addNewUser'>
                 <td colspan="3" id="addNewUserButton">
                     <a class="glyphicon glyphicon-plus link_button"
-                         href="../auth/CreateUser.php?adminToken=<?php echo $adminUsernameEncrypted;?>"
+                         href="../auth/CreateUser.php?adminToken=<?php echo Crypto::encrypt($adminUsername);?>"
                     > New User</a>
                 </td>
             </tr>
@@ -267,7 +267,7 @@ if(isset($_GET['delete'])) //delete the user
 
     var addUserButton = document.getElementById("addNewUserButton");
     addUserButton.addEventListener('click', function() {
-        window.location = '../auth/CreateUser.php?adminToken=<?php echo $adminUsernameEncrypted; ?>';
+        window.location = '../auth/CreateUser.php?adminToken=<?php echo Crypto::encrypt($adminUsername); ?>';
     }, false);
 
     var clickUsers = document.getElementsByClassName("clickUser");

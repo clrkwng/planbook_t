@@ -221,10 +221,10 @@ if(isset($_GET['completeTaskID'])) {
                     <a href ="../user/UserProfile.php">Profile</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#firstPage">Tasks</a>
+                    <a href="#task-view">Tasks</a>
                 </li>
                 <li class="page-scroll">
-                    <a href="#3rdPage">Awards</a>
+                    <a href="#award-view">Awards</a>
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
@@ -256,10 +256,9 @@ if(isset($_GET['completeTaskID'])) {
         </div>
     </div>
 </header>
-<section id="firstPage">
-    <div class="container" id="fullpage">
-    <div class="section" id="section0">
-        <div class="slide" id="slide1">
+<section id="task-view">
+    <div class="container">
+        <div class="section" id="sectionDaily">
             <div class="content">
                 <?php
                 if (isset($alertMessage)) {
@@ -426,174 +425,173 @@ if(isset($_GET['completeTaskID'])) {
                 </table>
             </div>
         </div>
-        <div class="slide" id="slide2">
+        <div class="section" id="sectionWeekly">
             <div class="content">
-                <table align="center" width="80%">
-                    <tr>
-                        <?php
-                        $encryptedUsername = Crypto::encrypt($username, true);
+                    <table align="center" width="80%">
+                        <tr>
+                            <?php
+                            $encryptedUsername = Crypto::encrypt($username, true);
 
-                        $datesOfTheWeek = $dbConn->getDatesofCurrentWeekByUsername($username);
-                        $daysOfTheWeek = $datesOfTheWeek[0];
-                        $monthsOfTheWeek = $datesOfTheWeek[1];
-                        $yearsOfTheWeek = $datesOfTheWeek[2];
-                        $colors = $dbConn->getThemeByUsername($username);
-                        ?>
-                        <td colspan="7" align="center">
-                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
-                                <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementWeek" type="submit"></button>
-                            </form>
-                            <h2 style="display: inline-block; font-size: 3em;" id="dailyViewDate">
-                                &nbsp;
-                                <?php echo $months[intval($monthsOfTheWeek[0])-1] . " " . $daysOfTheWeek[0] . ", " . $yearsOfTheWeek[0]; ?>
-                                &nbsp;-&nbsp;
-                                <?php echo $months[intval($monthsOfTheWeek[6])-1] . " " . $daysOfTheWeek[6] . ", " . $yearsOfTheWeek[6]; ?>
-                                &nbsp;
-                            </h2>
-                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
-                                <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementWeek" type="submit"></button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr style="border: 1px solid black" align="center">
-                        <?php
-                        for ($i = 0; $i < 7; $i++){
-                            $styleTagForWeek="";
-                            $daySubstr = substr($wordDaysOfTheWeek[$i], 0,3);
-                            $dayNumberTag=$daysOfTheWeek[$i];
-                            if(intval(date('j')) == intval($daysOfTheWeek[$i]) and intval(date('n')) == intval($monthsOfTheWeek[$i]) and intval(date('Y')) == intval($yearsOfTheWeek[$i])) {
-                                if ($daysOfTheWeek[$i] < 10) {
-                                    $dayNumberTag = "<span style='background-color: red; border-radius: 50%; color: white;'>&nbsp;$daysOfTheWeek[$i]&nbsp;</span>";
+                            $datesOfTheWeek = $dbConn->getDatesofCurrentWeekByUsername($username);
+                            $daysOfTheWeek = $datesOfTheWeek[0];
+                            $monthsOfTheWeek = $datesOfTheWeek[1];
+                            $yearsOfTheWeek = $datesOfTheWeek[2];
+                            $colors = $dbConn->getThemeByUsername($username);
+                            ?>
+                            <td colspan="7" align="center">
+                                <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
+                                    <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementWeek" type="submit"></button>
+                                </form>
+                                <h2 style="display: inline-block; font-size: 3em;" id="dailyViewDate">
+                                    &nbsp;
+                                    <?php echo $months[intval($monthsOfTheWeek[0])-1] . " " . $daysOfTheWeek[0] . ", " . $yearsOfTheWeek[0]; ?>
+                                    &nbsp;-&nbsp;
+                                    <?php echo $months[intval($monthsOfTheWeek[6])-1] . " " . $daysOfTheWeek[6] . ", " . $yearsOfTheWeek[6]; ?>
+                                    &nbsp;
+                                </h2>
+                                <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/1" method="post" class="login-form" style="display: inline-block">
+                                    <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementWeek" type="submit"></button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr style="border: 1px solid black" align="center">
+                            <?php
+                            for ($i = 0; $i < 7; $i++){
+                                $styleTagForWeek="";
+                                $daySubstr = substr($wordDaysOfTheWeek[$i], 0,3);
+                                $dayNumberTag=$daysOfTheWeek[$i];
+                                if(intval(date('j')) == intval($daysOfTheWeek[$i]) and intval(date('n')) == intval($monthsOfTheWeek[$i]) and intval(date('Y')) == intval($yearsOfTheWeek[$i])) {
+                                    if ($daysOfTheWeek[$i] < 10) {
+                                        $dayNumberTag = "<span style='background-color: red; border-radius: 50%; color: white;'>&nbsp;$daysOfTheWeek[$i]&nbsp;</span>";
+                                    }
+                                    else {
+                                        $dayNumberTag = "<span style='background-color: red; border-radius: 50%; color: white;'>$daysOfTheWeek[$i]</span>";
+                                    }
                                 }
-                                else {
-                                    $dayNumberTag = "<span style='background-color: red; border-radius: 50%; color: white;'>$daysOfTheWeek[$i]</span>";
-                                }
-                            }
-                            echo
-                                "<td class='weekToDay$i' width='100/7%' style='border: 1px solid black; background-color: $colors[$i]; cursor: pointer;'>"
-                                  ."<h4>$daySubstr $dayNumberTag</h4>"
-                              ."</td>";
-                        }
-                        ?>
-                    </tr>
-                    <?php
-                    $categories = $dbConn->getCategoryNamesByUsername($username);
-                    $colors = $dbConn->getThemeByUsername($username);
-                    for ($i = 0; $i < sizeOf($categories); $i++) {
-                        $dbConn->setDateByDate($username, $yearsOfTheWeek[0] . "-" . $monthsOfTheWeek[0] . "-" . $daysOfTheWeek[0]);
-                        $categoryName = $categories[$i];
-                        echo "<tr>";
-
-                        for ($j = 0; $j < 7; $j++) {
-                            $tasks = $dbConn->getTaskInfoByCategory($username, $categoryName);
-                            $taskCount = count($tasks);
-
-                            $color = $colors[($i%8)];
-                            $styleTag="";
-                            if ($i == sizeOf($categories)-1){
-                                $styleTag = "border-bottom: 1px solid black;";
-                            }
-                            if($taskCount > 0) {
-                                echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; padding: 2px 10px 2px 10px; cursor: pointer;'>"
-                                        ."<div class='badge' style='display: block; background-color: $color; color: black;'>"
-                                            .$categoryName
-                                            ."&nbsp;"
-                                            ."&nbsp;"
-                                            ."<span class='badge' style='display: inline-block; background-color: black; color: $color;'>"
-                                                .$taskCount
-                                            ."</span>"
-                                        ."</div>"
-                                      ."</td>";
-                            }
-                            else {
                                 echo
-                                    "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; cursor: pointer;'>"
+                                    "<td class='weekToDay$i' width='100/7%' style='border: 1px solid black; background-color: $colors[$i]; cursor: pointer;'>"
+                                    ."<h4>$daySubstr $dayNumberTag</h4>"
                                     ."</td>";
                             }
+                            ?>
+                        </tr>
+                        <?php
+                        $categories = $dbConn->getCategoryNamesByUsername($username);
+                        $colors = $dbConn->getThemeByUsername($username);
+                        for ($i = 0; $i < sizeOf($categories); $i++) {
+                            $dbConn->setDateByDate($username, $yearsOfTheWeek[0] . "-" . $monthsOfTheWeek[0] . "-" . $daysOfTheWeek[0]);
+                            $categoryName = $categories[$i];
+                            echo "<tr>";
 
-                            $dbConn->incrementDateByUsername($username);
+                            for ($j = 0; $j < 7; $j++) {
+                                $tasks = $dbConn->getTaskInfoByCategory($username, $categoryName);
+                                $taskCount = count($tasks);
+
+                                $color = $colors[($i%8)];
+                                $styleTag="";
+                                if ($i == sizeOf($categories)-1){
+                                    $styleTag = "border-bottom: 1px solid black;";
+                                }
+                                if($taskCount > 0) {
+                                    echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; padding: 2px 10px 2px 10px; cursor: pointer;'>"
+                                        ."<div class='badge' style='display: block; background-color: $color; color: black;'>"
+                                        .$categoryName
+                                        ."&nbsp;"
+                                        ."&nbsp;"
+                                        ."<span class='badge' style='display: inline-block; background-color: black; color: $color;'>"
+                                        .$taskCount
+                                        ."</span>"
+                                        ."</div>"
+                                        ."</td>";
+                                }
+                                else {
+                                    echo
+                                        "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; cursor: pointer;'>"
+                                        ."</td>";
+                                }
+
+                                $dbConn->incrementDateByUsername($username);
+                            }
+                            echo
+                            "</tr>";
                         }
-                        echo
-                                "</tr>";
-                    }
 
-                    $dbConn->setDateByDate($username, $theDate);
-                    ?>
-                </table>
-            </div>
+                        $dbConn->setDateByDate($username, $theDate);
+                        ?>
+                    </table>
+                </div>
         </div>
-        <div class="slide" id="slide3">
+        <div class="section" id="sectionMonthly">
             <div class="content">
-                <table align="center" width="80%" id="monthlyViewTable" border="1px solid black">
-                    <tr>
-                        <td colspan="7" align="center">
-                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
-                                <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementMonth" type="submit"></button>
-                            </form>
-                            <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<?php echo $currentMonthName . " " . $currentYear; ?>&nbsp;</h1>
-                            <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
-                                <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementMonth" type="submit"></button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr align="right">
-                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[0]; ?>; height: 40px;"><h4>Sun</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[1]; ?>"><h4>Mon</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[2]; ?>"><h4>Tue</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[3]; ?>"><h4>Wed</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[4]; ?>"><h4>Thu</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[5]; ?>"><h4>Fri</h4></td>
-                        <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[6]; ?>"><h4>Sun</h4></td>
-                    </tr>
-                    <?php
-                    $firstDOTW = $dbConn->getDOTWofFirstDayofCurrentMonth($username);
-                    $tasksperDay = $dbConn->getNumTasksPerDayOfCurrentMonthByUsername($username);
+                    <table align="center" width="80%" id="monthlyViewTable" border="1px solid black">
+                        <tr>
+                            <td colspan="7" align="center">
+                                <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
+                                    <button class="glyphicon glyphicon-chevron-left" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="decrementMonth" type="submit"></button>
+                                </form>
+                                <h1 style="display: inline-block;" id="dailyViewDate">&nbsp;<?php echo $currentMonthName . " " . $currentYear; ?>&nbsp;</h1>
+                                <form role="form" action="Homepage.php?userToken=<?php echo $encryptedUsername ?>#firstPage/2" method="post" class="login-form" style="display: inline-block">
+                                    <button class="glyphicon glyphicon-chevron-right" style="font-size: 3em; display: inline-block; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;" name="incrementMonth" type="submit"></button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr align="right">
+                            <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[0]; ?>; height: 40px;"><h4>Sun</h4></td>
+                            <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[1]; ?>"><h4>Mon</h4></td>
+                            <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[2]; ?>"><h4>Tue</h4></td>
+                            <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[3]; ?>"><h4>Wed</h4></td>
+                            <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[4]; ?>"><h4>Thu</h4></td>
+                            <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[5]; ?>"><h4>Fri</h4></td>
+                            <td width="100/7%" style="padding-right: 10px; background-color: <?php echo $colors[6]; ?>"><h4>Sun</h4></td>
+                        </tr>
+                        <?php
+                        $firstDOTW = $dbConn->getDOTWofFirstDayofCurrentMonth($username);
+                        $tasksperDay = $dbConn->getNumTasksPerDayOfCurrentMonthByUsername($username);
 
-                    echo "<tr>";
+                        echo "<tr>";
 
-                    for($i = 0; $i < $firstDOTW; $i++) {
-                        echo "<td></td>";
-                    }
-
-                    for($i = 1; $i <= $numDaysInMonth[intval($currentMonth)-1]; $i++) {
-                        $numTasks = $tasksperDay[$i-1];
-                        $taskColorIndex = ($i+$firstDOTW-1)%7;
-
-                        $taskColor = $colors[$taskColorIndex];
-
-                        echo "<td id='monthlyView$i' class='monthlyView' style='height: 70px; vertical-align: top; text-align: right; padding: 7px 7px 7px 7px; cursor: pointer;'>";
-
-                        if(intval(date('j')) == $i and intval(date('n')) == $currentMonth and intval(date('Y')) == $currentYear) {
-                            $numberStyleTag = $i;
-                            if($i < 10)  $numberStyleTag = "&nbsp;$i&nbsp;";
-                            echo "<span style='background-color: red; border-radius: 50%; color: white;'>$numberStyleTag</span>";
-                        }
-                        else {
-                            if($i < 10)  echo "&nbsp;$i&nbsp;";
-                            else         echo "$i";
+                        for($i = 0; $i < $firstDOTW; $i++) {
+                            echo "<td></td>";
                         }
 
-                        if($numTasks > 0) {
-                            $numberStyleTag = "Tasks";
-                            if ($numTasks == 1) $numberStyleTag = "Task";
-                            echo "<span class='badge' style='display: block; background-color: $taskColor; color: black;'>$numTasks&nbsp;$numberStyleTag</span>";
+                        for($i = 1; $i <= $numDaysInMonth[intval($currentMonth)-1]; $i++) {
+                            $numTasks = $tasksperDay[$i-1];
+                            $taskColorIndex = ($i+$firstDOTW-1)%7;
+
+                            $taskColor = $colors[$taskColorIndex];
+
+                            echo "<td id='monthlyView$i' class='monthlyView' style='height: 70px; vertical-align: top; text-align: right; padding: 7px 7px 7px 7px; cursor: pointer;'>";
+
+                            if(intval(date('j')) == $i and intval(date('n')) == $currentMonth and intval(date('Y')) == $currentYear) {
+                                $numberStyleTag = $i;
+                                if($i < 10)  $numberStyleTag = "&nbsp;$i&nbsp;";
+                                echo "<span style='background-color: red; border-radius: 50%; color: white;'>$numberStyleTag</span>";
+                            }
+                            else {
+                                if($i < 10)  echo "&nbsp;$i&nbsp;";
+                                else         echo "$i";
+                            }
+
+                            if($numTasks > 0) {
+                                $numberStyleTag = "Tasks";
+                                if ($numTasks == 1) $numberStyleTag = "Task";
+                                echo "<span class='badge' style='display: block; background-color: $taskColor; color: black;'>$numTasks&nbsp;$numberStyleTag</span>";
+                            }
+
+                            echo  "</td>";
+
+                            if(($i+$firstDOTW-1)%7 == 6) {
+                                echo "</tr><tr>";
+                            }
                         }
 
-                        echo  "</td>";
-
-                        if(($i+$firstDOTW-1)%7 == 6) {
-                            echo "</tr><tr>";
-                        }
-                    }
-
-                    echo "</tr>";
-                    ?>
-                </table>
-            </div>
+                        echo "</tr>";
+                        ?>
+                    </table>
+                </div>
         </div>
     </div>
-    </div>
-    <div class="section" id="3rdPage">
+    <div class="section" id="award-view">
         <table align="center" width="100%" style="height: 100%;">
             <tr style="height:25%">
                 <td rowspan="6" valign="center" width="20%" id="exchangeSystem">

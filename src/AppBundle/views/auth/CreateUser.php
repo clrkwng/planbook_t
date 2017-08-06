@@ -129,7 +129,7 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
     }
     if ($errorCount == 0) {
         $dbcomm->createNewUser($accountID, $username, $password, $email, $phonenumber);
-        echo "<script>window.location = '../admin/AdminPanel.php?adminToken=$adminUsernameEncrypted';</script>";
+        echo "<script>window.location = '../admin/AdminPanel.php?adminToken=". Crypto::encrypt($adminUsername) .";</script>";
     }
 }
 else {
@@ -188,16 +188,11 @@ else {
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="Login.php">Login/Sign up</a>
+                    <a href ="../admin/AdminPanel.php?adminToken='<?php echo Crypto::encrypt($adminUsername) ?>'">Admin Panel</a>
                 </li>
-                <li class="page-scroll">
-                    <a href="../index.html#portfolio">Activities</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#about">About</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#contact">Contact</a>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="../auth/Login.php">Log out</a>
                 </li>
             </ul>
         </div>
