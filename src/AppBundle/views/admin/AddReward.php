@@ -6,42 +6,61 @@ require_once "../db/Crypto.php";
 
 ini_set('display_errors', 0);
 
-if (!isset($_GET['id']) or !isset($_GET['reward'])) {
-    die("Error: The id or reward id was not set.");
+if (!isset($_GET['adminToken']) or !isset($_GET['userToken'])) {
+    die("Error: The admin or user token was not set.");
 }
-$encryptedAdminUsername = $_GET['id'];
-$adminUsername = Crypto::decrypt($encryptedAdminUsername);
+$adminUsernameEncrypted = $_GET['adminToken'];
+$adminUsername = Crypto::decrypt($adminUsernameEncrypted);
 
-$encryptedUserUsername = $_GET['reward'];
-$userUsername = Crypto::decrypt($encryptedUserUsername);
+$userUsernameEncrypted = $_GET['userToken'];
+$userUsername = Crypto::decrypt($userUsernameEncrypted);
 
 //create db connection
 $dbcomm = new dbcomm();
 
 if (isset($_POST['doneButton'])) {
-    $unencryptedRewardName = str_replace("XyzYx", " ", $_POST['rewardName']);
+    $unencryptedRewardName = Crypto::decrypt($_POST['rewardName']);
     if (!$dbcomm->redeemRewardByUsername($userUsername, $unencryptedRewardName)) {
-        $alert = '<div class="alert alert-danger alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Error!</strong>  Insufficient points to redeem.</div>';
+        $alert =
+            "<div class='alert alert-danger alert-dismissible' role='alert'>"
+                ."<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+                    ."<span aria-hidden='true'>"
+                        ."&times;"
+                    ."</span>"
+                ."</button>"
+                ."<strong>"
+                    ."Error: "
+                ."</strong>"
+                ."<span>"
+                    ."Insufficient Points to redeem."
+                ."</span>"
+            ."</div>'";
     }
 }
 
 if (isset($_POST['SubmitReward'])) {
     foreach($_POST['users'] as $userChecked){
-        $encodedUsername = $userChecked;
-
-        $unencodedUsername = Crypto::decrypt($encodedUsername);
-        $dbcomm->addRewardByUsername($unencodedUsername,$_POST['rewardName'],$_POST['numOfPoints']);
+        $dbcomm->addRewardByUsername($userUsername, $_POST['rewardName'], $_POST['numOfPoints']);
     }
 }
 
 if(isset($_GET['delete'])) {
     $deleteRewardID = $_GET['delete'];
     $dbcomm->deleteRewardByRewardID($deleteRewardID);
-    $alert = '<div class="alert alert-success alert-dismissible" role="alert">
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Success!</strong>  The reward has been deleted.</div>'; //successful deletion alert
+    $alert =
+            "<div class='alert alert-success alert-dismissible' role='alert'>"
+                ."<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+                    ."<span aria-hidden='true'>"
+                        ."&times;"
+                    ."</span>"
+                ."</button>"
+                ."<strong>"
+                    ."Success: "
+                ."</strong>"
+                ."<span>"
+                    ."Reward deleted."
+                ."</span>"
+            ."</div>'";
 
 }
 
@@ -58,7 +77,7 @@ if(isset($_GET['delete'])) {
     <link rel="stylesheet" type="text/css" href="../../libs/fullpage-js/dist/jquery.fullpage.min.js"/>
     <link rel="stylesheet" type="text/css" href="../../css/fullpage-style.css"/>
     <link rel="stylesheet" href="../../libs/w3-css/w3.css">
-    <link rel="stylesheet" type="text/css" href="../../css/admin/addreward.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/admin/admin.css"/>
 
 </head>
 <body>
@@ -90,10 +109,8 @@ if(isset($_GET['delete'])) {
             <div class="toAdminPanel" id="toAdminPanel9">E</div>
             <div class="toAdminPanel" id="toAdminPanel10">L</div>
             <div style="height:30px;"></div>
-            <?php
-                $encryptedUsername = Crypto::encrypt($adminUsername, true);
-            ?>
-            <button onclick="window.location='AdminPanel.php?id=<?php echo $encryptedUsername ?>'"
+
+            <button onclick="window.location='AdminPanel.php?adminToken=<?php echo Crypto::encrypt($adminUsername) ?>'"
                     class="w3-button w3-circle w3-teal"
                     style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;
             </button>
@@ -120,41 +137,57 @@ if(isset($_GET['delete'])) {
                 </tr>
 
                 <?php
-                $rewards = $dbcomm->getAllRewardsByUsername($userUsername);
+                $rewardList = $dbcomm->getAllRewardsByUsername($userUsername);
                 $userCounter = 0;
-                foreach ($rewards as $rewardId => $rewardValues) {
-                    $rewardID = $rewardValues['rewardID'];
-                    $rewardName = $rewardValues['name'];
-                    $rewardPoints = $rewardValues['points'];
-                    $rewardCompleted = $rewardValues['completed'];
-                    $rewardRedeemDate = $rewardValues['redeem_date'];
+                foreach ($rewardList as $rewardId => $curRewardVals) {
+                    $curRewardId = $curRewardVals['rewardID'];
+                    $curRewardName = $curRewardVals['name'];
+                    $curRewardPoints = $curRewardVals['points'];
+                    $curRewardCompleted = $curRewardVals['completed'];
+                    $curRewardRedeemDate = $curRewardVals['redeem_date'];
 
-                    if ($rewardRedeemDate == "//") {
-                        $rewardRedeemDate = "---";
+                    if ($curRewardRedeemDate == "//") {
+                        $curRewardRedeemDate = "---";
                     }
 
-                    echo "<tr style='height: 40px;'>
-                                <td>$rewardName</td>
-                                <td>$rewardPoints</td>";
+                    echo
+                        "<tr style='height: 40px;'>"
+                            ."<td>"
+                                .$curRewardName
+                            ."</td>"
+                            ."<td>"
+                                .$curRewardPoints
+                            ."</td>";
 
-                    if ($rewardCompleted == 1) {
-                        echo "<td><span class='glyphicon glyphicon-ok' style='font-size: 25px; color: green;'></span></td>";
+                    if ($curRewardCompleted == 1) {
+                        echo
+                            "<td>"
+                                ."<span class='glyphicon glyphicon-ok' style='font-size: 25px; color: green;'>"
+                                ."</span>"
+                            ."</td>";
                     } else {
-                        $encyptedRewardName = str_replace(" ", "XyzYx", $rewardName);
-                        echo "<td>
-                                    <form role='form' action=\"AddReward.php?id=$encryptedAdminUsername&reward=$encryptedUserUsername\" method='post'>
-                                        <input type='text' name='rewardName' value='$encyptedRewardName' style='display: none;'>
-                                        <button type='submit' name='doneButton' id='doneButton' class='confirmRedeem' title='Redeem'>Redeem?</button>
-                                    </form>
-                              </td>";
+                        $curRewardNameEncrypted = Crypto::encrypt($curRewardName);
+                        echo
+                            "<td>"
+                                ."<form role='form' action=\"AddReward.php?adminToken=$adminUsernameEncrypted&userToken=$userUsernameEncrypted\" method='post'>"
+                                    ."<input type='text' name='rewardName' value='$curRewardNameEncrypted' style='display: none;'>"
+                                    ."<button type='submit' name='doneButton' id='doneButton' class='confirmRedeem' title='Redeem'>"
+                                        ."Redeem?"
+                                    ."</button>"
+                                ."</form>"
+                            ."</td>";
                     }
-                    echo "    <td>$rewardRedeemDate</td>
-                              <td>
-                                  <a href=\"AddReward.php?id=$encryptedAdminUsername&reward=$encryptedUserUsername&delete=$rewardID\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
-                                    <span class='glyphicon glyphicon-trash' style='font-size: 20px;'></span>
-                                  </a>
-                              </td>
-                          </tr>";
+                    echo
+                            "<td>"
+                                .$curRewardRedeemDate
+                            ."</td>"
+                                ."<td>"
+                                  ."<a href=\"AddReward.php?adminToken=$adminUsernameEncrypted&userToken=$userUsernameEncrypted&delete=$curRewardId\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>"
+                                    ."<span class='glyphicon glyphicon-trash' style='font-size: 20px;'>"
+                                    ."</span>"
+                                ."</a>"
+                            ."</td>"
+                        ."</tr>";
                 }
                 ?>
                 <tr style="height: 40px; cursor: pointer;" data-toggle="modal" data-target="#addRewardModal">
@@ -216,7 +249,7 @@ if(isset($_GET['delete'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td align="left">
-                            <form enctype="multipart/form-data" action="AddReward.php?id=<?php echo $encryptedAdminUsername; ?>&reward=<?php echo $encryptedUserUsername; ?>" method="post">
+                            <form enctype="multipart/form-data" action="AddReward.php?adminToken=<?php echo $adminUsernameEncrypted; ?>&userToken=<?php echo $userUsernameEncrypted; ?>" method="post">
                                 <input type="text" name="rewardName" placeholder="Reward Name...">
                                 <br><br>
                                 <input type="number" name="numOfPoints" placeholder="Points Required...">

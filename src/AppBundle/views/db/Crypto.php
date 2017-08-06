@@ -17,7 +17,7 @@ class Crypto
      * @param boolean $encode - set to TRUE to return a base64-encoded
      * @return string (raw binary)
      */
-    public static function encrypt($message, $encode = false)
+    public static function encrypt($message, $encode = true)
     {
         $key = CryptoKeygen::getKey();
 

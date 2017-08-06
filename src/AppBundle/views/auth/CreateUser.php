@@ -7,12 +7,12 @@ require_once "../db/Crypto.php";
 //create db connection
 $dbcomm = new dbcomm();
 
-if(!isset($_GET['id'])){
+if(!isset($_GET['adminToken'])){
     die("Error: The ID was not set.");
 }
-$encryptedAccountID = $_GET['id'];
-
-$accountID = Crypto::decrypt($encryptedAccountID);
+$adminUsernameEncrypted = $_GET['adminToken'];
+$adminUsername = Crypto::decrypt($adminUsernameEncrypted);
+$accountID = $dbcomm->getAccountIDByUsername($adminUsername);
 
 $errorCount = 0;
 
@@ -128,12 +128,8 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
             .'</div>';
     }
     if ($errorCount == 0) {
-        $encryptedAccountID = $_GET['id'];
-        $accountID = Crypto::decrypt($encryptedAccountID, true);
         $dbcomm->createNewUser($accountID, $username, $password, $email, $phonenumber);
-        $adminUsername = $dbcomm->getAdminUsernameByAccountID($accountID);
-        $encryptedUsername = Crypto::encrypt($adminUsername, true);
-        echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername';</script>";
+        echo "<script>window.location = '../admin/AdminPanel.php?adminToken=$adminUsernameEncrypted';</script>";
     }
 }
 else {

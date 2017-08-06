@@ -7,14 +7,13 @@ require_once "../db/Crypto.php";
 
 $dbcomm = new dbcomm();
 
-if(!isset($_GET['id'])) {
-    die("Error: The id was not set.");
+if(!isset($_GET['adminToken'])) {
+    die("Error: The admin token was not set.");
 }
 
-$adminUsernameEncrypted = $_GET['id'];
+$adminUsernameEncrypted = $_GET['adminToken'];
 $adminUsername = Crypto::decrypt($adminUsernameEncrypted, true);
 $accountId = $dbcomm->getAccountIDByUsername($adminUsername);
-$accountIdEncrypted = Crypto::encrypt($accountId, true);
 
 if(isset($_GET['delete'])) //delete the user
 {
@@ -153,15 +152,17 @@ if(isset($_GET['delete'])) //delete the user
                 $curUserNameEncrypted = Crypto::encrypt($curUserName, true);
                 $curUserEmail = $dbcomm->getEmailByUsername($curUserName);
 
+                $curAdminUsernameEncrypted = Crypto::encrypt($adminUsername, true);
+
                 echo "<tr style='height:80px;'>
                           <td style='vertical-align: middle; cursor: pointer;' class='clickUser' id='clickUser$userCounter'>$curUserName</td>
                           <td style='vertical-align: middle;'>$curUserPoints</td>
                           <td style='vertical-align: middle;'>
-                              <a href=\"../user/Homepage.php?id=$curUserNameEncrypted\" title='Tasks' style='color: black;'>
+                              <a href=\"../user/Homepage.php?adminToken=$curAdminUsernameEncrypted&userToken=$curUserNameEncrypted\" title='Tasks' style='color: black;'>
                                   <span class='glyphicon glyphicon-calendar' style='font-size: 20px;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <a href=\"AddReward.php?id=$adminUsernameEncrypted&reward=$curUserNameEncrypted\" style='color: pink;' title='Rewards'>
+                              <a href=\"AddReward.php?adminToken=$curAdminUsernameEncrypted&userToken=$curUserNameEncrypted\" style='color: pink;' title='Rewards'>
                                   <span class='glyphicon glyphicon-piggy-bank' style='font-size: 20px; text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -169,7 +170,7 @@ if(isset($_GET['delete'])) //delete the user
                                   <span class='glyphicon glyphicon-envelope' style='font-size: 20px;'></span>
                               </a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                              <a href=\"AdminPanel.php?id=$adminUsernameEncrypted&delete=$curUserName\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
+                              <a href=\"AdminPanel.php?adminToken=$curAdminUsernameEncrypted&delete=$curUserName\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>
                                   <span class='glyphicon glyphicon-trash' style='font-size: 20px;'></span>
                               </a>
                           </td>
@@ -180,7 +181,7 @@ if(isset($_GET['delete'])) //delete the user
             <tr id='addNewUser'>
                 <td colspan="3" id="addNewUserButton">
                     <a class="glyphicon glyphicon-plus link_button"
-                         href="../auth/CreateUser.php?id=<?php echo $accountIdEncrypted;?>"
+                         href="../auth/CreateUser.php?adminToken=<?php echo $adminUsernameEncrypted;?>"
                     > New User</a>
                 </td>
             </tr>
@@ -266,7 +267,7 @@ if(isset($_GET['delete'])) //delete the user
 
     var addUserButton = document.getElementById("addNewUserButton");
     addUserButton.addEventListener('click', function() {
-        window.location = '../auth/CreateUser.php?id=<?php echo $accountIdEncrypted; ?>';
+        window.location = '../auth/CreateUser.php?adminToken=<?php echo $adminUsernameEncrypted; ?>';
     }, false);
 
     var clickUsers = document.getElementsByClassName("clickUser");

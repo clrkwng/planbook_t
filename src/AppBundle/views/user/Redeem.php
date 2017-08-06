@@ -7,6 +7,7 @@ require_once "../db/Crypto.php";
 if(!isset($_GET['id'])){
     die("Error: The id was not set.");
 }
+
 $usernameEncrypted = $_GET['id'];
 $username = Crypto::decrypt($usernameEncrypted);
 
@@ -16,22 +17,23 @@ if (isset($_GET['rewardName'])) {
     $rewardName = Crypto::decrypt($_GET['rewardName']);
     if (!$dbcomm->redeemRewardByUsername($username, $rewardName)) {
         $alert =
-            "<div class=\'alert alert-danger alert-dismissible\' role=\'alert\'>"
-                ."<button type=\'button\' class=\'close\' data-dismiss=\'alert\' aria-label=\'Close\'>"
-                    ."<span aria-hidden=\'true\'>"
+            "<div class='alert alert-danger alert-dismissible' role='alert'>"
+                ."<button type='button' class='close' data-dismiss='alert' aria-label='Close'>"
+                    ."<span aria-hidden='true'>"
                         ."&times;"
                     ."</span>"
                 ."</button>"
                 ."<strong>"
-                    ."Error!"
+                    ."Error: "
                 ."</strong>"
-                ."  Insufficient points to redeem."
+                ."<span>"
+                    ."Insufficient Points to redeem."
+                ."</span>"
             ."</div>";
     }
 }
 
 ?>
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 

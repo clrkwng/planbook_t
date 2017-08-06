@@ -30,13 +30,13 @@ if (isset($_POST['submitCredentials'])) {
                }
            }
             $type = $dbcomm->getTypeNameByUsername($_POST['username']);
+            $encryptedUsername = Crypto::encrypt($username, true);
+
             if($type == "Admin") {
-                $encryptedUsername = Crypto::encrypt($username, true);
-                echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername'</script>";
+                echo "<script>window.location = '../admin/AdminPanel.php?adminToken=$encryptedUsername'</script>";
             }
             elseif($type == "User") {
-                $encryptedUsername = Crypto::encrypt($username, true);
-                echo "<script>window.location = '../user/Homepage.php?id=$encryptedUsername'</script>";
+                echo "<script>window.location = '../user/Homepage.php?userToken=$encryptedUsername'</script>";
             }
         }
         else {
