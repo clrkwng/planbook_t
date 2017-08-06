@@ -1402,5 +1402,4 @@ class dbcomm
         }
         return $colors;
     }
-
 }
