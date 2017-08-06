@@ -102,6 +102,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
     $password = sha1($_POST['signup-password']);
     $email = $_POST['signup-email'];
     $phonenumber = preg_replace('/\D+/', '', $_POST['signup-phonenumber']);
+
     if($dbcomm->checkIfAccountNameExists($accountName)) {
         $errorCount++;
         $alertMessage =
@@ -173,6 +174,10 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
                     ."';"
             ."</script>";
     }
+}
+else {
+    echo "<script>document.getElementById(\"signup-password\").innerHTML = \"\";</script>";
+    echo "<script>document.getElementById(\"signup-repassword\").innerHTML = \"\";</script>";
 }
 
 ?>

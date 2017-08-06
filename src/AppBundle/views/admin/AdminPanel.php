@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <?php
-
 ini_set('display_errors',0);
 
 require_once "../db/dbcomm.php";
@@ -11,7 +10,6 @@ $dbcomm = new dbcomm();
 if(!isset($_GET['id'])) {
     die("Error: The id was not set.");
 }
-
 $encryptedUsername = $_GET['id'];
 $adminUsername = Crypto::decrypt($encryptedUsername, true);
 $accountID = $dbcomm->getAccountIDByUsername($adminUsername);
@@ -59,9 +57,16 @@ if(isset($_GET['delete'])) //delete the user
     <script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
     <script src="../../libs/vendor/respond.min.js"></script>
     <!--[endif]-->
-
     <!-- Theme JavaScript -->
     <script src="../../libs/freelancer/dist/freelancer.js"></script>
+    <style>
+        a:hover {
+            text-decoration: none;
+        }
+        td#addNewUserButton{
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body style="background-color: #e6f7ff;" id="page-top" >

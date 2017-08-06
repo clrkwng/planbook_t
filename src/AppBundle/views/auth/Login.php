@@ -2,6 +2,7 @@
 session_start();
 $username = $password = '';
 
+ini_set('display_errors',0);
 if (isset($_COOKIE['username']) and isset($_COOKIE['password'])){
     $cookieUsername = $_COOKIE['username'];
     $cookiePassword = $_COOKIE['password'];
@@ -147,6 +148,7 @@ if (isset($_POST['submitCredentials'])) {
 
 <!-- Top content -->
 <div class="top-content">
+
     <div class="inner-bg">
         <div class="container">
             <div class="row">

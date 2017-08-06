@@ -52,19 +52,6 @@ class dbcomm
         return time();
     }
 
-    function deleteAccountByUsername($username) {
-        $accountID = $this->getAccountIDByUsername($username);
-
-        $query = "SELECT `username`,`image_id` FROM `User` WHERE `account_id`='$accountID'";
-        $result = $this->doQuery($query);
-        while($row = mysqli_fetch_array($result)) {
-            $userUsername = $row['username'];
-            $this->deleteUserByUsername($userUsername);
-        }
-        $query = "DELETE FROM `Account` WHERE `id` = '$accountID'";
-        $this->doQuery($query);
-    }
-
     /*
     * DB Setup Functions
     */
@@ -594,6 +581,14 @@ class dbcomm
 
         $query = "INSERT INTO `Date` (`user_id`) VALUES ('$userID')";
         $this ->doQuery($query);
+        $this->setCurrentDateByUsername($username);
+
+        $this->setDefaultThemeByUsername($username);
+        $query = "SELECT `id` FROM `Theme` WHERE `user_id`='$userID'";
+        $themeID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "UPDATE `User` SET `theme_id`='$themeID' WHERE `id`='$userID'";
+        $this->doQuery($query);
     }
 
     function verifyAccountByAccountID($accountID)
@@ -632,7 +627,6 @@ class dbcomm
             return False;
         }
     }
-
 
     function getTypeByUsername($username)
     {
@@ -703,6 +697,19 @@ class dbcomm
         }
         ksort($users);
         return $users;
+    }
+
+    function deleteAccountByUsername($username) {
+        $accountID = $this->getAccountIDByUsername($username);
+
+        $query = "SELECT `username`,`image_id` FROM `User` WHERE `account_id`='$accountID'";
+        $result = $this->doQuery($query);
+        while($row = mysqli_fetch_array($result)) {
+            $userUsername = $row['username'];
+            $this->deleteUserByUsername($userUsername);
+        }
+        $query = "DELETE FROM `Account` WHERE `id` = '$accountID'";
+        $this->doQuery($query);
     }
 
     function deleteUserByUsername($username) {
@@ -866,6 +873,84 @@ class dbcomm
         return mysqli_fetch_array($this->doQuery($query))['link'];
     }
 
+    function convertPointsStarsTrophies($username) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $bronzeStarID = $this->getBronzeStarAwardID();
+        $silverStarID = $this->getSilverStarAwardID();
+        $goldStarID = $this->getGoldStarAwardID();
+        $bronzeTrophyID = $this->getBronzeTrophyAwardID();
+        $silverTrophyID = $this->getSilverTrophyAwardID();
+        $goldTrophyID = $this->getGoldTrophyAwardID();
+
+        $numCurrentPoints = $this->getNumCurrentPointsByUsername($username);
+        $numBronzeStars = $this->getNumBronzeStarsByUsername($username);
+        $numSilverStars = $this->getNumSilverStarsByUsername($username);
+        $numGoldStars = $this->getNumGoldStarsByUsername($username);
+        $numBronzeTrophies = $this->getNumBronzeTrophiesByUsername($username);
+        $numSilverTrophies = $this->getNumSilverTrophiesByUsername($username);
+        $numGoldTrophies = $this->getNumGoldTrophiesByUsername($username);
+
+        $query = "SELECT `amount` FROM `Awards` WHERE `id`='$bronzeStarID'";
+        $PointstoBronzeStars = mysqli_fetch_array($this->doQuery($query))['amount'];
+        $query = "SELECT `amount` FROM `Awards` WHERE `id`='$silverStarID'";
+        $BronzeStarstoSilverStars = mysqli_fetch_array($this->doQuery($query))['amount'];
+        $query = "SELECT `amount` FROM `Awards` WHERE `id`='$goldStarID'";
+        $SilverStarstoGoldStars = mysqli_fetch_array($this->doQuery($query))['amount'];
+        $query = "SELECT `amount` FROM `Awards` WHERE `id`='$bronzeTrophyID'";
+        $GoldStarstoBronzeTrophies = mysqli_fetch_array($this->doQuery($query))['amount'];
+        $query = "SELECT `amount` FROM `Awards` WHERE `id`='$silverTrophyID'";
+        $BronzeTrophiestoSilverTrophies = mysqli_fetch_array($this->doQuery($query))['amount'];
+        $query = "SELECT `amount` FROM `Awards` WHERE `id`='$goldTrophyID'";
+        $SilverTrophiestoGoldTrophies = mysqli_fetch_array($this->doQuery($query))['amount'];
+
+        while ($numCurrentPoints >= $PointstoBronzeStars)
+        {
+            $numCurrentPoints -= $PointstoBronzeStars;
+            $numBronzeStars += 1;
+        }
+        while ($numBronzeStars >= $BronzeStarstoSilverStars)
+        {
+            $numBronzeStars -= $BronzeStarstoSilverStars;
+            $numSilverStars += 1;
+        }
+        while ($numSilverStars >= $SilverStarstoGoldStars)
+        {
+            $numSilverStars -= $SilverStarstoGoldStars;
+            $numGoldStars += 1;
+        }
+        while ($numGoldStars >= $GoldStarstoBronzeTrophies)
+        {
+            $numGoldStars -= $GoldStarstoBronzeTrophies;
+            $numBronzeTrophies += 1;
+        }
+        while ($numBronzeTrophies >= $BronzeTrophiestoSilverTrophies)
+        {
+            $numBronzeTrophies -= $BronzeTrophiestoSilverTrophies;
+            $numSilverTrophies += 1;
+        }
+        while ($numSilverTrophies >= $SilverTrophiestoGoldTrophies)
+        {
+            $numSilverTrophies -= $SilverTrophiestoGoldTrophies;
+            $numGoldTrophies += 1;
+        }
+
+        $query = "UPDATE `User` SET `current_points`='$numCurrentPoints' WHERE `id`='$userID'";
+        $this->doQuery($query);
+        $query = "UPDATE `User_Awards` SET `quantity`='$numBronzeStars' WHERE `award_id`='$bronzeStarID' AND `user_id`='$userID'";
+        $this->doQuery($query);
+        $query = "UPDATE `User_Awards` SET `quantity`='$numSilverStars' WHERE `award_id`='$silverStarID' AND `user_id`='$userID'";
+        $this->doQuery($query);
+        $query = "UPDATE `User_Awards` SET `quantity`='$numGoldStars' WHERE `award_id`='$goldStarID' AND `user_id`='$userID'";
+        $this->doQuery($query);
+        $query = "UPDATE `User_Awards` SET `quantity`='$numBronzeTrophies' WHERE `award_id`='$bronzeTrophyID' AND `user_id`='$userID'";
+        $this->doQuery($query);
+        $query = "UPDATE `User_Awards` SET `quantity`='$numSilverTrophies' WHERE `award_id`='$silverTrophyID' AND `user_id`='$userID'";
+        $this->doQuery($query);
+        $query = "UPDATE `User_Awards` SET `quantity`='$numGoldTrophies' WHERE `award_id`='$goldTrophyID' AND `user_id`='$userID'";
+        $this->doQuery($query);
+    }
+
     /*
      * Profile FUNCTIONS ------------------------------------------------------------
      * */
@@ -907,8 +992,9 @@ class dbcomm
         $users = Array();
         $counter = 0;
         while($row = mysqli_fetch_array($result)) {
-            $row['redeem_date'] = substr($row['redeem_date'],5,2) . '/' . substr($row['redeem_date'],8,2) . '/' . substr($row['redeem_date'],0,4);
-            $users[$counter] = Array("rewardID"=>$row['id'], "name"=>$row['reward'], "points"=>$row['points'], "completed"=>$row['completed'], "redeem_date"=>$row['redeem_date']);
+            if($row['redeem_date'] != null) $redeemDate = intval(substr($row['redeem_date'],5,2)) . '/' . intval(substr($row['redeem_date'],8,2)) . '/' . intval(substr($row['redeem_date'],0,4));
+            else                            $redeemDate = "0/0/0";
+            $users[$counter] = Array("rewardID"=>$row['id'], "name"=>$row['reward'], "points"=>$row['points'], "completed"=>$row['completed'], "redeem_date"=>$redeemDate);
             $counter += 1;
         }
         return $users;
@@ -951,7 +1037,7 @@ class dbcomm
     }
 
     /*
-     * Create Task FUNCTIONS ----------------------------------------------------------
+     * Task FUNCTIONS ----------------------------------------------------------
      */
 
     function createTaskByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime, $date) {
@@ -965,9 +1051,45 @@ class dbcomm
 
         $query =
             "INSERT INTO `Task` "
-                ."(`user_id`, `name`, `category_id`, `priority_id`, `start_time`, `end_time`, `date`) "
+            ."(`user_id`, `name`, `category_id`, `priority_id`, `start_time`, `end_time`, `date`) "
             ."VALUES "
-                ."('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime', '$date')";
+            ."('$userID', '$taskName', '$categoryID', '$priorityID', '$startTime', '$endTime', '$date')";
+        $this->doQuery($query);
+    }
+
+    function updateTaskByTaskID($taskID, $taskName, $categoryName, $importance, $startTime, $endTime, $date) {
+        $query = "SELECT `user_id` FROM `Task` WHERE `id`='$taskID'";
+        $userID = mysqli_fetch_array($this->doQuery($query))['user_id'];
+
+        $query = "SELECT `id` FROM `Category` WHERE `name`='$categoryName' AND `user_id`='$userID'";
+        $categoryID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "SELECT `id` FROM `Priority` WHERE `name`='$importance'";
+        $priorityID = mysqli_fetch_array($this->doQuery($query))['id'];
+
+        $query = "UPDATE `Task` SET `task_name`='$taskName', `category_id`='$categoryID', `priority_id`='$priorityID', `start_time`='$startTime', `end_time`='$endTime', `date`='$date' WHERE `id`='$taskID'";
+        $this->doQuery($query);
+    }
+
+    function completeTaskByTaskID($username, $taskID) {
+        $userID = $this->getUserIDFromUsername($username);
+
+        $query = "UPDATE `Task` SET `completed`='1' WHERE `id`='$taskID'";
+        $this->doQuery($query);
+
+        $query = "SELECT `priority_id` FROM `Task` WHERE `id`='$taskID'";
+        $priorityID = mysqli_fetch_array($this->doQuery($query))['priority_id'];
+
+        $query = "SELECT `points` FROM `Priority` WHERE `id`='$priorityID'";
+        $addPoints = mysqli_fetch_array($this->doQuery($query))['points'];
+
+        $currentPoints = $this->getNumCurrentPointsByUsername($username);
+        $finalCurrentPoints = $currentPoints + $addPoints;
+
+        $totalPoints = $this->getNumTotalPointsByUsername($username);
+        $finalTotalPoints = $totalPoints + $addPoints;
+
+        $query = "UPDATE `User` SET `current_points`='$finalCurrentPoints', `total_points`='$finalTotalPoints' WHERE `id`='$userID'";
         $this->doQuery($query);
     }
 
@@ -1025,6 +1147,10 @@ class dbcomm
     function deleteCategoryByCategoryID($categoryID) {
         $query = "DELETE FROM `Category` WHERE `id`='$categoryID'";
         $this->doQuery($query);
+
+        $todayDate = date('Y-m-d');
+        $query = "DELETE FROM `Task` WHERE `category_id`='$categoryID' AND `date` >= '$todayDate'";
+        $this->doQuery($query);
     }
 
     function deleteTaskByTaskID($taskID){
@@ -1067,6 +1193,14 @@ class dbcomm
             $counter++;
         }
         return $tasks;
+    }
+
+    function isCompletedByTaskID($taskID) {
+        $query = "SELECT `completed` FROM `Task` WHERE `id`='$taskID'";
+        $completed = mysqli_fetch_array($this->doQuery($query))['completed'];
+
+        if($completed == 1) return true;
+        else                return false;
     }
 
     /*
@@ -1315,6 +1449,7 @@ class dbcomm
     /*
      * Template FUNCTIONS ------------------------------------------------------------
      * */
+
     function getAllTemplatesByUsername($username){
         $userID = $this->getUserIDFromUsername($username);
 

@@ -10,6 +10,10 @@ $dbcomm = new dbcomm();
 if(!isset($_GET['id'])){
     die("Error: The ID was not set.");
 }
+$encryptedAccountID = $_GET['id'];
+$encryptedAccountID = str_replace("!!!", "+", $encryptedAccountID);
+$encryptedAccountID = str_replace("$$$", "%", $encryptedAccountID);
+$accountID = openssl_decrypt($encryptedAccountID, 'bf-ecb', 'makeNewUserPassword');
 
 $errorCount = 0;
 
@@ -108,7 +112,7 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
                 .'</span>'
             .'</div>';
     }
-    if($dbcomm->checkIfPhonenumberExists($phonenumber)) {
+    /*if($dbcomm->checkIfPhonenumberExists($phonenumber)) {
         $errorCount += 1;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
@@ -122,7 +126,7 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
                     .'Phone number is already associated with an account.'
                 .'</span>'
             .'</div>';
-    }
+    }*/
     if($dbcomm->checkIfEmailExists($email)) {
         $errorCount += 1;
         $alertMessage =
@@ -146,6 +150,10 @@ if ($errorCount == 0 && isset($_POST['user-password'])) {
         $encryptedUsername = Crypto::encrypt($adminUsername, true);
         echo "<script>window.location = '../admin/AdminPanel.php?id=$encryptedUsername';</script>";
     }
+}
+else {
+    echo "<script>document.getElementById(\"user-password\").innerHTML = \"\";</script>";
+    echo "<script>document.getElementById(\"user-repassword\").innerHTML = \"\";</script>";
 }
 
 ?>

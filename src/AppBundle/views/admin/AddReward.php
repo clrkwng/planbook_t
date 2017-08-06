@@ -7,39 +7,38 @@ if (!isset($_GET['id']) or !isset($_GET['reward'])) {
     die("Error: The id or reward id was not set.");
 }
 $encryptedAdminUsername = $_GET['id'];
-$adminUsername = Crypto::decrypt($encryptedAdminUsername, true);
+$encryptedAdminUsername = str_replace("!!!", "+", $encryptedAdminUsername);
+$encryptedAdminUsername = str_replace("$$$", "%", $encryptedAdminUsername);
+$adminUsername = openssl_decrypt($encryptedAdminUsername, 'AES-128-CFB1', 'rewardPanelAdminPassword');
+$encryptedAdminUsername = str_replace("+", "!!!", $encryptedAdminUsername);
+$encryptedAdminUsername = str_replace("%", "$$$", $encryptedAdminUsername);
 
 $encryptedUserUsername = $_GET['reward'];
-$userUsername = Crypto::decrypt($encryptedUserUsername, true);
+$encryptedUserUsername = str_replace("!!!", "+", $encryptedUserUsername);
+$encryptedUserUsername = str_replace("$$$", "%", $encryptedUserUsername);
+$userUsername = openssl_decrypt($encryptedUserUsername, 'aes-192-cfb', 'rewardPanelUserPassword');
+$encryptedUserUsername = str_replace("+", "!!!", $encryptedUserUsername);
+$encryptedUserUsername = str_replace("%", "$$$", $encryptedUserUsername);
 
-require_once "../db/dbcomm.php";
-require_once "../db/Crypto.php";
-
+require_once "../../scripts/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 
 if (isset($_POST['doneButton'])) {
     $unencryptedRewardName = str_replace("XyzYx", " ", $_POST['rewardName']);
     if (!$dbcomm->redeemRewardByUsername($userUsername, $unencryptedRewardName)) {
-        $alertMessage =
-                    '<div class="alert alert-danger alert-dismissible" role="alert">'
-                        . '<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
-                            .'<span aria-hidden="true">&times;</span>'
-                        .'</button>'
-                        . '<strong>'
-                            . 'Error: '
-                        . '</strong>'
-                        . '<span>'
-                            . 'Not enough points to redeem reward.'
-                        . '</span>'
-                    . '</div>';
+        $alert = '<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  Insufficient points to redeem.</div>';
     }
 }
 
 if (isset($_POST['SubmitReward'])) {
     foreach($_POST['users'] as $userChecked){
         $encodedUsername = $userChecked;
-        $unencodedUsername = Crypto::decrypt($encodedUsername, true);
+        $encodedUsername = str_replace("!!!", "+", $encodedUsername);
+        $encodedUsername = str_replace("$$$", "%", $encodedUsername);
+        $unencodedUsername = openssl_decrypt($encodedUsername, 'DES-EDE3', 'viewUserProfilePassword');
         $dbcomm->addRewardByUsername($unencodedUsername,$_POST['rewardName'],$_POST['numOfPoints']);
     }
 }
@@ -77,7 +76,7 @@ if(isset($_GET['delete'])) {
         <td height="25%">
             <h1>Rewards</h1>
             <p style="font-size: 25px;">Manage Rewards for <b><? echo $userUsername; ?></b></p>
-            <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+            <? if (isset($alert))  echo $alert; ?>
         </td>
         <td width="15%" valign="bottom">
             <p style="max-width: 100%;">
@@ -201,6 +200,14 @@ if(isset($_GET['delete'])) {
     };
     for (var i = 0, l = elems.length; i < l; i++) {
         elems[i].addEventListener('click', confirmIt, false);
+    }
+
+    var deletes = document.getElementsByClassName('confirmDelete');
+    var confirmDelete = function (e) {
+        if (!confirm('Are you sure you want to delete this reward?')) e.preventDefault();
+    };
+    for (var m = 0; m < deletes.length; m++) {
+        deletes[m].addEventListener('click', confirmDelete, false);
     }
 </script>
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <?php
+ini_set('display_errors', 0);
 require_once "../db/dbcomm.php";
 require_once "../db/Crypto.php";
 
@@ -25,11 +26,11 @@ if(isset($_POST['createTask'])) {
         $end_hour = $_POST['end_hour'];
         $end_minute = $_POST['end_minute'];
         $end_period = $_POST['endAmPm'];
-        $date1 = $_POST['date'];
+        $taskDate = $_POST['date'];
 
-        $year = substr($date1, 6,4);
-        $month = substr($date1,0,2);
-        $day = substr($date1, 3,2);
+        $year = substr($taskDate, 6,4);
+        $month = substr($taskDate,0,2);
+        $day = substr($taskDate, 3,2);
         $date = $year."-".$month.'-'.$day;
 
         $startTime = $start_hour.':'.$start_minute.' '.$start_period;
@@ -41,6 +42,51 @@ if(isset($_POST['createTask'])) {
         if($_POST['createTemplate']=='yes') {
             $dbcomm->addTemplateByUsername($username, $taskName, $categoryName, $importance, $startTime, $endTime);
         }
+    }
+}
+
+if(isset($_POST['saveTask'])) {
+    if (isset($_POST['editTaskID']) and isset($_POST['editTaskName']) and isset($_POST['editTaskCategoryName']) and isset($_POST['editTaskImportance']) and isset($_POST['editTask_start_hour']) and isset($_POST['editTask_start_minute']) and isset($_POST['editTask_end_hour']) and isset($_POST['editTask_end_minute']) and isset($_POST['editTask_date'])) {
+
+        $errorCount= 0;
+        $taskName = $_POST['editTaskName'];
+        $categoryName = $_POST['editTaskCategoryName'];
+        $importance = $_POST['editTaskImportance'];
+        $start_hour = $_POST['editTask_start_hour'];
+        $start_minute = $_POST['editTask_start_minute'];
+        $start_period = $_POST['editTask_startAmPm'];
+        $end_hour = $_POST['editTask_end_hour'];
+        $end_minute = $_POST['editTask_end_minute'];
+        $end_period = $_POST['editTask_endAmPm'];
+        $taskDate = $_POST['editTask_date'];
+        $taskIdToUpdate = $_POST['editTaskID'];
+
+        /*if ($end_hour < $start_hour OR !($end_hour != $start_hour AND $end_minute >= $start_minute)){
+            $errorCount++;
+            $alertMessage =
+                '<div class="alert alert-danger alert-dismissible" role="alert">'
+                .'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+                .'<span aria-hidden="true">&times;</span>'
+                .'</button>'
+                .'<strong>'
+                .'Error:'
+                .'</strong>'
+                .'<span>'
+                .'The times set are not correct.'
+                .'</div>';
+
+        }*/
+
+        $year = substr($taskDate, 6,4);
+        $month = substr($taskDate,0,2);
+        $day = substr($taskDate, 3,2);
+        $date = $year."-".$month.'-'.$day;
+
+        $startTime = $start_hour.':'.$start_minute.' '.$start_period;
+
+        $endTime = $end_hour.':'.$end_minute.' '.$end_period;
+
+        $dbcomm->updateTaskByTaskID($taskIdToUpdate, $taskName, $categoryName, $importance, $startTime, $endTime, $date);
     }
 }
 
@@ -99,6 +145,7 @@ if ($dbcomm->isCurrentYearALeapYear($username) == 1) {
     $numDaysInMonth[1] = 29;
 }
 
+
 $theDate = $dbcomm->getDateByUsername($username);
 $currentDate = substr($theDate, 5,2).'/'.substr($theDate, 8,2);
 $currentDay = intval($dbcomm->getDayByUsername($username));
@@ -106,6 +153,28 @@ $currentMonth = $dbcomm->getMonthByUsername($username);
 $currentMonthName = $months[$currentMonth-1];
 $currentYear = $dbcomm->getYearByUsername($username);
 
+
+if(isset($_GET['completeTaskID'])) {
+    $todayDate = date('Y-m-d');
+    if ($todayDate <= $theDate) {
+        $encryptedTaskID = $_GET['completeTaskID'];
+        $encryptedTaskID = str_replace("!!!", "+", $encryptedTaskID);
+        $encryptedTaskID = str_replace("$$$", "%", $encryptedTaskID);
+        $taskID = openssl_decrypt($encryptedTaskID, 'RC2-64-CBC', 'completeTaskPassword');
+        $completeTaskID = intval($taskID);
+        $dbcomm->completeTaskByTaskID($username, $completeTaskID);
+        $alertMessage .= '<div class="alert alert-success alert-dismissible col-md-10 col-md-offset-1" role="alert" align="center">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Success!</strong>  Your task has been completed.</div>';
+    }
+    else {
+        $alertMessage .= '<div class="alert alert-danger alert-dismissible col-md-10 col-md-offset-1" role="alert" align="center">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Error!</strong>  Previous tasks can no longer be completed.</div>';
+    }
+}
+
+$dbcomm->convertPointsStarsTrophies($username);
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -132,8 +201,8 @@ $currentYear = $dbcomm->getYearByUsername($username);
     <script type="text/javascript">
         $(document).ready(function () {
             $('#fullpage').fullpage({
-                sectionsColor: ['#ADD8E6', '#ADD8E6', '#ADD8E6'],
-                anchors: ['firstPage', 'secondPage', '3rdPage'],
+                sectionsColor: ['#ADD8E6', '#ADD8E6'],
+                anchors: ['firstPage', '3rdPage'],
                 menu: '#menu'
             });
         });
@@ -144,7 +213,6 @@ $currentYear = $dbcomm->getYearByUsername($username);
 
 <ol id="menu">
     <li data-menuanchor="firstPage"><a href="#firstPage">Tasks</a></li>
-    <li data-menuanchor="secondPage"><a href="#secondPage">Stats</a></li>
     <li data-menuanchor="3rdPage"><a href="#3rdPage">Awards</a></li>
 </ol>
 
@@ -152,15 +220,14 @@ $currentYear = $dbcomm->getYearByUsername($username);
     <div class="section" id="section0">
         <div class="slide" id="slide1">
             <div class="content">
-                <!--https://bootsnipp.com/snippets/D2kkX-->
                 <?php
-                    if (isset($alertMessage)) {
-                        "<div>"
-                            .$alertMessage
-                        ."</div>";
-                    }
+                if (isset($alertMessage)) {
+                    "<div>"
+                    .$alertMessage
+                    ."</div>";
+                }
                 ?>
-                <table align="center" width="80%">
+                <table align="center" width="80%" id="dailyTable">
                     <tr>
                         <td width="10%" align="left">
                             <form role="form" action = "Homepage.php?id=<? echo $encryptedUsername; ?>&today=xtxrxuxex" method="post">
@@ -184,83 +251,102 @@ $currentYear = $dbcomm->getYearByUsername($username);
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <?php
-                        $categories = $dbcomm->getCategoryNamesByUsername($username);
-                        $colors = $dbcomm->getThemeByUsername($username);
-                        for ($i = 0; $i < sizeOf($categories); $i++) {
-                            $category = $categories[$i];
-                            $color = $colors[$i];
-                            $j = $i + 1;
+                    <?php
+                    $categories = $dbcomm->getCategoryNamesByUsername($username);
+                    $colors = $dbcomm->getThemeByUsername($username);
+                    $allTasksForDay = Array();
+                    $ultimateTaskCount = 0;
+                    for ($i = 0; $i < sizeOf($categories); $i++) {
+                        $category = $categories[$i];
+                        $color = $colors[$i];
+                        $j = $i + 1;
 
-                            $tasks = $dbcomm->getTaskInfoByCategory($username, $category);
-                            $taskCount = count($tasks);
+                        $tasks = $dbcomm->getTaskInfoByCategory($username, $category);
+                        $taskCount = count($tasks);
 
-                            echo '<tr>';
-                            echo '<td colspan="3" align="left">';
-                            echo '<div class="panel-group">';
-                            echo '<div class="panel panel-default">';
-                            echo "<div class='panel-heading' style='background-color:$color;'>";
-                            echo '<h4 class="panel-title">';
-                            echo "<a data-toggle='collapse' href='#collapse$j'>";
-                            echo $category . "</a>";
-                            echo "&nbsp;&nbsp;<span class='badge' style='color: $color'>$taskCount</span>";
-                            echo '</h4>';
-                            echo '</div>';
-                            echo "<div id='collapse$j' class='panel-collapse collapse'>";
-                            echo '<form>';
-                            echo '<table class="list-group" width="100%">';
-                            $priorityColor = "gray";
-                            foreach ($tasks as $taskID => $tasksValues) {
-                                $task = $tasksValues['taskName'];
-                                $priority = $tasksValues['priority'];
-                                $startTime = $tasksValues['startTime'];
-                                $endTime = $tasksValues['endTime'];
-                                $date = $tasksValues['date'];
-                                $taskID = $tasksValues['id'];
-                                if ($priority == "Low") {
-                                    $priorityStyle = 'style = "color:green"';
-                                } else if ($priority == "Medium") {
-                                    $priorityStyle = 'style="color: yellow;text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;"';
-                                } else {
-                                    $priorityStyle = 'style = "color: red"';
-                                }
+                        for ($l = 0; $l < $taskCount; $l++) {
+                            $tasks[$l]['category'] = $category;
+                            array_push($allTasksForDay, $tasks[$l]);
+                        }
 
-                                echo '<tr id="closeItem"  style="border: 1px solid black">';
-                                echo '<td style="padding: 8px" width="40%">' . $task . '</td>';
-                                echo '<td align ="center"><div class="glyphicon glyphicon-alert" ' . $priorityStyle . '></div></td>';
-                                echo '<td align = "left" width="20%">' . $priority . ' Priority </td>';
-                                echo '<td align ="center"><div class="glyphicon glyphicon-time"></div></td>';
-                                echo '<td align="right" width="7.5%">' . $startTime . '</td>';
-                                echo '<td align = "center"> to </td>';
-                                echo '<td align="left">' . $endTime . '</td>';
-                                echo "<td align='center' width='2%'><div class='glyphicon glyphicon-ok-sign'></div></td>";
-                                echo "<td align='center' width='2%'>
-                                        <button style='appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none; border: 0; background: transparent;' type='button' class='glyphicon glyphicon-pencil' id = '$taskID' data-toggle='modal' data-target='#editTaskModal'>
-                                        </button>
+                        $trID = str_replace(" ","_",$category);
+                        echo "<tr id='categoryPanel$trID'>";
+                        echo '<td colspan="3" align="left">';
+                        echo '<div class="panel-group">';
+                        echo '<div class="panel panel-default">';
+                        echo "<div class='panel-heading' style='background-color:$color;'>";
+                        echo '<h4 class="panel-title">';
+                        echo "<a data-toggle='collapse' data-target='#collapse$j' style='text-decoration: none; cursor: pointer;'>";
+                        echo $category . "</a>";
+                        echo "&nbsp;&nbsp;<span class='badge' style='color: $color'>$taskCount</span>";
+                        echo '</h4>';
+                        echo '</div>';
+                        echo "<div id='collapse$j' class='panel-collapse collapse'>";
+                        echo '<form>';
+                        echo '<table class="list-group" width="100%">';
+                        $priorityColor = "gray";
+                        foreach ($tasks as $taskID => $tasksValues) {
+                            $task = $tasksValues['taskName'];
+                            $priority = $tasksValues['priority'];
+                            $startTime = $tasksValues['startTime'];
+                            $endTime = $tasksValues['endTime'];
+                            $date = $tasksValues['date'];
+                            $taskID = $tasksValues['id'];
+                            if ($priority == "Low") {
+                                $priorityStyle = 'style = "color:green"';
+                            } else if ($priority == "Medium") {
+                                $priorityStyle = 'style="color: yellow;text-shadow: -1px 0 dimgrey, 0 1px dimgrey, 1px 0 dimgrey, 0 -1px dimgrey;"';
+                            } else {
+                                $priorityStyle = 'style = "color: red"';
+                            }
+
+                            $encryptedTaskID = openssl_encrypt($taskID, 'RC2-64-CBC', 'completeTaskPassword');
+                            $encryptedTaskID = str_replace("+", "!!!", $encryptedTaskID);
+                            $encryptedTaskID = str_replace("%", "$$$", $encryptedTaskID);
+                            $completedTRClass = "";
+                            if ($dbcomm->isCompletedByTaskID($taskID)) {
+                                $completedTRClass = "background-color: #DCDCDC;";
+                            }
+                            echo "<tr id='closeItem'  style='border: 1px solid black; $completedTRClass'>";
+                            echo '<td style="padding: 8px" width="40%">' . $task . '</td>';
+                            echo '<td align ="center"><div class="glyphicon glyphicon-alert" ' . $priorityStyle . '></div></td>';
+                            echo '<td align = "left" width="20%">' . $priority . ' Priority </td>';
+                            echo '<td align ="center"><div class="glyphicon glyphicon-time"></div></td>';
+                            echo '<td align="right" width="7.5%">' . $startTime . '</td>';
+                            echo '<td align = "center"> to </td>';
+                            echo '<td align="left">' . $endTime . '</td>';
+                            if (!($dbcomm->isCompletedByTaskID($taskID))) {
+                                echo "<td align='center' width='2%' id='tdConfirmComplete'>
+                                        <a href='Homepage.php?id=$encryptedUsername&completeTaskID=$encryptedTaskID' class='confirmCompleteTask' title='Complete' id='confirmComplete'>
+                                            <div class='glyphicon glyphicon-ok-sign'></div>
+                                        </a>
                                       </td>";
                                 echo "<td align='center' width='2%'>
-                                        <a href='Homepage.php?id=$encryptedUsername&deleteTask=$taskID' class='confirmation' title='deleteTask'>
+                                        <button style='appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none; border: 0; background: transparent;' type='button' class='glyphicon glyphicon-pencil' id = 'ultimateTaskCount$ultimateTaskCount' title='Edit' data-toggle='modal' data-target='#editTaskModal' onclick='loadEditTask(this.id)'></button>
+                                      </td>";
+                                echo "<td align='center' width='2%'>
+                                        <a href='Homepage.php?id=$encryptedUsername&deleteTask=$taskID' class='confirmation' title='Delete'>
                                             <div class='glyphicon glyphicon-remove-sign'></div>
                                         </a>
                                       </td>";
-                                echo '</tr>';
                             }
-                            if ($taskCount == 0) {
-                                echo '<tr>';
-                                echo '<td style="padding: 8px">No Tasks here</td>';
-                                echo '</tr>';
-                            }
-                            echo '</table>';
-                            echo '</form>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</td>';
+                            echo '</tr>';
+                            $ultimateTaskCount++;
+                        }
+                        if ($taskCount == 0) {
+                            echo '<tr>';
+                            echo '<td style="padding: 8px">No Tasks here</td>';
                             echo '</tr>';
                         }
-                        ?>
-                    </tr>
+                        echo '</table>';
+                        echo '</form>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }
+                    ?>
                 </table>
             </div>
         </div>
@@ -323,18 +409,22 @@ $currentYear = $dbcomm->getYearByUsername($username);
                             $tasks = $dbcomm->getTaskInfoByCategory($username, $categoryName);
                             $taskCount = count($tasks);
 
-                            $color = $colors[$i];
+                            $color = $colors[($i%8)];
                             $styleTag="";
                             if ($i == sizeOf($categories)-1){
                                 $styleTag = "border-bottom: 1px solid black;";
                             }
-                            //$ = $dbcomm->getNumberOfTasksInCategoryByDate($username, $category, $currentDate);
-                            echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; padding: 2px 10px 2px 10px; cursor: pointer;'>
+                            if($taskCount > 0) {
+                                echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; padding: 2px 10px 2px 10px; cursor: pointer;'>
                                     <div class='badge' style='display: block; background-color: $color; color: black;'>
                                         $categoryName&nbsp;&nbsp;
                                         <span class='badge' style='display: inline-block; background-color: black; color: $color;'>$taskCount</span>
                                     </div>
                                   </td>";
+                            }
+                            else {
+                                echo "<td class='weekToDay$j' style='border-left: 1px solid black; border-right: 1px solid black; $styleTag height: 55px; cursor: pointer;'></td>";
+                            }
 
                             $dbcomm->incrementDateByUsername($username);
                         }
@@ -416,15 +506,10 @@ $currentYear = $dbcomm->getYearByUsername($username);
             </div>
         </div>
     </div>
-    <div class="section " id="section1">
-        <div class="content">
-            <h1>Stats</h1>
-        </div>
-    </div>
     <div class="section" id="section2">
         <table align="center" width="100%" style="height: 100%;">
             <tr style="height:25%">
-                <td rowspan="6" valign="center" width="20%" id="exchangeSystem" style="border-right: 1px solid black;">
+                <td rowspan="6" valign="center" width="20%" id="exchangeSystem">
                     <h3><u>Exchange System</u></h3>
                     <br>
                     <p>Points</p>
@@ -440,6 +525,10 @@ $currentYear = $dbcomm->getYearByUsername($username);
                     <p>Silver Trophies</p>
                     <p style="transform: rotate(90deg); font-size: 25px;">➜</p>
                     <p>Gold Trophies</p>
+                    <div align="left" style="position: relative; top: 55px; left: 20px;">
+                        <button type="button" class="glyphicon glyphicon-question-sign" data-toggle="modal" data-target="#infoAwardsModal" style="font-size:32px; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent">
+                        </button>
+                    </div>
                 </td>
                 <td rowspan="5" width="5%"></td>
                 <td colspan="3" valign="bottom">
@@ -447,7 +536,7 @@ $currentYear = $dbcomm->getYearByUsername($username);
                 </td>
                 <td>
                     <h3 style="color: dimgrey; font-size: 30px; text-align: left;">
-                        Points: <? echo $dbcomm->getNumCurrentPointsByUsername($username); ?></h3>
+                        Total points: <? echo $dbcomm->getNumTotalPointsByUsername($username); ?></h3>
                 </td>
             </tr>
             <tr id="starSymbols">
@@ -461,22 +550,22 @@ $currentYear = $dbcomm->getYearByUsername($username);
                     <img src="<? echo $dbcomm->getGoldStarImageSource(); ?>" width="150" height="150">
                 </td>
                 <td width="15%" rowspan="3" align="right" style="vertical-align: middle">
-                    <div class="toMarket" id="toMarket1">T</div>
-                    <div class="toMarket" id="toMarket2">O</div>
-                    <div class="toMarket" id="toMarket3">T</div>
-                    <div class="toMarket" id="toMarket4">H</div>
+                    <div class="toMarket" id="toMarket1">R</div>
+                    <div class="toMarket" id="toMarket2">E</div>
+                    <div class="toMarket" id="toMarket3">D</div>
+                    <div class="toMarket" id="toMarket4">E</div>
                     <div class="toMarket" id="toMarket5">E</div>
                     <div class="toMarket" id="toMarket6">M</div>
-                    <div class="toMarket" id="toMarket7">A</div>
+                    <div class="toMarket" id="toMarket7">P</div>
                     <div class="toMarket" id="toMarket8">R</div>
-                    <div class="toMarket" id="toMarket9">K</div>
-                    <div class="toMarket" id="toMarket10">E</div>
-                    <div class="toMarket" id="toMarket11">T</div>
+                    <div class="toMarket" id="toMarket9">I</div>
+                    <div class="toMarket" id="toMarket10">Z</div>
+                    <div class="toMarket" id="toMarket11">E</div>
                     <div style="height: 30px;"></div>
                     <?php
                     $encryptedMarketUsername = Crypto::encrypt($username, true);
                     ?>
-                    <button onclick="window.location='Market.php?id=<? echo $encryptedMarketUsername ?>';"
+                    <button onclick="window.location='Redeem.php?id=<? echo $encryptedMarketUsername ?>';"
                             class="w3-button w3-circle w3-teal"
                             style="transform: translateX(50%); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;
                     </button>
@@ -521,35 +610,6 @@ $currentYear = $dbcomm->getYearByUsername($username);
     </div>
 </div>
 <script>
-    // Create a "close" button and append it to each list item
-    var myNodelist = document.getElementsByClassName("list-group-item");
-    for (var a = 0; a < myNodelist.length; a++) {
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode("\u00D7");
-        span.className = "close";
-        span.appendChild(txt);
-        myNodelist[a].appendChild(span);
-    }
-
-    // Click on a close button to hide the current list item
-    var close = document.getElementsByClassName("close");
-    for (var b = 0; b < close.length; b++) {
-        close[b].onclick = function () {
-            var div = this.parentElement;
-            div.style.display = "none";
-        }
-    }
-
-    // Add a "checked" symbol when clicking on a list item
-    var list = document.getElementsByClassName("list-group");
-    for (var c = 0; c < list.length; c++) {
-        list[c].addEventListener('click', function (ev) {
-            if (ev.target.tagName === 'LI') {
-                ev.target.classList.toggle('checked');
-            }
-        }, false);
-    }
-
     var elems = document.getElementsByClassName('confirmation');
     var confirmIt = function (e) {
         if (!confirm('Are you sure you want to delete this task?')) e.preventDefault();
@@ -557,7 +617,6 @@ $currentYear = $dbcomm->getYearByUsername($username);
     for (var i = 0, l = elems.length; i < l; i++) {
         elems[i].addEventListener('click', confirmIt, false);
     }
-
 
     var monthlyViews = document.getElementsByClassName('monthlyView');
     for (var e = 0; e < monthlyViews.length; e++) {
@@ -689,6 +748,148 @@ $currentYear = $dbcomm->getYearByUsername($username);
         }
     }
 
+    function loadEditTask(id) {
+        var dayTasks = <?php echo json_encode($allTasksForDay); ?>;
+        var dayTasksIndex = Number(id.substring(17));
+
+        var taskName = dayTasks[dayTasksIndex]['taskName'];
+        var startHour = dayTasks[dayTasksIndex]['startTime'].substring(0,2);
+        var startMin = dayTasks[dayTasksIndex]['startTime'].substring(3,5);
+        var startAMPM = dayTasks[dayTasksIndex]['startTime'].substring(6,8);
+        var endHour = dayTasks[dayTasksIndex]['endTime'].substring(0,2);
+        var endMin = dayTasks[dayTasksIndex]['endTime'].substring(3,5);
+        var endAMPM = dayTasks[dayTasksIndex]['endTime'].substring(6,8);
+        var day = dayTasks[dayTasksIndex]['date'].substring(8,10);
+        var month = dayTasks[dayTasksIndex]['date'].substring(5,7);
+        var year = dayTasks[dayTasksIndex]['date'].substring(0,4);
+        var templatePriority = dayTasks[dayTasksIndex]['priority'];
+        var templateCategory = dayTasks[dayTasksIndex]['category'];
+        var taskID = dayTasks[dayTasksIndex]['id'];
+
+        $("#editTaskName").val(taskName);
+        $("#editTaskCategoryName").val(templateCategory);
+        $("#editTaskImportance").val(templatePriority);
+        $("#editTask_start_hour").val(startHour);
+        $("#editTask_start_minute").val(startMin);
+        $("#editTask_startAmPm").val(startAMPM);
+        $("#editTask_end_hour").val(endHour);
+        $("#editTask_end_minute").val(endMin);
+        $("#editTask_endAmPm").val(endAMPM);
+        $("#editTask_date").val(month + "/" + day + "/" + year);
+        $("#editTaskID").val(taskID);
+    }
+
+
+    $(function () {
+
+        $('#categoryForm').on('submit', function (e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: 'post',
+                url: '../ajax/AddCategory.php',
+                data: $('#categoryForm').serialize(),
+                success: function () {
+                    //alert('form was submitted');
+                }
+            });
+
+            var table = document.getElementById("tableOfCategories");
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var newCategoryName = document.getElementById("newCategoryName").value;
+            $('#newCategoryName').val("");
+            cell1.innerHTML = "- " + newCategoryName;
+            cell2.innerHTML = "";
+            cell3.innerHTML = "<div class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete''></div>";
+            cell3.style.borderRight = "1px solid black";
+            cell3.style.paddingLeft = "12px";
+            cell3.style.height = "37px";
+
+
+            $("select#categoryName option").eq($(this).length-3).before($("<option></option>").val(newCategoryName).html(newCategoryName));
+
+
+            var tablezzz = document.getElementById("dailyTable");
+            var rowCountzzz = tablezzz.rows.length;
+            var rowzzz = tablezzz.insertRow(rowCountzzz);
+            rowzzz.id = "categoryPanel" + newCategoryName;
+
+            var cellzzz = rowzzz.insertCell(0);
+            var colorOfAddedCategory = "<? $colorIndex = (count($categories))%8; echo $colors[$colorIndex]; ?>";
+            cellzzz.innerHTML = "<div class='panel-group'>" +
+                                    "<div class='panel panel-default'>" +
+                                        "<div class='panel-heading' style='background-color: " + colorOfAddedCategory + ";'>" +
+                                            "<h4 class='panel-title'>" +
+                                                "<a data-toggle='collapse' data-target='#collapse100' style='text-decoration: none; cursor: pointer;'>" + newCategoryName + "</a>" +
+                                                "&nbsp;&nbsp;<span class='badge' style='color: " + colorOfAddedCategory + "'>0</span>" +
+                                            "</h4>" +
+                                        "</div>" +
+                                        "<div id='collapse100' class='panel-collapse collapse'>" +
+                                            "<table class='list-group' width='100%'>" +
+                                                "<tr>" +
+                                                    "<td style='padding: 8px'>No Tasks here</td>" +
+                                                "</tr>" +
+                                            "</table>" +
+                                        "</div>" +
+                                    "</div>" +
+                                "</div>";
+            cellzzz.style.textAlign = "left";
+            cellzzz.colSpan = 3;
+        });
+
+    });
+
+    $(function () {
+
+        for (var i = 0; i < <? echo count($dbcomm->getCategoriesByUsername($username)); ?>; i++) {
+            $('#deleteCategoryForm' + i).on('submit', function (e) {
+
+                e.preventDefault();
+
+                var count = Number((this.id).substring(18));
+
+                if (confirm('Delete this category?')) {
+                    $.ajax({
+                        type: 'post',
+                        url: '../ajax/DeleteCategory.php',
+                        data: $('#deleteCategoryForm' + count).serialize(),
+                        success: function () {
+                            //alert('form was submitted');
+                        }
+                    });
+
+                    var deleteCategoryName = document.getElementById("deleteCategoryName" + count).value;
+                    var deleteCategoryCounter = document.getElementById("deleteCategoryCounter" + count).value;
+
+
+                    document.getElementById("tableOfCategories").deleteRow(Number(deleteCategoryCounter)+2);
+
+
+                    var selectobject=document.getElementById("categoryName");
+                    for (var j=0; j<selectobject.length; j++){
+                        if (selectobject.options[j].value === deleteCategoryName)
+                        {
+                            selectobject.remove(j);
+                            break;
+                        }
+                    }
+
+
+                    var trID = deleteCategoryName.replace(' ','_');
+                    var row = document.getElementById("categoryPanel"+trID);
+                    row.parentNode.removeChild(row);
+                }
+
+            });
+        }
+
+    });
+
+
 
     $(document).ready(function() {
         $('#mymodal').click(function() {
@@ -712,19 +913,79 @@ $currentYear = $dbcomm->getYearByUsername($username);
         })
     });
 </script>
-</body>
+
+
+<!--------------------- Modals --------------------->
+
+
+<div class="modal fade" id="infoAwardsModal">
+    <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#firstPage" method="post">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-left: 10%;">
+                    <h2>Awards Info</h2>
+
+                </div>
+                <div class="modal-body">
+                    <table width="80%" align="center">
+                        <tr>
+                            <td valign="bottom" width="40%">
+                                <h3>
+                                    Earning Points&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span class="glyphicon glyphicon-piggy-bank"></span>
+                                </h3>
+                                <h6>Points will be added to your total points whenever you create
+                                    and complete new tasks. 'Low priority' tasks are worth 5 points,
+                                    'Medium priority' tasks are worth 8 points, and 'High priority'
+                                    tasks are worth 10 points.</h6>
+                                <h3>
+                                    Stars and Trophies&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span class="glyphicon glyphicon-star"></span>
+                                </h3>
+                                <h6>Whenever you reach 50 points, a bronze star will automatically be
+                                    added to your account as a personal achievement. From here, 10 bronze
+                                    stars become a silver star and 10 silver stars become a gold star.
+                                    Once you reach 10 gold stars, they turn into a bronze trophy. Then,
+                                    10 bronze trophies become a silver trophy and 10 silver trophies become
+                                    a gold trophy.</h6>
+                                <h3>
+                                    Redeeming Rewards&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <span class="glyphicon glyphicon-gift"></span>
+                                </h3>
+                                <h6>Stars and trophies, however, aren't taken away from how many total
+                                    points you have. You can use these points that you have to redeem
+                                    rewards in the market once you reach enough points.</h6>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <table align="center" width="80%">
+                        <tr>
+                            <td align="right">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="modal fade" id="mymodal">
     <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#firstPage" method="post" class="task_create">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="padding-left: 10%;">
                     <h2>Create New Task</h2>
 
                     <? if (isset($alertMessageForTask)) //if the alert for creating list is set, then echo the alert
                     {
-                        '<div>'
-                            .$alertMessageForTask
-                        .'</div>';
+                        echo
+                            '<div>'
+                                .$alertMessageForTask
+                            .'</div>';
                     }
                     ?>
 
@@ -920,57 +1181,225 @@ $currentYear = $dbcomm->getYearByUsername($username);
 </div>
 
 <div class="modal fade" id="manageCategoriesModal">
-    <form id="categoryForm">
-        <div class="modal-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="text-align: center;">
+                <h2>Manage Categories</h2>
+            </div>
+            <div class="modal-body">
+                <table width="100%">
+                    <tr>
+                        <td width="50%">
+                            <table width="100%" id="tableOfCategories">
+                                <tr>
+                                    <td colspan="3" style="border-right: 1px solid black;">
+                                        Categories:
+                                        <br>
+                                    </td>
+                                </tr>
+                                <tr><td height="20px" colspan="3" style="border-right: 1px solid black;"></td></tr>
+                                <?php
+                                $categories = $dbcomm->getCategoriesByUsername($username);
+                                for($i = 0; $i < count($categories); $i++) {
+                                    $categoryName = $categories[$i]['name'];
+                                    $categoryID = $categories[$i]['id'];
+                                    echo "<tr>
+                                        <td>- $categoryName</td>
+                                        <td width='40px'></td>
+                                        <td style='border-right: 1px solid black;'>
+                                            <form id='deleteCategoryForm$i'>
+                                                <input type='text' name='deleteCategoryID'  style='display: none;' value='$categoryID'>
+                                                <input type='text' id='deleteCategoryCounter$i' style='display: none;' value='$i'>
+                                                <input type='text' id='deleteCategoryName$i' style='display: none;' value='$categoryName'>
+                                                <button type='submit' class='btn btn-default' style='appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent;'>
+                                                    <div class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete'></div>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>";
+                                }
+                                ?>
+                            </table>
+                        </td>
+                        <td width="50%" style="vertical-align: top;">
+                            <div style="width: 100%; padding: 10px 10px 10px 10px;">
+                                Add New Category:
+                                <br><br>
+                                <form id="categoryForm">
+                                    <input type="text" name="newCategoryUsername" id="newCategoryUsername" value="<? echo $username ?>" style="display: none;">
+                                    <input maxlength="15" type="text" class="form-control" name="newCategoryName" id="newCategoryName" placeholder="Category Name...">
+                                    <br>
+                                    <button type="submit" name="submitAddCategory" class="btn btn-default" style="float: right;">Add Category</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeManageCategoryModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editTaskModal">
+    <form role="form" action="Homepage.php?id=<? echo $encryptedUsername; ?>#firstPage" method="post">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header" style="text-align: center;">
-                    <h2>Manage Categories</h2>
+                <div class="modal-header" style="padding-left: 10%;">
+                    <h2>Edit Task</h2>
+
+                    <? if (isset($alertMessageForEditTask))
+                    {
+                        echo '<div>';
+                        echo $alertMessageForEditTask;
+                        echo '</div>';
+                    }
+                    ?>
+
                 </div>
                 <div class="modal-body">
-                    <table width="100%">
+                    <table width="80%" align="center">
                         <tr>
-                            <td width="50%">
-                                <table width="100%">
-                                    <tr>
-                                        <td colspan="3" style="border-right: 1px solid black;">
-                                            Categories:
-                                            <br>
-                                        </td>
-                                    </tr>
-                                    <tr><td height="20px" colspan="3" style="border-right: 1px solid black;"></td></tr>
+                            <td valign="bottom" width="40%">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="editTaskName" id="editTaskName" maxlength="45" placeholder="Enter Task Name...">
+                                </div>
+                            </td>
+                            <td align="center" valign="top" width="20%"><!--<h3>-or-</h3>--></td>
+                            <td>
+                                <!--
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#templateModal">
+                                    Use template
+                                </button>
+                                -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="10px"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="form-control" title="Category Name" name="editTaskCategoryName" id="editTaskCategoryName">
+                                    <option value="defaultSelected" disabled selected>Choose Category</option>
                                     <?php
                                     $categories = $dbcomm->getCategoriesByUsername($username);
                                     for($i = 0; $i < count($categories); $i++) {
                                         $categoryName = $categories[$i]['name'];
-                                        echo "<tr id='categories$i'>
-                                            <td>- $categoryName</td>
-                                            <td width='40px'></td>
-                                            <td style='border-right: 1px solid black;'>
-                                                <div class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' id='delete$i' title='Delete' onclick='deleteCategory(this)'></div>
-                                            </td>
-                                        </tr>";
+                                        echo "<option value='$categoryName'>$categoryName</option>";
                                     }
                                     ?>
-                                </table>
+                                </select>
                             </td>
-                            <td width="50%" style="vertical-align: top;">
-                                <div style="width: 100%; padding: 10px 10px 10px 10px;">
-                                    Add New Category:
-                                    <br><br>
-                                    <input maxlength="15" type="text" class="form-control" name="newCategoryName" id="newCategoryName" placeholder="Category Name...">
-                                    <br>
-                                    <button type="button" class="btn btn-default" style="float: right;">Add Category</button>
+                            <td></td>
+                            <td width="40%">
+                                <select class="form-control" title="Importance" name="editTaskImportance" id="editTaskImportance">
+                                    <option value="defaultSelected" disabled selected>Choose Importance</option>
+                                    <?php
+                                    $priorities = $dbcomm->getPriorities();
+                                    for($i = 0; $i < count($priorities); $i++) {
+                                        echo "<option value='$priorities[$i]'>$priorities[$i]</option>";
+                                    }
+                                    ?>
+                                </select>
+
+                            </td>
+                        </tr>
+                        <tr><td height="10px"></td></tr>
+                        <tr><td>Start Time</td><td></td><td>End Time</td></tr>
+                        <tr>
+                            <td><div class="input-group registration-date-time ">
+                                    <span class="input-group-addon" ><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
+                                    <select type="text" class="form-control" id="editTask_start_hour" name="editTask_start_hour">
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <span class="input-group-addon" >:</span>
+                                    <select type="text" class="form-control" id="editTask_start_minute" name="editTask_start_minute">
+                                        <option value="00">00</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
+                                    </select>
+                                    <span class="input-group-addon" ><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></span>
+                                    <select type="text" class="form-control" id="editTask_startAmPm" name="editTask_startAmPm">
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td><div class="input-group registration-date-time ">
+                                    <span class="input-group-addon" ><span class="glyphicon glyphicon-time" aria-hidden="true"></span></span>
+                                    <select type="text" class="form-control" id="editTask_end_hour" name="editTask_end_hour">
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <span class="input-group-addon" >:</span>
+                                    <select type="text" class="form-control" id="editTask_end_minute" name="editTask_end_minute">
+                                        <option value="00">00</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
+                                    </select>
+                                    <span class="input-group-addon" ><span class="glyphicon glyphicon-minus" aria-hidden="true"> </span></span>
+                                    <select type="text" class="form-control" id="editTask_endAmPm" name="editTask_endAmPm">
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td height="10px"></td></tr>
+                        <tr><td>Date</td></tr>
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input class="form-control" id="editTask_date" name="editTask_date" placeholder="MM/DD/YYYY" type="text"/>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeManageCategoryModal()">Close</button>
+                    <table align="center" width="80%">
+                        <tr>
+                            <td align="right">
+                                <input type="text" name="editTaskID" id="editTaskID" style="display: none;">
+                                <button type="submit" name="saveTask" class="btn btn-primary">Save</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
     </form>
 </div>
 
+</body>
 </html>

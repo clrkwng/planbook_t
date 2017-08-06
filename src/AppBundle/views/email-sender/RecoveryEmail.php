@@ -170,7 +170,7 @@ if (isset($_POST['Submit'])){
                         </p>
                     </div>
 
-                    <?php if (isset($alertMessage)) echo "echo $alertMessage";?>
+                    <?php if (isset($alertMessage)) echo $alertMessage;?>
 
 
                 </div>
