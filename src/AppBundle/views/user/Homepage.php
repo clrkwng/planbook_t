@@ -182,43 +182,82 @@ if(isset($_GET['completeTaskID'])) {
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../../libs/bootstrap/dist/css/bootstrap.min.css">
-    <script src="../../libs/jquery/dist/jquery.min.js"></script>
-    <script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Planbook</title>
 
+    <!-- Theme CSS -->
+    <link href="../../css/start-bootstrap-template.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../libs/bootstrap/dist/css/bootstrap.min.css">
 
     <link rel="stylesheet" type="text/css" href="../../libs/fullpage-js/dist/jquery.fullpage.min.css"/>
-    <link rel="stylesheet" type="text/css" href="../../css/fullpage-style.css" />
     <link rel="stylesheet" href="../../libs/w3-css/w3.css">
-
-    <script type="text/javascript" src="../../libs/fullpage-js/dist/jquery.fullpage.min.js"></script>
-    <script type="text/javascript" src="../../scripts/jquery/fullpage-config.js"></script>
-    <script type="text/javascript" src="../../scripts/jquery/user/tasklist-config.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../css/user/homepage.css"/>
-    <script src="../../scripts/jquery/user/createTask.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#fullpage').fullpage({
-                sectionsColor: ['#ADD8E6', '#ADD8E6'],
-                anchors: ['firstPage', '3rdPage'],
-                menu: '#menu'
-            });
-        });
-    </script>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="../../css/user/homepage.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/fullpage-style.css" />
 
 </head>
-<body>
+<body id="page-top" >
+<!-- Navigation -->
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="#page-top">Planbook</a>
+        </div>
 
-<ol id="menu">
-    <li data-menuanchor="firstPage"><a href="#firstPage">Tasks</a></li>
-    <li data-menuanchor="3rdPage"><a href="#3rdPage">Awards</a></li>
-</ol>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a href ="../user/UserProfile.php">Profile</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="#firstPage">Tasks</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="#3rdPage">Awards</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="../auth/Login.php">Log out</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
 
-<div id="fullpage">
+<!-- Header -->
+<header>
+    <div class="container" id="maincontent" tabindex="-1">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-text">
+                    <span class="skills">
+                        Welcome,
+                        <?php if (isset($adminUsername))
+                            echo $username;
+                        ?>
+                        !
+                    </span>
+                    <hr class="star-light">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<section id="firstPage">
+    <div class="container" id="fullpage">
     <div class="section" id="section0">
         <div class="slide" id="slide1">
             <div class="content">
@@ -553,7 +592,8 @@ if(isset($_GET['completeTaskID'])) {
             </div>
         </div>
     </div>
-    <div class="section" id="section2">
+    </div>
+    <div class="section" id="3rdPage">
         <table align="center" width="100%" style="height: 100%;">
             <tr style="height:25%">
                 <td rowspan="6" valign="center" width="20%" id="exchangeSystem">
@@ -655,312 +695,55 @@ if(isset($_GET['completeTaskID'])) {
             <tr style="height:5%;"></tr>
         </table>
     </div>
-</div>
-<script>
-    var elems = document.getElementsByClassName('confirmation');
-    var confirmIt = function (e) {
-        if (!confirm('Are you sure you want to delete this task?')) e.preventDefault();
-    };
-    for (var i = 0, l = elems.length; i < l; i++) {
-        elems[i].addEventListener('click', confirmIt, false);
-    }
+</section>
+<!-- Footer -->
+<footer class="text-center">
+    <div class="footer-above">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col col-md-4">
+                    <h3>Location</h3>
+                    <p>400 Cedar Ave
+                        <br>West Long Branch, NJ 07764</p>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>Around the Web</h3>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Facebook</span><i class="fa fa-fw fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Google Plus</span><i class="fa fa-fw fa-google-plus"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Twitter</span><i class="fa fa-fw fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Linked In</span><i class="fa fa-fw fa-linkedin"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Dribble</span><i class="fa fa-fw fa-dribbble"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>About Planbook</h3>
+                    <p>Planbook is a free to use tool to help keep lives organized.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-below">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    Copyright &copy; Planbook 2017
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
-    var monthlyViews = document.getElementsByClassName('monthlyView');
-    for (var e = 0; e < monthlyViews.length; e++) {
-        monthlyViews[e].addEventListener('click', function(ev) {
-            if (ev.target.tagName === 'TD') {
-                var tdID = ev.target.id;
-                tdID = parseInt(tdID.substr(11));
-                window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&monthToDay=' + tdID;
-            }
-            else if (ev.target.tagName === 'SPAN'){
-                var tdElement = ev.target.parentElement;
-                if (tdElement.tagName === 'TD') {
-                    var tdElementID = tdElement.id;
-                    tdElementID = parseInt(tdElementID.substr(11));
-                    window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&monthToDay=' + tdElementID;
-                }
-                else {
-                    //tag error inside
-                }
-            }
-            else {
-                //tag error outside
-            }
-        }, false);
-    }
-
-    var daysOfWeek = <?php echo json_encode($daysOfTheWeek); ?>;
-    var monthsOfWeek = <?php echo json_encode($monthsOfTheWeek); ?>;
-    var yearsOfWeek = <?php echo json_encode($yearsOfTheWeek); ?>;
-    for(var m = 0; m < 7; m++) {
-        daysOfWeek[m] = parseInt(daysOfWeek[m])
-    }
-    for(var j = 0; j < 7; j++) {
-        var weeklyViews = document.getElementsByClassName('weekToDay'+j);
-        for (var k = 0; k < weeklyViews.length; k++) {
-            weeklyViews[k].addEventListener('click', function(ev) {
-                var id, day, month, year;
-                if (ev.target.tagName === 'TD') {
-                    id = Number((ev.target.className).substring(9));
-                    day = daysOfWeek[id];
-                    month = monthsOfWeek[id];
-                    year = yearsOfWeek[id];
-                    window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
-                }
-                else if (ev.target.tagName === 'H4'){
-                    var tdElement3 = ev.target.parentElement;
-                    if (tdElement3.tagName === 'TD') {
-                        id = Number((tdElement3.className).substring(9));
-                        day = daysOfWeek[id];
-                        month = monthsOfWeek[id];
-                        year = yearsOfWeek[id];
-                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
-                    }
-                    else {
-                        //alert('tag error inside3');
-                    }
-                }
-                else if (ev.target.tagName === 'DIV'){
-                    var tdElement = ev.target.parentElement;
-                    if (tdElement.tagName === 'TD') {
-                        id = Number((tdElement.className).substring(9));
-                        day = daysOfWeek[id];
-                        month = monthsOfWeek[id];
-                        year = yearsOfWeek[id];
-
-                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
-                    }
-                    else {
-                        //alert('tag error inside1');
-                    }
-                }
-                else if (ev.target.tagName === 'SPAN'){
-                    var tdElement2 = (ev.target.parentElement).parentElement;
-                    if (tdElement2.tagName === 'TD') {
-                        id = Number((tdElement2.className).substring(9));
-                        day = daysOfWeek[id];
-                        month = monthsOfWeek[id];
-                        year = yearsOfWeek[id];
-                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
-                    }
-                    else {
-                        //alert('tag error inside2');
-                    }
-                }
-                else {
-                    //alert('tag error outside');
-                }
-            }, false);
-        }
-    }
-
-    function onManageCategories(selectElement) {
-        if (selectElement.value === "manageCategories") {
-            $('#manageCategoriesModal').modal('show');
-        }
-    }
-
-    function closeManageCategoryModal() {
-        $("#categoryName").val('defaultSelected');
-    }
-
-    function loadTemplate() {
-        var templates = <?php echo json_encode($dbConn->getAllTemplatesByUsername($username)); ?>;
-        var radioValue = $('input[name="templateRadio"]:checked').val();
-        for (var i = 0; i < templates.length; i++) {
-            if (templates[i]['templateID'] === radioValue) {
-                var templateName = templates[i]['templateName'];
-                var startHour = templates[i]['startHour'];
-                var startMin = templates[i]['startMin'];
-                var startAMPM = templates[i]['startAMPM'];
-                var endHour = templates[i]['endHour'];
-                var endMin = templates[i]['endMin'];
-                var endAMPM = templates[i]['endAMPM'];
-                var templatePriority = templates[i]['priority'];
-                var templateCategory = templates[i]['category'];
-
-                $("#taskName").val(templateName);
-                $("#categoryName").val(templateCategory);
-                $("#importance").val(templatePriority);
-                $("#start_hour").val(startHour);
-                $("#start_minute").val(startMin);
-                $("#startAmPm").val(startAMPM);
-                $("#end_hour").val(endHour);
-                $("#end_minute").val(endMin);
-                $("#endAmPm").val(endAMPM);
-
-                $('#templateModal').modal('hide');
-                break;
-            }
-        }
-    }
-
-    function loadEditTask(id) {
-        var dayTasks = <?php echo json_encode($allTasksForDay); ?>;
-        var dayTasksIndex = Number(id.substring(17));
-
-        var taskName = dayTasks[dayTasksIndex]['taskName'];
-        var startHour = dayTasks[dayTasksIndex]['startTime'].substring(0,2);
-        var startMin = dayTasks[dayTasksIndex]['startTime'].substring(3,5);
-        var startAMPM = dayTasks[dayTasksIndex]['startTime'].substring(6,8);
-        var endHour = dayTasks[dayTasksIndex]['endTime'].substring(0,2);
-        var endMin = dayTasks[dayTasksIndex]['endTime'].substring(3,5);
-        var endAMPM = dayTasks[dayTasksIndex]['endTime'].substring(6,8);
-        var day = dayTasks[dayTasksIndex]['date'].substring(8,10);
-        var month = dayTasks[dayTasksIndex]['date'].substring(5,7);
-        var year = dayTasks[dayTasksIndex]['date'].substring(0,4);
-        var templatePriority = dayTasks[dayTasksIndex]['priority'];
-        var templateCategory = dayTasks[dayTasksIndex]['category'];
-        var taskID = dayTasks[dayTasksIndex]['id'];
-
-        $("#editTaskName").val(taskName);
-        $("#editTaskCategoryName").val(templateCategory);
-        $("#editTaskImportance").val(templatePriority);
-        $("#editTask_start_hour").val(startHour);
-        $("#editTask_start_minute").val(startMin);
-        $("#editTask_startAmPm").val(startAMPM);
-        $("#editTask_end_hour").val(endHour);
-        $("#editTask_end_minute").val(endMin);
-        $("#editTask_endAmPm").val(endAMPM);
-        $("#editTask_date").val(month + "/" + day + "/" + year);
-        $("#editTaskID").val(taskID);
-    }
-
-
-    $(function () {
-
-        $('#categoryForm').on('submit', function (e) {
-
-            e.preventDefault();
-
-            $.ajax({
-                type: 'post',
-                url: '../ajax/AddCategory.php',
-                data: $('#categoryForm').serialize(),
-                success: function () {
-                    //alert('form was submitted');
-                }
-            });
-
-            var table = document.getElementById("tableOfCategories");
-            var row = table.insertRow();
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var newCategoryName = document.getElementById("newCategoryName").value;
-            $('#newCategoryName').val("");
-            cell1.innerHTML = "- " + newCategoryName;
-            cell2.innerHTML = "";
-            cell3.innerHTML = "<div class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete''></div>";
-            cell3.style.borderRight = "1px solid black";
-            cell3.style.paddingLeft = "12px";
-            cell3.style.height = "37px";
-
-
-            $("select#categoryName option").eq($(this).length-3).before($("<option></option>").val(newCategoryName).html(newCategoryName));
-
-
-            var tablezzz = document.getElementById("dailyTable");
-            var rowCountzzz = tablezzz.rows.length;
-            var rowzzz = tablezzz.insertRow(rowCountzzz);
-            rowzzz.id = "categoryPanel" + newCategoryName;
-
-            var cellzzz = rowzzz.insertCell(0);
-            var colorOfAddedCategory = "<?php $colorIndex = (count($categories))%8; echo $colors[$colorIndex]; ?>";
-            cellzzz.innerHTML = "<div class='panel-group'>" +
-                                    "<div class='panel panel-default'>" +
-                                        "<div class='panel-heading' style='background-color: " + colorOfAddedCategory + ";'>" +
-                                            "<h4 class='panel-title'>" +
-                                                "<a data-toggle='collapse' data-target='#collapse100' style='text-decoration: none; cursor: pointer;'>" + newCategoryName + "</a>" +
-                                                "&nbsp;&nbsp;<span class='badge' style='color: " + colorOfAddedCategory + "'>0</span>" +
-                                            "</h4>" +
-                                        "</div>" +
-                                        "<div id='collapse100' class='panel-collapse collapse'>" +
-                                            "<table class='list-group' width='100%'>" +
-                                                "<tr>" +
-                                                    "<td style='padding: 8px'>No Tasks here</td>" +
-                                                "</tr>" +
-                                            "</table>" +
-                                        "</div>" +
-                                    "</div>" +
-                                "</div>";
-            cellzzz.style.textAlign = "left";
-            cellzzz.colSpan = 3;
-        });
-
-    });
-
-    $(function () {
-
-        for (var i = 0; i < <?php echo count($dbConn->getCategoriesByUsername($username)); ?>; i++) {
-            $('#deleteCategoryForm' + i).on('submit', function (e) {
-
-                e.preventDefault();
-
-                var count = Number((this.id).substring(18));
-
-                if (confirm('Delete this category?')) {
-                    $.ajax({
-                        type: 'post',
-                        url: '../ajax/DeleteCategory.php',
-                        data: $('#deleteCategoryForm' + count).serialize(),
-                        success: function () {
-                            //alert('form was submitted');
-                        }
-                    });
-
-                    var deleteCategoryName = document.getElementById("deleteCategoryName" + count).value;
-                    var deleteCategoryCounter = document.getElementById("deleteCategoryCounter" + count).value;
-
-
-                    document.getElementById("tableOfCategories").deleteRow(Number(deleteCategoryCounter)+2);
-
-
-                    var selectobject=document.getElementById("categoryName");
-                    for (var j=0; j<selectobject.length; j++){
-                        if (selectobject.options[j].value === deleteCategoryName)
-                        {
-                            selectobject.remove(j);
-                            break;
-                        }
-                    }
-
-
-                    var trID = deleteCategoryName.replace(' ','_');
-                    var row = document.getElementById("categoryPanel"+trID);
-                    row.parentNode.removeChild(row);
-                }
-
-            });
-        }
-
-    });
-
-
-
-    $(document).ready(function() {
-        $('#mymodal').click(function() {
-            $('html').css('overflow', 'hidden');
-            $('body').bind('touchmove', function(e) {
-                e.preventDefault()
-            });
-        });
-        $('.mymodal-close').click(function() {
-            $('html').css('overflow', 'scroll');
-            $('body').unbind('touchmove');
-        });
-
-        var date_input=$('input[name="date"]'); //our date input has the name "date"
-        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-        date_input.datepicker({
-            format: 'mm/dd/yyyy',
-            container: container,
-            todayHighlight: true,
-            autoclose: true
-        })
-    });
-</script>
 
 
 <!--------------------- Modals --------------------->
@@ -1454,6 +1237,346 @@ if(isset($_GET['completeTaskID'])) {
         </div>
     </form>
 </div>
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
 
 </body>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//use.fontawesome.com/7d70b9fab6.js"></script>
+<script src="../../libs/jquery/dist/jquery.min.js"></script>
+<script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
+<!--<script type="text/javascript" src="../../libs/fullpage-js/dist/jquery.fullpage.min.js"></script>-->
+<!--<script type="text/javascript" src="../../scripts/jquery/fullpage-config.js"></script>-->
+<script type="text/javascript" src="../../scripts/jquery/user/tasklist-config.js"></script>
+<script src="../../scripts/jquery/user/createTask.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]-->
+<script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
+<script src="../../libs/vendor/respond.min.js"></script>
+<!--[endif]-->
+<!-- Theme JavaScript -->
+<script src="../../libs/freelancer/dist/freelancer.js"></script>
+<!--<script type="text/javascript">-->
+<!--    $(document).ready(function () {-->
+<!--        $('#fullpage').fullpage({-->
+<!--            sectionsColor: ['#ADD8E6', '#ADD8E6'],-->
+<!--            anchors: ['firstPage', '3rdPage'],-->
+<!--            menu: '#menu'-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<script>
+    var elems = document.getElementsByClassName('confirmation');
+    var confirmIt = function (e) {
+        if (!confirm('Are you sure you want to delete this task?')) e.preventDefault();
+    };
+    for (var i = 0, l = elems.length; i < l; i++) {
+        elems[i].addEventListener('click', confirmIt, false);
+    }
+
+    var monthlyViews = document.getElementsByClassName('monthlyView');
+    for (var e = 0; e < monthlyViews.length; e++) {
+        monthlyViews[e].addEventListener('click', function(ev) {
+            if (ev.target.tagName === 'TD') {
+                var tdID = ev.target.id;
+                tdID = parseInt(tdID.substr(11));
+                window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&monthToDay=' + tdID;
+            }
+            else if (ev.target.tagName === 'SPAN'){
+                var tdElement = ev.target.parentElement;
+                if (tdElement.tagName === 'TD') {
+                    var tdElementID = tdElement.id;
+                    tdElementID = parseInt(tdElementID.substr(11));
+                    window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&monthToDay=' + tdElementID;
+                }
+                else {
+                    //tag error inside
+                }
+            }
+            else {
+                //tag error outside
+            }
+        }, false);
+    }
+
+    var daysOfWeek = <?php echo json_encode($daysOfTheWeek); ?>;
+    var monthsOfWeek = <?php echo json_encode($monthsOfTheWeek); ?>;
+    var yearsOfWeek = <?php echo json_encode($yearsOfTheWeek); ?>;
+    for(var m = 0; m < 7; m++) {
+        daysOfWeek[m] = parseInt(daysOfWeek[m])
+    }
+    for(var j = 0; j < 7; j++) {
+        var weeklyViews = document.getElementsByClassName('weekToDay'+j);
+        for (var k = 0; k < weeklyViews.length; k++) {
+            weeklyViews[k].addEventListener('click', function(ev) {
+                var id, day, month, year;
+                if (ev.target.tagName === 'TD') {
+                    id = Number((ev.target.className).substring(9));
+                    day = daysOfWeek[id];
+                    month = monthsOfWeek[id];
+                    year = yearsOfWeek[id];
+                    window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
+                }
+                else if (ev.target.tagName === 'H4'){
+                    var tdElement3 = ev.target.parentElement;
+                    if (tdElement3.tagName === 'TD') {
+                        id = Number((tdElement3.className).substring(9));
+                        day = daysOfWeek[id];
+                        month = monthsOfWeek[id];
+                        year = yearsOfWeek[id];
+                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
+                    }
+                    else {
+                        //alert('tag error inside3');
+                    }
+                }
+                else if (ev.target.tagName === 'DIV'){
+                    var tdElement = ev.target.parentElement;
+                    if (tdElement.tagName === 'TD') {
+                        id = Number((tdElement.className).substring(9));
+                        day = daysOfWeek[id];
+                        month = monthsOfWeek[id];
+                        year = yearsOfWeek[id];
+
+                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
+                    }
+                    else {
+                        //alert('tag error inside1');
+                    }
+                }
+                else if (ev.target.tagName === 'SPAN'){
+                    var tdElement2 = (ev.target.parentElement).parentElement;
+                    if (tdElement2.tagName === 'TD') {
+                        id = Number((tdElement2.className).substring(9));
+                        day = daysOfWeek[id];
+                        month = monthsOfWeek[id];
+                        year = yearsOfWeek[id];
+                        window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true); ?>&weekToDay=' + year + "**" + month + "**" + day;
+                    }
+                    else {
+                        //alert('tag error inside2');
+                    }
+                }
+                else {
+                    //alert('tag error outside');
+                }
+            }, false);
+        }
+    }
+
+    function onManageCategories(selectElement) {
+        if (selectElement.value === "manageCategories") {
+            $('#manageCategoriesModal').modal('show');
+        }
+    }
+
+    function closeManageCategoryModal() {
+        $("#categoryName").val('defaultSelected');
+    }
+
+    function loadTemplate() {
+        var templates = <?php echo json_encode($dbConn->getAllTemplatesByUsername($username)); ?>;
+        var radioValue = $('input[name="templateRadio"]:checked').val();
+        for (var i = 0; i < templates.length; i++) {
+            if (templates[i]['templateID'] === radioValue) {
+                var templateName = templates[i]['templateName'];
+                var startHour = templates[i]['startHour'];
+                var startMin = templates[i]['startMin'];
+                var startAMPM = templates[i]['startAMPM'];
+                var endHour = templates[i]['endHour'];
+                var endMin = templates[i]['endMin'];
+                var endAMPM = templates[i]['endAMPM'];
+                var templatePriority = templates[i]['priority'];
+                var templateCategory = templates[i]['category'];
+
+                $("#taskName").val(templateName);
+                $("#categoryName").val(templateCategory);
+                $("#importance").val(templatePriority);
+                $("#start_hour").val(startHour);
+                $("#start_minute").val(startMin);
+                $("#startAmPm").val(startAMPM);
+                $("#end_hour").val(endHour);
+                $("#end_minute").val(endMin);
+                $("#endAmPm").val(endAMPM);
+
+                $('#templateModal').modal('hide');
+                break;
+            }
+        }
+    }
+
+    function loadEditTask(id) {
+        var dayTasks = <?php echo json_encode($allTasksForDay); ?>;
+        var dayTasksIndex = Number(id.substring(17));
+
+        var taskName = dayTasks[dayTasksIndex]['taskName'];
+        var startHour = dayTasks[dayTasksIndex]['startTime'].substring(0,2);
+        var startMin = dayTasks[dayTasksIndex]['startTime'].substring(3,5);
+        var startAMPM = dayTasks[dayTasksIndex]['startTime'].substring(6,8);
+        var endHour = dayTasks[dayTasksIndex]['endTime'].substring(0,2);
+        var endMin = dayTasks[dayTasksIndex]['endTime'].substring(3,5);
+        var endAMPM = dayTasks[dayTasksIndex]['endTime'].substring(6,8);
+        var day = dayTasks[dayTasksIndex]['date'].substring(8,10);
+        var month = dayTasks[dayTasksIndex]['date'].substring(5,7);
+        var year = dayTasks[dayTasksIndex]['date'].substring(0,4);
+        var templatePriority = dayTasks[dayTasksIndex]['priority'];
+        var templateCategory = dayTasks[dayTasksIndex]['category'];
+        var taskID = dayTasks[dayTasksIndex]['id'];
+
+        $("#editTaskName").val(taskName);
+        $("#editTaskCategoryName").val(templateCategory);
+        $("#editTaskImportance").val(templatePriority);
+        $("#editTask_start_hour").val(startHour);
+        $("#editTask_start_minute").val(startMin);
+        $("#editTask_startAmPm").val(startAMPM);
+        $("#editTask_end_hour").val(endHour);
+        $("#editTask_end_minute").val(endMin);
+        $("#editTask_endAmPm").val(endAMPM);
+        $("#editTask_date").val(month + "/" + day + "/" + year);
+        $("#editTaskID").val(taskID);
+    }
+
+
+    $(function () {
+
+        $('#categoryForm').on('submit', function (e) {
+
+            e.preventDefault();
+
+            $.ajax({
+                type: 'post',
+                url: '../ajax/AddCategory.php',
+                data: $('#categoryForm').serialize(),
+                success: function () {
+                    //alert('form was submitted');
+                }
+            });
+
+            var table = document.getElementById("tableOfCategories");
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var newCategoryName = document.getElementById("newCategoryName").value;
+            $('#newCategoryName').val("");
+            cell1.innerHTML = "- " + newCategoryName;
+            cell2.innerHTML = "";
+            cell3.innerHTML = "<div class='glyphicon glyphicon-trash' style='font-size: 20px; color: dimgrey; cursor: pointer;' title='Delete''></div>";
+            cell3.style.borderRight = "1px solid black";
+            cell3.style.paddingLeft = "12px";
+            cell3.style.height = "37px";
+
+
+            $("select#categoryName option").eq($(this).length-3).before($("<option></option>").val(newCategoryName).html(newCategoryName));
+
+
+            var tablezzz = document.getElementById("dailyTable");
+            var rowCountzzz = tablezzz.rows.length;
+            var rowzzz = tablezzz.insertRow(rowCountzzz);
+            rowzzz.id = "categoryPanel" + newCategoryName;
+
+            var cellzzz = rowzzz.insertCell(0);
+            var colorOfAddedCategory = "<?php $colorIndex = (count($categories))%8; echo $colors[$colorIndex]; ?>";
+            cellzzz.innerHTML = "<div class='panel-group'>" +
+                "<div class='panel panel-default'>" +
+                "<div class='panel-heading' style='background-color: " + colorOfAddedCategory + ";'>" +
+                "<h4 class='panel-title'>" +
+                "<a data-toggle='collapse' data-target='#collapse100' style='text-decoration: none; cursor: pointer;'>" + newCategoryName + "</a>" +
+                "&nbsp;&nbsp;<span class='badge' style='color: " + colorOfAddedCategory + "'>0</span>" +
+                "</h4>" +
+                "</div>" +
+                "<div id='collapse100' class='panel-collapse collapse'>" +
+                "<table class='list-group' width='100%'>" +
+                "<tr>" +
+                "<td style='padding: 8px'>No Tasks here</td>" +
+                "</tr>" +
+                "</table>" +
+                "</div>" +
+                "</div>" +
+                "</div>";
+            cellzzz.style.textAlign = "left";
+            cellzzz.colSpan = 3;
+        });
+
+    });
+
+    $(function () {
+
+        for (var i = 0; i < <?php echo count($dbConn->getCategoriesByUsername($username)); ?>; i++) {
+            $('#deleteCategoryForm' + i).on('submit', function (e) {
+
+                e.preventDefault();
+
+                var count = Number((this.id).substring(18));
+
+                if (confirm('Delete this category?')) {
+                    $.ajax({
+                        type: 'post',
+                        url: '../ajax/DeleteCategory.php',
+                        data: $('#deleteCategoryForm' + count).serialize(),
+                        success: function () {
+                            //alert('form was submitted');
+                        }
+                    });
+
+                    var deleteCategoryName = document.getElementById("deleteCategoryName" + count).value;
+                    var deleteCategoryCounter = document.getElementById("deleteCategoryCounter" + count).value;
+
+
+                    document.getElementById("tableOfCategories").deleteRow(Number(deleteCategoryCounter)+2);
+
+
+                    var selectobject=document.getElementById("categoryName");
+                    for (var j=0; j<selectobject.length; j++){
+                        if (selectobject.options[j].value === deleteCategoryName)
+                        {
+                            selectobject.remove(j);
+                            break;
+                        }
+                    }
+
+
+                    var trID = deleteCategoryName.replace(' ','_');
+                    var row = document.getElementById("categoryPanel"+trID);
+                    row.parentNode.removeChild(row);
+                }
+
+            });
+        }
+
+    });
+
+
+
+    $(document).ready(function() {
+        $('#mymodal').click(function() {
+            $('html').css('overflow', 'hidden');
+            $('body').bind('touchmove', function(e) {
+                e.preventDefault()
+            });
+        });
+        $('.mymodal-close').click(function() {
+            $('html').css('overflow', 'scroll');
+            $('body').unbind('touchmove');
+        });
+
+        var date_input=$('input[name="date"]'); //our date input has the name "date"
+        var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+        date_input.datepicker({
+            format: 'mm/dd/yyyy',
+            container: container,
+            todayHighlight: true,
+            autoclose: true
+        })
+    });
+</script>
+
 </html>
