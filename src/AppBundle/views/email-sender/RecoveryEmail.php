@@ -137,17 +137,9 @@ if (isset($_POST['Submit'])){
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="../auth/Login.php">Login/Sign up</a>
+                    <a href ="../auth/Login.php">Login</a>
                 </li>
-                <li class="page-scroll">
-                    <a href="../index.html#portfolio">Activities</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#about">About</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#contact">Contact</a>
-                </li>
+
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -162,11 +154,11 @@ if (isset($_POST['Submit'])){
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-3 text">
                     <h1 align="left">
-                        <font color="#696969"><strong>Login Recovery Page</strong></font>
+                        <font color="#696969"><strong>Recover Account</strong></font>
                     </h1>
                     <div class="">
                         <p align = "left">
-                            <font color="696969">Enter your email and follow the instructions on resetting your password.</font>
+                            <font color="696969">Please enter your email and follow the instructions.</font>
                         </p>
                     </div>
 

@@ -79,16 +79,7 @@ if ($dbcomm->checkIfEmailExists($email)) {
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href ="../auth/Login.php">Login/Sign up</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#portfolio">Activities</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#about">About</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#contact">Contact</a>
+                    <a href ="../auth/Login.php">Login</a>
                 </li>
             </ul>
         </div>

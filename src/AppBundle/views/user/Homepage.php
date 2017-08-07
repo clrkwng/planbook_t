@@ -257,8 +257,7 @@ if(isset($_GET['completeTaskID'])) {
                         Welcome,
                         <?php if (isset($username))
                             echo $username;
-                        ?>
-                        !
+                        ?>!
                     </span>
                     <hr class="star-light">
                 </div>
