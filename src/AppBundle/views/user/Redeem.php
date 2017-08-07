@@ -51,7 +51,6 @@ if (isset($_GET['rewardName'])) {
     <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" href="../../libs/w3-css/w3.css">
-<!--    <link rel="stylesheet" type="text/css" href="../../css/user/redeem.css"/>-->
 
 </head>
 <body id="page-top" class="index">

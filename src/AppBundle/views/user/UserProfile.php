@@ -22,23 +22,16 @@
     <title>Edit Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Bootstrap Core CSS -->
+    <link href="../../libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">f
+
     <!-- Theme CSS -->
     <link href="../../css/start-bootstrap-template.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="../../libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]-->
-    <script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
-    <script src="../../libs/vendor/respond.min.js"></script>
-    <!--[endif]-->
 
 </head>
 <body id="page-top" class="index">
@@ -225,21 +218,21 @@
     </a>
 </div>
 
-<!-- jQuery -->
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//use.fontawesome.com/7d70b9fab6.js"></script>
 <script src="../../libs/jquery/dist/jquery.min.js"></script>
+<script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
 
-<!-- Bootstrap Core JavaScript -->
-<script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
-
-<!-- Plugin JavaScript -->
-<script src="../../libs/jquery-easing/jquery.easing.min.js"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]-->
+<script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
+<script src="../../libs/vendor/respond.min.js"></script>
+<!--[endif]-->
 <!-- Theme JavaScript -->
 <script src="../../libs/freelancer/dist/freelancer.js"></script>
-
-<!-- Fonts -->
-<script src="//use.fontawesome.com/7d70b9fab6.js"></script>
-
 
 </body>
 </html>
