@@ -48,7 +48,7 @@ class Crypto
      * @param boolean $encoded - are we expecting an encoded string?
      * @return string
      */
-    public static function decrypt($message, $encoded = false)
+    public static function decrypt($message, $encoded = true)
     {
         $key = CryptoKeygen::getKey();
 

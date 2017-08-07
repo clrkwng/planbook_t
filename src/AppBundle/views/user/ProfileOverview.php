@@ -224,7 +224,8 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
 
 </head>
 
-<body>
+<body id="page-top" class="index">
+<!-- Navigation -->
 <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -232,23 +233,21 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="../index.html">Planbook</a>
+            <a class="navbar-brand" href="#page-top">Planbook</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li class="page-scroll">
+                    <a href="../admin/AdminPanel.php?adminToken=<?php echo Crypto::encrypt($adminUsername, true) ?>">Admin Panel</a>
+                </li>
+                <li role="separator" class="divider"></li>
                 <li>
-                    <a href ="../auth/Login.php">Login/Sign up</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#portfolio">Activities</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#about">About</a>
-                </li>
-                <li class="page-scroll">
-                    <a href="../index.html#contact">Contact</a>
+                    <a href="../auth/Login.php">Log out</a>
                 </li>
             </ul>
         </div>

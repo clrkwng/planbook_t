@@ -163,7 +163,7 @@ if(isset($_GET['completeTaskID'])) {
     $todayDate = date('Y-m-d');
     if ($todayDate <= $theDate) {
         $encryptedTaskID = Crypto::encrypt($_GET['completeTaskID'], true);
-        $taskID = Crypto::decrypt($encryptedTaskID);
+        $taskID = Crypto::decrypt($encryptedTaskID, true);
         $completeTaskID = intval($taskID);
         $dbConn->completeTaskByTaskID($username, $completeTaskID);
         $alertMessage .= '<div class="alert alert-success alert-dismissible col-md-10 col-md-offset-1" role="alert" align="center">
@@ -235,7 +235,7 @@ if(isset($_GET['completeTaskID'])) {
                 </li>
                 <li role="separator" class="divider"></li>
                 <li>
-                    <a href ="../user/UserProfile.php?userToken=<?php echo Crypto::encrypt($username) ?>">Profile Settings</a>
+                    <a href ="../user/UserProfile.php?userToken=<?php echo Crypto::encrypt($username, true) ?>">Profile Settings</a>
                 </li>
                 <li>
                     <a href="../auth/Login.php">Log out</a>

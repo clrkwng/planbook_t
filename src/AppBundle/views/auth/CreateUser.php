@@ -11,7 +11,7 @@ if(!isset($_GET['adminToken'])){
     die("Error: The ID was not set.");
 }
 $adminUsernameEncrypted = $_GET['adminToken'];
-$adminUsername = Crypto::decrypt($adminUsernameEncrypted);
+$adminUsername = Crypto::decrypt($adminUsernameEncrypted, true);
 $accountID = $dbcomm->getAccountIDByUsername($adminUsername);
 
 $errorCount = 0;

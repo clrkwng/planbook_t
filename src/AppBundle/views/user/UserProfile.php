@@ -61,7 +61,7 @@
                     <a href="#page-top"></a>
                 </li>
                 <li>
-                    <a href ="../user/Homepage.php?userToken=<?php echo Crypto::encrypt($username)?>" >Tasks</a>
+                    <a href ="../user/Homepage.php?userToken=<?php echo Crypto::encrypt($username, true)?>" >Tasks</a>
                 </li>
                 <li class="page-scroll">
                     <a href="#profile-settings">Profile Settings</a>
