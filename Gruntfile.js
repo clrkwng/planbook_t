@@ -49,7 +49,8 @@ module.exports = function (grunt) {
                     "bin/css/error/error.css": "web/less/error/*.less",
                     "bin/css/user/homepage.css": "web/less/user/homepage.less",
                     "bin/css/user/market.css": "web/less/user/market.less",
-                    "bin/css/user/user-profile.css": "web/less/user/user-profile.less"
+                    "bin/css/user/user-profile.css": "web/less/user/user-profile.less",
+                    "bin/css/user/redeem.css": "web/less/user/redeem.less"
                 }
             }
         },
