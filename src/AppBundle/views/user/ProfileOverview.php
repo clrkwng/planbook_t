@@ -4,13 +4,13 @@ require_once "../db/dbcomm.php";
 //create db connection
 $dbcomm = new dbcomm();
 
-if(!isset($_GET['id']))
+if(!isset($_GET['adminToken']))
 {
     die("Error: The id was not set.");
 }
 
-$encryptedUsername = $_GET['id'];
-$username = Crypto::decrypt($encryptedUsername, true);
+$adminUsernameEncrypted = $_GET['adminToken'];
+$adminUsername = Crypto::decrypt($adminUsernameEncrypted, true);
 
 if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
     if ($_FILES['image']['size'] == 0 and $_FILES['image']['error'] == 0)
@@ -31,7 +31,7 @@ if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
     else {
         chdir("../../resources/img/profilePictures/");
         $cwd = getcwd();
-        $path = $cwd . '/'.$username;
+        $path = $cwd . '/'.$adminUsername;
         //echo "<script>console.log('$path');</script>";
         if (mkdir("$path")){
             //echo "<script>console.log('Huzzah!');</script>";
@@ -88,7 +88,7 @@ if (isset($_POST['Submit1']) and isset($_FILES['image'])) {
         if(!isset($alertMessage)) {
             move_uploaded_file($file_tmp, "$path".'/'.$file_name);
             //echo "<script>console.log('The file was uploaded');</script>";
-            $dbcomm->updateProfileImageByUsername($username,"../../resources/img/profilePictures/".$username."/".$file_name);
+            $dbcomm->updateProfileImageByUsername($adminUsername,"../../resources/img/profilePictures/".$adminUsername."/".$file_name);
         }
     }
 }
@@ -127,7 +127,7 @@ if (isset($_POST['Submit2']) and isset($_POST['email'])) {
                     . '</div>';
     }
     if ($errorCount == 0) {
-        $dbcomm->updateEmailByUsername($username, $email);
+        $dbcomm->updateEmailByUsername($adminUsername, $email);
     }
 }
 
@@ -169,7 +169,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
 
     }
     if ($errorCount == 0) {
-        $dbcomm->updatePhoneNumberByUsername($username, $phonenumber);
+        $dbcomm->updatePhoneNumberByUsername($adminUsername, $phonenumber);
     }
 }
 
@@ -275,7 +275,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                         <tr>
                             <td></td>
                             <td>
-                                <img src="<?php echo $dbcomm->getProfileImageByUsername($username); ?>" id="profileImage">
+                                <img src="<?php echo $dbcomm->getProfileImageByUsername($adminUsername); ?>" id="profileImage">
                             </td>
                             <td></td>
                         </tr>
@@ -289,43 +289,43 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                         </tr>
                         <tr>
                             <td align="left">
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username: <?php echo $username; ?><br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Account Name: <?php echo $dbcomm->getAccountNameByUsername($username); ?><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username: <?php echo $adminUsername; ?><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Account Name: <?php echo $dbcomm->getAccountNameByUsername($adminUsername); ?><br>
                                 <div class="glyphicon glyphicon-wrench" style="color: #5e5e5e; display: inline-block;" id="changeEmailButton" data-toggle="modal" data-target="#changeEmailModal"></div>
-                                Email: <?php echo $dbcomm->getEmailByUsername($username); ?><br>
+                                Email: <?php echo $dbcomm->getEmailByUsername($adminUsername); ?><br>
                                 <div class="glyphicon glyphicon-wrench" style="color: #5e5e5e; display: inline-block;" id="changePhoneNumberButton" data-toggle="modal" data-target="#changePhoneNumberModal"></div>
-                                Phone: <?php echo $dbcomm->getPhoneNumberByUsername($username); ?><br>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Points: <?php echo $dbcomm->getUserTotalPointsByUsername($username); ?><br>
+                                Phone: <?php echo $dbcomm->getPhoneNumberByUsername($adminUsername); ?><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Total Points: <?php echo $dbcomm->getUserTotalPointsByUsername($adminUsername); ?><br>
                             </td>
                             <td colspan="2">
                                 <table width="100%" align="center">
                                     <tr>
                                         <td colspan="3">
-                                            Current Points: <?php echo $dbcomm->getUserCurrentPointsByUsername($username); ?>
+                                            Current Points: <?php echo $dbcomm->getUserCurrentPointsByUsername($adminUsername); ?>
                                         </td>
                                     </tr>
                                     <tr><td height="10px"></td></tr>
                                     <tr>
                                         <td height="50%">
-                                            <?php echo $dbcomm->getNumBronzeStarsByUsername($username); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getBronzeStarImageSource(); ?>" width="50px" height="50px">
+                                            <?php echo $dbcomm->getNumBronzeStarsByUsername($adminUsername); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getBronzeStarImageSource(); ?>" width="50px" height="50px">
                                         </td>
                                         <td>
-                                            <?php echo $dbcomm->getNumSilverStarsByUsername($username); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getSilverStarImageSource(); ?>" width="50px" height="50px">
+                                            <?php echo $dbcomm->getNumSilverStarsByUsername($adminUsername); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getSilverStarImageSource(); ?>" width="50px" height="50px">
                                         </td>
                                         <td>
-                                            <?php echo $dbcomm->getNumGoldStarsByUsername($username); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getGoldStarImageSource(); ?>" width="50px" height="50px">
+                                            <?php echo $dbcomm->getNumGoldStarsByUsername($adminUsername); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getGoldStarImageSource(); ?>" width="50px" height="50px">
                                         </td>
                                     </tr>
                                     <tr><td height="20px"></td></tr>
                                     <tr>
                                         <td height="50%">
-                                            <?php echo $dbcomm->getNumBronzeTrophiesByUsername($username); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="50px" height="50px">
+                                            <?php echo $dbcomm->getNumBronzeTrophiesByUsername($adminUsername); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getBronzeTrophyImageSource(); ?>" width="50px" height="50px">
                                         </td>
                                         <td>
-                                            <?php echo $dbcomm->getNumSilverTrophiesByUsername($username); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getSilverTrophyImageSource(); ?>" width="50px" height="50px">
+                                            <?php echo $dbcomm->getNumSilverTrophiesByUsername($adminUsername); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getSilverTrophyImageSource(); ?>" width="50px" height="50px">
                                         </td>
                                         <td>
-                                            <?php echo $dbcomm->getNumGoldTrophiesByUsername($username); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getGoldTrophyImageSource(); ?>" width="50px" height="50px">
+                                            <?php echo $dbcomm->getNumGoldTrophiesByUsername($adminUsername); ?>&nbsp;&nbsp;<img src="<?php echo $dbcomm->getGoldTrophyImageSource(); ?>" width="50px" height="50px">
                                         </td>
                                     </tr>
                                 </table>
@@ -362,7 +362,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td>
-                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $encryptedUsername; ?>" method="post">
+                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $adminUsernameEncrypted; ?>" method="post">
                                 <input style="line-height: 1em;" type="file" name="image" accept="image/*">
                                 <br>
                                 <input type="submit" name="Submit1" class="btn btn-default">
@@ -388,7 +388,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td>
-                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $encryptedUsername; ?>" method="post">
+                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $adminUsernameEncrypted; ?>" method="post">
                                 <input style="line-height: 1em;" type="email" name="email" value="" placeholder="New Email...">
                                 &nbsp;&nbsp;&nbsp;
                                 <input style="line-height: 1.5em;" type="submit" name="Submit2" class="btn btn-default">
@@ -414,7 +414,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td>
-                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $encryptedUsername; ?>" method="post">
+                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $adminUsernameEncrypted; ?>" method="post">
                                 <input style="line-height: 1em;" type="text" name="phonenumber" value="" placeholder="New Phone Number..."
                                        onblur="$(this).val($(this).val().replace(/[^0-9.]/g, '')); if($(this).val().length >= 10){$(this).val('(' + $(this).val().substring(0,3) + ') ' + $(this).val().substring(3,6) + '-' + $(this).val().substring(6,10));}">
                                 &nbsp;&nbsp;&nbsp;

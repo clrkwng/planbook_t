@@ -88,7 +88,7 @@ if(isset($_GET['delete'])) //delete the user
                     <a href="#page-top"></a>
                 </li>
                 <li>
-                    <a href ="../user/UserProfile.php">Profile</a>
+                    <a href ="../user/ProfileOverview.php?adminToken=<?php echo Crypto::encrypt($adminUsername) ?>">Profile Overview</a>
                 </li>
                 <li class="page-scroll">
                     <a href="#manage-users">Group Settings</a>

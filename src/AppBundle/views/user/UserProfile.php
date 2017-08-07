@@ -1,20 +1,44 @@
 <!DOCTYPE html>
+<?php
+    ini_set('display_errors', 0);
+    require_once "../db/dbcomm.php";
+    require_once "../db/Crypto.php";
+
+    //create db connection
+    $dbConn = new dbcomm();
+
+    if (!isset($_GET['userToken'])) {
+        die("Error: The user token was not set.");
+    }
+
+    $encryptedUsername = $_GET['userToken'];
+    $username = Crypto::decrypt($encryptedUsername, true);
+
+?>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Edit profile page</title>
+    <title>Edit Profile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Theme CSS -->
     <link href="../../css/start-bootstrap-template.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="../../libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../css/user/user-profile.css" rel="stylesheet" type="text/css">
 
     <!-- Custom Fonts -->
     <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]-->
+    <script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
+    <script src="../../libs/vendor/respond.min.js"></script>
+    <!--[endif]-->
 
 </head>
 <body id="page-top" class="index">
@@ -37,7 +61,7 @@
                     <a href="#page-top"></a>
                 </li>
                 <li>
-                    <a href ="../user/UserProfile.php">Profile</a>
+                    <a href ="../user/Homepage.php?userToken=<?php echo Crypto::encrypt($username)?>" >Tasks</a>
                 </li>
                 <li class="page-scroll">
                     <a href="#profile-settings">Profile Settings</a>
@@ -200,12 +224,6 @@
         <i class="fa fa-chevron-up"></i>
     </a>
 </div>
-
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]-->
-<script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
-<script src="../../libs/vendor/respond.min.js"></script>
 
 <!-- jQuery -->
 <script src="../../libs/jquery/dist/jquery.min.js"></script>
