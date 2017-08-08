@@ -83,7 +83,6 @@ if(isset($_GET['delete'])) {
     <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <link rel="stylesheet" href="../../libs/w3-css/w3.css">
-<!--    <link rel="stylesheet" type="text/css" href="../../css/admin/admin.css"/>-->
 
 </head>
 <body id="page-top" class="index">
@@ -208,7 +207,7 @@ if(isset($_GET['delete'])) {
                                         $curRewardNameEncrypted = Crypto::encrypt($curRewardName, true);
                                         echo
                                             "<td>"
-                                            ."<form role='form' action=\"AddReward.php?adminToken=$adminUsernameEncrypted&userToken=$userUsernameEncrypted\" method='post'>"
+                                            ."<form role='form' action=\"AddReward.php?adminToken=". Crypto::encrypt($adminUsername, true)."&userToken=". Crypto::encrypt($userUsername, true)."\" method='post'>"
                                             ."<input type='text' name='rewardName' value='$curRewardNameEncrypted' style='display: none;'>"
                                             ."<button type='submit' name='doneButton' id='doneButton' class='confirmRedeem' title='Redeem'>"
                                             ."Redeem?"
@@ -221,7 +220,7 @@ if(isset($_GET['delete'])) {
                                         .$curRewardRedeemDate
                                         ."</td>"
                                         ."<td>"
-                                        ."<a href=\"AddReward.php?adminToken=$adminUsernameEncrypted&userToken=$userUsernameEncrypted&delete=$curRewardId\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>"
+                                        ."<a href=\"AddReward.php?adminToken=". Crypto::encrypt($adminUsername, true)."&userToken=". Crypto::encrypt($userUsername, true)."&delete=$curRewardId\" style='color: dimgrey;' class=\"confirmation\" title='Delete'>"
                                         ."<span class='glyphicon glyphicon-trash' style='font-size: 20px;'>"
                                         ."</span>"
                                         ."</a>"
@@ -325,7 +324,7 @@ if(isset($_GET['delete'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td align="left">
-                            <form enctype="multipart/form-data" action="AddReward.php?adminToken=<?php echo $adminUsernameEncrypted; ?>&userToken=<?php echo $userUsernameEncrypted; ?>" method="post">
+                            <form enctype="multipart/form-data" action="AddReward.php?adminToken=<?php echo Crypto::encrypt($adminUsername, true); ?>&userToken=<?php echo Crypto::encrypt($userUsername, true); ?>" method="post">
                                 <input type="text" name="rewardName" placeholder="Reward Name...">
                                 <br><br>
                                 <input type="number" name="numOfPoints" placeholder="Points Required...">

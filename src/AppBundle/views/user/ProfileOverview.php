@@ -6,7 +6,7 @@ $dbcomm = new dbcomm();
 
 if(!isset($_GET['adminToken']))
 {
-    die("Error: The id was not set.");
+    die("Error: The admin token was not set.");
 }
 
 $adminUsernameEncrypted = $_GET['adminToken'];
@@ -389,7 +389,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td>
-                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $adminUsernameEncrypted; ?>" method="post">
+                            <form enctype="multipart/form-data" action="ProfileOverview.php?adminToken=<?php echo Crypto::encrypt($adminUsername, true); ?>" method="post">
                                 <input style="line-height: 1em;" type="file" name="image" accept="image/*">
                                 <br>
                                 <input type="submit" name="Submit1" class="btn btn-default">
@@ -414,7 +414,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td>
-                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $adminUsernameEncrypted; ?>" method="post">
+                            <form enctype="multipart/form-data" action="ProfileOverview.php?adminToken=<?php echo Crypto::encrypt($adminUsername, true); ?>" method="post">
                                 <input style="line-height: 1em;" type="email" name="email" value="" placeholder="New Email...">
                                 &nbsp;&nbsp;&nbsp;
                                 <input style="line-height: 1.5em;" type="submit" name="Submit2" class="btn btn-default">
@@ -439,7 +439,7 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 <table width="80%" align="center">
                     <tr>
                         <td>
-                            <form enctype="multipart/form-data" action="ProfileOverview.php?id=<?php echo $adminUsernameEncrypted; ?>" method="post">
+                            <form enctype="multipart/form-data" action="ProfileOverview.php?adminToken=<?php echo Crypto::encrypt($adminUsername, true); ?>" method="post">
                                 <input style="line-height: 1em;" type="text" name="phonenumber" value="" placeholder="New Phone Number..."
                                        onblur="$(this).val($(this).val().replace(/[^0-9.]/g, '')); if($(this).val().length >= 10){$(this).val('(' + $(this).val().substring(0,3) + ') ' + $(this).val().substring(3,6) + '-' + $(this).val().substring(6,10));}">
                                 &nbsp;&nbsp;&nbsp;
