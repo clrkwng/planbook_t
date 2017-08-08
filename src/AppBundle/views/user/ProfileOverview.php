@@ -184,27 +184,16 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-    <link rel="stylesheet" href="../../libs/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../css/form-elements.css">
-    <link rel="stylesheet" href="../../css/main-style.css">
+    <!-- Bootstrap Core CSS -->
+    <link href="../../libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">f
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]-->
-    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <!--[endif]-->
+    <!-- Theme CSS -->
+    <link href="../../css/start-bootstrap-template.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
-    <!-- Favicon and touch icons -->
-    <link rel="shortcut icon" href="../../resources/img/ico/favicon.png">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../resources/img/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../resources/img/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../resources/img/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="../../resources/img/ico/apple-touch-icon-57-precomposed.png">
-
+    <link rel="stylesheet" href="../../libs/w3-css/w3.css">
     <style>
         #profileImage {
             border-radius: 50%;
@@ -256,10 +245,8 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
     <!-- /.container-fluid -->
 </nav>
 <!-- Top content -->
-<div class="top-content">
-
-    <div class="inner-bg">
-        <div class="container">
+<section id="manage-profile">
+    <div class="container">
             <div class="row">
                 <h1 align="left">
                     <font color="#696969"><strong>Profile Overview</strong></font>
@@ -334,23 +321,64 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
                 </div>
             </div>
         </div>
-    </div>
+</section>
 
+<!-- Footer -->
+<footer class="text-center">
+    <div class="footer-above">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col col-md-4">
+                    <h3>Location</h3>
+                    <p>400 Cedar Ave
+                        <br>West Long Branch, NJ 07764</p>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>Around the Web</h3>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Facebook</span><i class="fa fa-fw fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Google Plus</span><i class="fa fa-fw fa-google-plus"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Twitter</span><i class="fa fa-fw fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Linked In</span><i class="fa fa-fw fa-linkedin"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Dribble</span><i class="fa fa-fw fa-dribbble"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>About Planbook</h3>
+                    <p>Planbook is a free to use tool to help keep lives organized.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-below">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    Copyright &copy; Planbook 2017
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
 </div>
 
-
-<!-- Javascript -->
-<script src="../../libs/jquery/dist/jquery.min.js"></script>
-<script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
-<script src="../../scripts/jquery/scripts.js"></script>
-
-<!--[if lt IE 10]-->
-<script src="../../scripts/jquery/placeholder.js"></script>
-<!--[endif]-->
-
-</body>
-
+<!--------------------- Modals --------------------->
 <div class="modal fade" id="profileImageModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -376,7 +404,6 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="changeEmailModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -402,7 +429,6 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="changePhoneNumberModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -429,5 +455,25 @@ if (isset($_POST['Submit3']) and isset($_POST['phonenumber'])) {
         </div>
     </div>
 </div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//use.fontawesome.com/7d70b9fab6.js"></script>
+<script src="../../libs/jquery/dist/jquery.min.js"></script>
+<script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]-->
+<script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
+<script src="../../libs/vendor/respond.min.js"></script>
+<!--[endif]-->
+<!-- Theme JavaScript -->
+<script src="../../libs/freelancer/dist/freelancer.js"></script>
+
+</body>
+
+
 
 </html>
