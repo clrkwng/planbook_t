@@ -643,30 +643,13 @@ if(isset($_GET['completeTaskID'])) {
             <table align="center" width="100%" style="height: 100%;">
                 <tr style="height:25%">
                     <td rowspan="6" valign="center" width="20%" id="exchangeSystem">
-                        <h3><u>Exchange System</u></h3>
-                        <br>
-                        <p>Points</p>
-                        <p style="transform: rotate(90deg); font-size: 25px;">➜</p>
-                        <p>Bronze Stars</p>
-                        <p style="transform: rotate(90deg); font-size: 25px;">➜</p>
-                        <p>Silver Stars</p>
-                        <p style="transform: rotate(90deg); font-size: 25px;">➜</p>
-                        <p>Gold Stars</p>
-                        <p style="transform: rotate(90deg); font-size: 25px;">➜</p>
-                        <p>Bronze Trophies</p>
-                        <p style="transform: rotate(90deg); font-size: 25px;">➜</p>
-                        <p>Silver Trophies</p>
-                        <p style="transform: rotate(90deg); font-size: 25px;">➜</p>
-                        <p>Gold Trophies</p>
                         <div align="left" style="position: relative; top: 55px; left: 20px;">
                             <button type="button" class="glyphicon glyphicon-question-sign" data-toggle="modal" data-target="#infoAwardsModal" style="font-size:32px; appearance: none; -webkit-appearance: none; -moz-appearance: none; outline: none;border: 0; background: transparent">
                             </button>
                         </div>
                     </td>
                     <td rowspan="5" width="5%"></td>
-                    <td colspan="3" valign="bottom">
-                        <h1>Awards</h1>
-                    </td>
+
                     <td>
                         <h3 style="color: dimgrey; font-size: 30px; text-align: left;">
                             Total points: <?php echo $dbConn->getUserTotalPointsByUsername($username); ?></h3>
@@ -683,17 +666,6 @@ if(isset($_GET['completeTaskID'])) {
                         <img src="<?php echo $dbConn->getGoldStarImageSource(); ?>" width="150" height="150">
                     </td>
                     <td width="15%" rowspan="3" align="right" style="vertical-align: middle">
-                        <div class="toMarket" id="toMarket1">R</div>
-                        <div class="toMarket" id="toMarket2">E</div>
-                        <div class="toMarket" id="toMarket3">D</div>
-                        <div class="toMarket" id="toMarket4">E</div>
-                        <div class="toMarket" id="toMarket5">E</div>
-                        <div class="toMarket" id="toMarket6">M</div>
-                        <div class="toMarket" id="toMarket7">P</div>
-                        <div class="toMarket" id="toMarket8">R</div>
-                        <div class="toMarket" id="toMarket9">I</div>
-                        <div class="toMarket" id="toMarket10">Z</div>
-                        <div class="toMarket" id="toMarket11">E</div>
                         <div style="height: 30px;"></div>
                         <?php
                         $encryptedMarketUsername = Crypto::encrypt($username, true);

@@ -118,17 +118,6 @@ if (isset($_GET['rewardName'])) {
                 <table width="100%" style="height: 100%; text-align: center;">
                     <tr>
                         <td width="15%" height="71%">
-                            <div class="toAwards" id="toAwards1">T</div>
-                            <div class="toAwards" id="toAwards2">O</div>
-                            <div class="toAwards" id="toAwards3">T</div>
-                            <div class="toAwards" id="toAwards4">H</div>
-                            <div class="toAwards" id="toAwards5">E</div>
-                            <div class="toAwards" id="toAwards6">A</div>
-                            <div class="toAwards" id="toAwards7">W</div>
-                            <div class="toAwards" id="toAwards8">A</div>
-                            <div class="toAwards" id="toAwards9">R</div>
-                            <div class="toAwards" id="toAwards10">D</div>
-                            <div class="toAwards" id="toAwards11">S</div>
                             <div style="height:30px;"></div>
 
                             <button onclick="window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true) ?>#3rdPage'" class="w3-button w3-circle w3-teal" style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;</button>
