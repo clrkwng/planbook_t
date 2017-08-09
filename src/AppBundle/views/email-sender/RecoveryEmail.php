@@ -1,6 +1,6 @@
 <?php
-require_once "../../scripts/dbcomm.php";
-require_once "../../scripts/Crypto.php";
+require_once "../db/dbcomm.php";
+require_once "../db/Crypto.php";
 
 //create db connection
 $dbcomm = new dbcomm();

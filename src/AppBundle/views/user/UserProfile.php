@@ -2,51 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <!--  This file has been downloaded from bootdey.com    @bootdey on twitter -->
-    <!--  All snippets are MIT license http://bootdey.com/license -->
-    <title>Edit profile page - Bootdey.com</title>
+    <title>Edit profile page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- Theme CSS -->
+    <link href="../../css/start-bootstrap-template.css" rel="stylesheet">
+    <!-- Custom CSS -->
     <link href="../../libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/user/user-profile.css" rel="stylesheet" type="text/css">
 
-</head>
-<body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="../index.html">Planbook</a></li>
-            </ul>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="glyphicon glyphicon-user"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="UserProfile.php">Profile</a></li>
-                    <li><a href="#">Group Settings</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="../auth/Login.php">Log out</a></li>
-                </ul>
-            </div>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container bootstrap snippets">
+    <!-- Custom Fonts -->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <div class="starter-template">
-        <h1>Profile Settings</h1>
+</head>
+<body id="page-top" class="index">
+
+<!-- Navigation -->
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="#page-top">Planbook</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a href ="../user/UserProfile.php">Profile</a>
+                </li>
+                <li class="page-scroll">
+                    <a href="#profile-settings">Profile Settings</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="../auth/Login.php">Log out</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
-    <br>
+    <!-- /.container-fluid -->
+</nav>
+
+<!-- Header -->
+<header>
+    <div class="container" id="maincontent" tabindex="-1">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-text">
+                    <h1 class="name">Profile Settings</h1>
+                    <hr class="star-light">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section id="profile-settings">
+    <div class="container">
+
     <div class="row">
         <div class="col-xs-12 col-sm-9">
             <form class="form-horizontal">
@@ -123,8 +146,81 @@
         </div>
     </div>
 </div>
+</section>
+<!-- Footer -->
+<footer class="text-center">
+    <div class="footer-above">
+        <div class="container">
+            <div class="row">
+                <div class="footer-col col-md-4">
+                    <h3>Location</h3>
+                    <p>400 Cedar Ave
+                        <br>West Long Branch, NJ 07764</p>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>Around the Web</h3>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Facebook</span><i class="fa fa-fw fa-facebook"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Google Plus</span><i class="fa fa-fw fa-google-plus"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Twitter</span><i class="fa fa-fw fa-twitter"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Linked In</span><i class="fa fa-fw fa-linkedin"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="btn-social btn-outline"><span class="sr-only">Dribble</span><i class="fa fa-fw fa-dribbble"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-col col-md-4">
+                    <h3>About Planbook</h3>
+                    <p>Planbook is a free to use tool to help keep lives organized.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-below">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    Copyright &copy; Planbook 2017
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+<div class="scroll-top page-scroll hidden-sm hidden-xs hidden-lg hidden-md">
+    <a class="btn btn-primary" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+</div>
 
-<script src="../../libs/bootstrap/dist/js/bootstrap.min.js" type="text/javascript" ></script>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]-->
+<script src="../../libs/html5shiv/dist/html5shiv.min.js"></script>
+<script src="../../libs/vendor/respond.min.js"></script>
+
+<!-- jQuery -->
+<script src="../../libs/jquery/dist/jquery.min.js"></script>
+<script src="../../libs/jquery-backstretch/jquery.backstretch.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../libs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="../../libs/jquery-easing/jquery.easing.min.js"></script>
+<!-- Theme JavaScript -->
+<script src="../../libs/freelancer/dist/freelancer.js"></script>
+
+<!-- Fonts -->
+<script src="//use.fontawesome.com/7d70b9fab6.js"></script>
 
 
 </body>
