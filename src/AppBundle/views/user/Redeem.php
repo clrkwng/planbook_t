@@ -4,11 +4,11 @@
 require_once "../db/dbcomm.php";
 require_once "../db/Crypto.php";
 
-if(!isset($_GET['id'])){
-    die("Error: The id was not set.");
+if(!isset($_GET['userToken'])){
+    die("Error: The user token was not set.");
 }
 
-$usernameEncrypted = $_GET['id'];
+$usernameEncrypted = $_GET['userToken'];
 $username = Crypto::decrypt($usernameEncrypted);
 
 $dbcomm = new dbcomm();
@@ -123,26 +123,28 @@ if (isset($_GET['rewardName'])) {
                             <button onclick="window.location='Homepage.php?userToken=<?php echo Crypto::encrypt($username, true) ?>#3rdPage'" class="w3-button w3-circle w3-teal" style="transform: translateX(-50%) rotate(180deg); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;</button>
                         </td>
                         <td rowspan="2" valign="top" style="overflow-y: auto;">
-                            <br><br>
+                            <br>
+                            <br>
 
                             <?php
                             $rewardList = $dbcomm->getAllRewardsByUsername($username);
                             if(count($rewardList) > 0) {
-                                echo "<table id='rewardsTable' border='1px solid black'>" .
-                                    "<tr id='tableHeader'>" .
-                                    "<td width='50%'>" .
-                                    "<p>Reward</p>" .
-                                    "</td>" .
-                                    "<td width='20%'>" .
-                                    "<p>Points</p>" .
-                                    "</td>" .
-                                    "<td width='15%'>" .
-                                    "<p>Status</p>" .
-                                    "</td>" .
-                                    "<td width='15%'>" .
-                                    "<p>Date</p>" .
-                                    "</td>" .
-                                    "</tr>";
+                                echo
+                                    '<table id="rewardsTable" border="1px solid black">'
+                                        .'<tr id="tableHeader">'
+                                            .'<td width="50%">'
+                                                .'<p>Reward</p>'
+                                            .'</td>'
+                                            .'<td width="20%">'
+                                                .'<p>Points</p>'
+                                            .'</td>'
+                                            .'<td width="15%">'
+                                                .'<p>Status</p>'
+                                            .'</td>'
+                                            .'<td width="15%">'
+                                                .'<p>Date</p>'
+                                            .'</td>'
+                                        .'</tr>';
 
                                 $userCounter = 0;
                                 foreach ($rewardList as $curRewardId => $curRewardVals) {
@@ -155,31 +157,45 @@ if (isset($_GET['rewardName'])) {
                                         $curRewardRedeemDate = "---";
                                     }
 
-                                    echo "<tr style='height: 40px;'>
-                                <td>$curRewardName</td>
-                                <td>$curRewardPoints</td>";
+                                    echo
+                                        '<tr style="height: 40px;">'
+                                            .'<td>'
+                                                .$curRewardName
+                                            .'</td>'
+                                            .'<td>'
+                                                .$curRewardPoints
+                                            .'</td>';
 
                                     if ($curRewardCompleted == 1) {
-                                        echo "<td>
-                                <span class='glyphicon glyphicon-ok' style='font-size: 25px; color: green;'></span>
-                              </td>";
+                                        echo
+                                            '<td>'
+                                                .'<span class="glyphicon glyphicon-ok" style="font-size: 25px; color: green;">'.'</span>'
+                                            .'</td>';
                                     } else {
                                         $curRewardNameEncrypted = Crypto::encrypt($curRewardName, true);
-                                        echo "<td>
-                                    <a href='Redeem.php?id=$usernameEncrypted&rewardName=$curRewardNameEncrypted'>
-                                        <button type='button' id='doneButton' class='confirmRedeem' title='Redeem'>Redeem?</button>
-                                    </a>
-                              </td>";
+                                        echo
+                                            '<td>'
+                                                .'<a href="Redeem.php?userToken=$usernameEncrypted&rewardName=$curRewardNameEncrypted">'
+                                                    .'<button type="button" id="doneButton" class="confirmRedeem" title="Redeem">Redeem?</button>'
+                                                .'</a>'
+                                            .'</td>';
                                     }
-                                    echo "      <td>$curRewardRedeemDate</td>
-                          </tr>";
+                                    echo
+                                            '<td>'
+                                                .$curRewardRedeemDate
+                                            .'</td>'
+                                        .'</tr>';
                                 }
 
-                                echo "</table>";
+                                echo
+                                    '</table>';
                             }
                             else {
-                                echo "<br><br><br>";
-                                echo "<h2>Your admin has not set any awards for you yet.</h2>";
+                                echo
+                                    '<br>'
+                                    .'<br>'
+                                    .'<br>'
+                                    .'<h2>Your admin has not set any awards for you yet.</h2>';
                             }
 
                             ?>

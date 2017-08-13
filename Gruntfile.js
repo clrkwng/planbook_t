@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
 
     var isApple = false; //This flag needs to be set based on the dev environment's base OS
+    var xamppDir = "C:/Users/andrew.parise/Projects/3rdParty/xampp";
     var target;
     if(isApple){
         target = grunt.option('target') || 'devApple';
@@ -27,7 +28,7 @@ module.exports = function (grunt) {
                 'bin/*'
             ],
             devWindows: [
-                'C:/xampp/htdocs/planbook/*'
+                xamppDir + '/htdocs/planbook/*'
             ],
             devApple: [
                 //insert Apple unique paths to clean here
@@ -169,7 +170,7 @@ module.exports = function (grunt) {
                        expand: true,
                        cwd: 'bin',
                        src: ['**'],
-                       dest: 'C:/xampp/htdocs/planbook/'
+                       dest: xamppDir + '/htdocs/planbook/'
                    }
                ]
             },

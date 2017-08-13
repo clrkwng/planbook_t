@@ -30,17 +30,17 @@ if (isset($_POST['submitCredentials'])) {
                }
            }
             $type = $dbcomm->getTypeNameByUsername($_POST['username']);
-            $encryptedUsername = Crypto::encrypt($username, true);
+            $usernameEncrypted = Crypto::encrypt($username, true);
 
             if($type == "Admin") {
-                echo "<script>window.location = '../admin/AdminPanel.php?adminToken=$encryptedUsername'</script>";
+                echo "<script>window.location = '../admin/AdminPanel.php?adminToken=$usernameEncrypted'</script>";
             }
             elseif($type == "User") {
-                echo "<script>window.location = '../user/Homepage.php?userToken=$encryptedUsername'</script>";
+                echo "<script>window.location = '../user/Homepage.php?userToken=$usernameEncrypted'</script>";
             }
         }
         else {
-            $encryptedUsername = Crypto::encrypt($username, true);
+            $usernameEncrypted = Crypto::encrypt($username, true);
 
             $alertMessage =
                 '<div class="alert alert-danger alert-dismissible" role="alert">'
@@ -53,7 +53,7 @@ if (isset($_POST['submitCredentials'])) {
                     .'<span>'
                         .'Please verify your account.\n'
                     .'</span>'
-                    .'<a href="../email-sender/AccountVerificationSender.php?id=$encryptedUsername">'
+                    .'<a href="../email-sender/AccountVerificationSender.php?adminToken='.$usernameEncrypted.'">'
                         .'Click here'
                     .'</a>'
                     .'<span>'

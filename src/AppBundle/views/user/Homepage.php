@@ -667,10 +667,8 @@ if(isset($_GET['completeTaskID'])) {
                     </td>
                     <td width="15%" rowspan="3" align="right" style="vertical-align: middle">
                         <div style="height: 30px;"></div>
-                        <?php
-                        $encryptedMarketUsername = Crypto::encrypt($username, true);
-                        ?>
-                        <button onclick="window.location='Redeem.php?id=<?php echo $encryptedMarketUsername ?>';"
+
+                        <button onclick="window.location='Redeem.php?userToken=<?php echo Crypto::encrypt($username, true) ?>';"
                                 class="w3-button w3-circle w3-teal"
                                 style="transform: translateX(50%); width: 190px; height: 180px; font-size: 75px;">➜&nbsp;&nbsp;&nbsp;
                         </button>

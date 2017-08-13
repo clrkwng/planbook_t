@@ -5,11 +5,11 @@ require_once "../db/Crypto.php";
 //create db connection
 $dbcomm = new dbcomm();
 
-if(!isset($_GET['id'])) {
-    die("Error: The id was not set.");
+if(!isset($_GET['userToken'])) {
+    die("Error: The user token was not set.");
 }
-$encryptedUsername = $_GET['id'];
-$username = Crypto::decrypt($encryptedUsername, true);
+$usernameEncrypted = $_GET['userToken'];
+$username = Crypto::decrypt($usernameEncrypted, true);
 
 if(isset($_POST['Submit'])) {
     $errorCount = 0;

@@ -10,11 +10,11 @@ $dbcomm = new dbcomm();
 $errorCount = 0;
 
 if(isset($_POST['signup-password'])) {
-    $password = filter_var($_POST['signup-password'], FILTER_SANITIZE_STRING);
-    $uppercase = preg_match('@[A-Z]@', $password);
-    $lowercase = preg_match('@[a-z]@', $password);
-    $number = preg_match('@[0-9]@', $password);
-    if (!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
+    $adminPassword = filter_var($_POST['signup-password'], FILTER_SANITIZE_STRING);
+    $uppercase = preg_match('@[A-Z]@', $adminPassword);
+    $lowercase = preg_match('@[a-z]@', $adminPassword);
+    $number = preg_match('@[0-9]@', $adminPassword);
+    if (!$uppercase || !$lowercase || !$number || strlen($adminPassword) < 8) {
         $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
@@ -98,10 +98,10 @@ if(isset($_POST["signup-email"])){
 
 if ($errorCount == 0 && isset($_POST['signup-password'])) {
     $accountName = $_POST['signup-accountName'];
-    $username = $_POST['signup-username'];
-    $password = sha1($_POST['signup-password']);
-    $email = $_POST['signup-email'];
-    $phonenumber = preg_replace('/\D+/', '', $_POST['signup-phonenumber']);
+    $adminUsername = $_POST['signup-username'];
+    $adminPassword = sha1($_POST['signup-password']);
+    $adminEmail = $_POST['signup-email'];
+    $adminPhoneNumber = preg_replace('/\D+/', '', $_POST['signup-phonenumber']);
 
     if($dbcomm->checkIfAccountNameExists($accountName)) {
         $errorCount++;
@@ -118,7 +118,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
                 .'</span>'
             .'</div>';
     }
-    if($dbcomm->checkIfUsernameExists($username)) {
+    if($dbcomm->checkIfUsernameExists($adminUsername)) {
         $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
@@ -133,7 +133,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
                 .'</span>'
             .'</div>';
     }
-    if($dbcomm->checkIfPhonenumberExists($phonenumber)) {
+    if($dbcomm->checkIfPhonenumberExists($adminPhoneNumber)) {
         $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
@@ -148,7 +148,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
                 .'</span>'
             .'</div>';
     }
-    if($dbcomm->checkIfEmailExists($email)) {
+    if($dbcomm->checkIfEmailExists($adminEmail)) {
         $errorCount++;
         $alertMessage =
             '<div class="alert alert-danger alert-dismissible" role="alert">'
@@ -164,13 +164,13 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
             .'</div>';
     }
     if ($errorCount == 0) {
-        $dbcomm->createNewAdmin($accountName, $username, $password, $email, $phonenumber);
-        $encryptedUsername = Crypto::encrypt($username, true);
+        $dbcomm->createNewAdmin($accountName, $adminUsername, $adminPassword, $adminEmail, $adminPhoneNumber);
+        $adminUsernameEncrypted = Crypto::encrypt($adminUsername, true);
 
         echo
             "<script>"
-                ."window.location ='../email-sender/AccountVerificationSender.php?id="
-                    .$encryptedUsername
+                ."window.location ='../email-sender/AccountVerificationSender.php?adminToken="
+                    .$adminUsernameEncrypted
                     ."';"
             ."</script>";
     }

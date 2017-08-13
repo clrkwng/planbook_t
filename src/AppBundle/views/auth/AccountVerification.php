@@ -5,14 +5,14 @@
     //create db connection
     $dbcomm = new dbcomm();
 
-    if(!isset($_GET['id'])) {
-        die("Error: The id was not set.");
+    if(!isset($_GET['adminToken'])) {
+        die("Error: The admin token was not set.");
     }
-    $encryptedUsername = $_GET['id'];
-    $username = Crypto::decrypt($encryptedUsername, true);
+    $adminUsernameEncrypted = $_GET['adminToken'];
+    $adminUsername = Crypto::decrypt($adminUsernameEncrypted, true);
 
-    if($dbcomm->checkIfUsernameExists($username)){
-        $dbcomm->verifyAccountByUsername($username);
+    if($dbcomm->checkIfUsernameExists($adminUsername)){
+        $dbcomm->verifyAccountByUsername($adminUsername);
     }
 
 

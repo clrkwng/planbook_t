@@ -27,7 +27,7 @@ if (isset($_POST['Submit'])){
                             ."<br>"
                             ."<br>"
                             ."<a "
-                                ."href='./auth/PasswordReset.php?id="
+                                ."href='./auth/PasswordReset.php?userToken="
                                 .$encryptedUsername
                             ."'>"
                                 ."Reset Password".

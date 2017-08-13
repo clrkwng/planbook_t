@@ -275,7 +275,7 @@ if(isset($_GET['delete'])) //delete the user
     for (var i = 0; i < clickUsers.length; i++) {
         clickUsers[i].addEventListener('click', function() {
             var userNum = Number((this.id).substring(9));
-            window.location = '../user/ProfileOverview.php?id=' + accountUsernames[userNum];
+            window.location = '../user/ProfileOverview.php?userToken=' + accountUsernames[userNum];
         }, false);
     }
 </script>

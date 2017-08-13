@@ -6,26 +6,26 @@ require_once "../db/Crypto.php";
 //create db connection
 $dbcomm = new dbcomm();
 
-if(!isset($_GET['id'])) {
-    die("Error: The id was not set.");
+if(!isset($_GET['adminToken'])) {
+    die("Error: The admin token was not set.");
 }
-$encryptedUsername = $_GET['id'];
-$username = Crypto::decrypt($encryptedUsername, true);
-$email = $dbcomm->getEmailByUsername($username);
+$adminUsernameEncrypted = $_GET['adminToken'];
+$adminUsername = Crypto::decrypt($adminUsernameEncrypted, true);
+$adminEmail = $dbcomm->getEmailByUsername($adminUsername);
 
-if ($dbcomm->checkIfEmailExists($email)) {
+if ($dbcomm->checkIfEmailExists($adminEmail)) {
     $headers = "From: noreply@planbook.xyz" . "\r\n";
     $headers .= "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $message = "<html><body><div>Hello,<br><br>
         Click on the following link to verify your Planbook account.<br><br>
-        <a href='http://dev1.planbook.xyz/Bitbucket/bin/modules/auth/AccountVerification.php?id=$encryptedUsername'>Verify Account</a><br><br>
+        <a href='http://dev1.planbook.xyz/Bitbucket/bin/modules/auth/AccountVerification.php?adminToken=$adminUsernameEncrypted'>Verify Account</a><br><br>
         Please ignore this email if you did not create a Planbook account.<br><br>
         As always, thanks for using Planbook!<br><br>
         Planbook Services<br>
         <a href='http://dev1.planbook.xyz/Bitbucket/bin/modules/index.html'>www.planbook.com</a>
         </div></body></html>";
-    mail($email, "Planbook Verification Email", $message, $headers);
+    mail($adminEmail, "Planbook Verification Email", $message, $headers);
 }
 
 
@@ -100,7 +100,7 @@ if ($dbcomm->checkIfEmailExists($email)) {
                         <font color="White"> Your verification email has been sent. Please check your inbox.</font>
                     </h4>
                     <p class="description">
-                        <a href = "AccountVerificationSender.php?id=<?php echo $encryptedUsername ?>">Resend email?</a>
+                        <a href = "AccountVerificationSender.php?adminToken=<?php echo Crypto::encrypt($adminUsername, true) ?>">Resend email?</a>
                     </p>
                 </div>
                 <br><br><br><br>
