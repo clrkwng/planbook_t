@@ -379,18 +379,13 @@ class dbcomm
         return mysqli_fetch_array($this->doQuery($query))['account_id'];
     }
 
-    function getUserIDFromUsername($username, $isCallback = false)
+    function getUserIDFromUsername($username)
     {
         $query = "SELECT `id` FROM `User` WHERE `username`='$username';";
         $result = mysqli_fetch_array($this->doQuery($query))['id'];
-        if(count($result) < 1 && !$isCallback) {
-            //if it fails to find a username, then the passed in string may be encrypted
-            $decryptedUsername = Crypto::decrypt($username);
-            return $this->getUserIDFromUsername($decryptedUsername, true);
-        }
-        else {
-            return $result;
-        }
+
+        return $result;
+
     }
 
     function getUserPhoneNumberByUserId($userId)
@@ -410,7 +405,7 @@ class dbcomm
 
     function checkIfAccountNameExists($accountName)
     {
-        $query = "SELECT `id` FROM `Account` WHERE `name`='$accountName';";
+        $query = "SELECT `id` FROM `Organization` WHERE `name`='$accountName';";
         $result = $this->doQuery($query);
 
         $SQLdataarray = mysqli_fetch_array($result);
@@ -424,11 +419,9 @@ class dbcomm
 
     function checkIfUsernameExists($username)
     {
-        $query = $this->getUserIDFromUsername($username);
-        $result = $this->doQuery($query);
+        $userId = $this->getUserIDFromUsername($username);
 
-        $SQLdataarray = mysqli_fetch_array($result);
-        if(count($SQLdataarray) < 1) {
+        if(count($userId) < 1) {
             return FALSE;
         }
         else {
@@ -467,16 +460,16 @@ class dbcomm
 
     function createNewAdmin($accountName, $username, $password, $email, $phoneNumber)
     {
-        //Register forest in Account DB
+        //Register forest in Organization DB
         $query =
-            "INSERT INTO  `Account` "
+            "INSERT INTO  `Organization` "
                 ."(`name`, `password`, `email`, `phone_number`) "
             ."VALUES "
                 ."('$accountName', '$password', '$email', '$phoneNumber');";
         $this->doQuery($query);
 
         //Fetch the corresponding Id for the newly created record
-        $query = "SELECT `id` FROM `Account` WHERE `name`='$accountName'";
+        $query = "SELECT `id` FROM `Organization` WHERE `name`='$accountName'";
         $accountID = mysqli_fetch_array($this->doQuery($query))['id'];
 
         //Fetch the Type.id corresponding to the "Admin" role
@@ -615,7 +608,7 @@ class dbcomm
 
     function verifyAccountByAccountID($accountID)
     {
-        $query = "UPDATE `Account` SET `verified`='1' WHERE `id`='$accountID'";
+        $query = "UPDATE `Organization` SET `verified`='1' WHERE `id`='$accountID'";
         return $this->doQuery($query);
     }
 
@@ -640,7 +633,7 @@ class dbcomm
     function isAccountVerified($username)
     {
         $accountID = $this->getAccountIDByUsername($username);
-        $query = "SELECT `verified` FROM `Account` WHERE `id`='$accountID'";
+        $query = "SELECT `verified` FROM `Organization` WHERE `id`='$accountID'";
         $verified  = mysqli_fetch_array($this->doQuery($query))['verified'];
         if ($verified > 0){
             return True;
@@ -711,7 +704,7 @@ class dbcomm
 
     function getAccountNameByUsername($username) {
         $accountID = $this->getAccountIDByUsername($username);
-        $query = "SELECT `name` FROM `Account` WHERE `id`='$accountID'";
+        $query = "SELECT `name` FROM `Organization` WHERE `id`='$accountID'";
         return mysqli_fetch_array($this->doQuery($query))['name'];
     }
 
@@ -740,7 +733,7 @@ class dbcomm
             $userUsername = $row['username'];
             $this->deleteUserByUsername($userUsername);
         }
-        $query = "DELETE FROM `Account` WHERE `id` = '$accountID'";
+        $query = "DELETE FROM `Organization` WHERE `id` = '$accountID'";
         $this->doQuery($query);
     }
 

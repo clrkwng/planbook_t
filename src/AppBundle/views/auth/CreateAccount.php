@@ -114,7 +114,7 @@ if ($errorCount == 0 && isset($_POST['signup-password'])) {
                     .'Error: '
                 .'</strong>'
                 .'<span>'
-                    .'Account name is already in use.'
+                    .'Organization name is already in use.'
                 .'</span>'
             .'</div>';
     }

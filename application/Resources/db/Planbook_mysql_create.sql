@@ -8,12 +8,12 @@ CREATE TABLE `Account` (
 	`name` varchar(255),
 	`email` varchar(255),
 	`phone_number` varchar(255),
-	`verified` bit DEFAULT 0,
+	`verified` TINYINT(1) DEFAULT 0,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `Theme` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `color1` varchar(7) DEFAULT '',
   `color2` varchar(7) DEFAULT '',
   `user_id` int NOT NULL,
@@ -22,7 +22,8 @@ CREATE TABLE `Theme` (
   `color5` varchar(7) DEFAULT '',
   `color6` varchar(7) DEFAULT '',
   `color7` varchar(7) DEFAULT '',
-  `color8` varchar(7) DEFAULT ''
+  `color8` varchar(7) DEFAULT '',
+  PRIMARY KEY (`id`)
 );
 
 CREATE TABLE `User` (
@@ -77,7 +78,7 @@ CREATE TABLE `Priority` (
 );
 
 CREATE TABLE `Date` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int,
   `date` varchar(10) DEFAULT '',
   PRIMARY KEY (`id`)

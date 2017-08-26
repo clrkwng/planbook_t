@@ -1,0 +1,66 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: Andrew.Parise
+ * Date: 8/25/2017
+ * Time: 8:54 PM
+ */
+
+namespace AppBundle\ORM\Entity;
+
+/**
+ * @Entity @Table(name="priority")
+ **/
+class Priority
+{
+    /**
+     * @var int
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue
+     */
+    protected $id;
+
+    /**
+     * @var string
+     * @Column(type="string")
+     */
+    protected $name;
+
+    /**
+     * @var int
+     * @Id
+     * @Column(type="integer")
+     *
+     *  Allows for the organization to define their own custom priorities with associated values
+     *
+     */
+    protected $organization_id;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+
+
+}
