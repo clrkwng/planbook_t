@@ -11,6 +11,9 @@ namespace AppBundle\ORM\Entity;
 
 /**
  * @Entity @Table(name="type")
+ *
+ * Role that a user has in the Realm
+ *
  **/
 class Type
 {

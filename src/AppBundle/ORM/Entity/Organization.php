@@ -10,6 +10,9 @@ namespace AppBundle\ORM;
 
 /**
  * @Entity @Table(name="organization")
+ *
+ * Realm (collection) of users
+ *
  **/
 class Organization
 {

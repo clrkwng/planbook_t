@@ -11,7 +11,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="theme")
  *
- *  Container for a collection of colors
+ *  Container of related colors
  *
  **/
 class Theme

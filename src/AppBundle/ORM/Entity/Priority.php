@@ -10,6 +10,9 @@ namespace AppBundle\ORM\Entity;
 
 /**
  * @Entity @Table(name="priority")
+ *
+ * Per tenant definitions of
+ *
  **/
 class Priority
 {
@@ -36,6 +39,15 @@ class Priority
      *
      */
     protected $organization_id;
+
+    /**
+     * @var int
+     * @Column(type="integer")
+     *
+     * How many points are given to the user upon completion of the task
+     *
+     */
+    protected $completion_points;
 
     /**
      * @return int

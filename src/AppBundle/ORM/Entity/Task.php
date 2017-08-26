@@ -10,6 +10,9 @@ namespace AppBundle\ORM\Entity;
 
 /**
  * @Entity @Table(name="task")
+ *
+ * Base definition for a task
+ *
  **/
 class Task
 {

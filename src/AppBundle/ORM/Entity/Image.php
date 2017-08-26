@@ -10,6 +10,9 @@ namespace AppBundle\ORM\Entity;
 
 /**
  * @Entity @Table(name="image")
+ *
+ * Per tenant container of uploaded images
+ *
  **/
 class Image
 {

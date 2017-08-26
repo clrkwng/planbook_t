@@ -10,6 +10,9 @@ namespace AppBundle\ORM\Entity;
 
 /**
  * @Entity @Table(name="trophy")
+ *
+ * Per tenant definitions of trophies that are earned by a user completing tasks
+ *
  **/
 class Trophy
 {

@@ -10,6 +10,9 @@ namespace AppBundle\ORM\Entity;
 
 /**
  * @Entity @Table(name="sys_config")
+ *
+ * Global configurations for the deployment environment
+ *
  **/
 class Sys_Config
 {
@@ -36,14 +39,38 @@ class Sys_Config
     /**
      * @var string
      * @Column(type="string")
+     *
+     * Timestamp for when this record was created
+     *
      */
-    protected $set_time;
+    protected $created_time;
 
     /**
      * @var string
      * @Column(type="string")
+     *
+     * Timestamp for when this record was last updated
+     *
      */
-    protected $set_by;
+    protected $updated_time;
+
+    /**
+     * @var string
+     * @Column(type="string")
+     *
+     * User that last updated this record
+     *
+     */
+    protected $updated_by;
+
+    /**
+     * @var string
+     * @Column(type="string")
+     *
+     * User that initially created this record
+     *
+     */
+    protected $created_by;
 
     /**
      * @return int

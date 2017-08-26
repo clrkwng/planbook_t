@@ -10,6 +10,9 @@ namespace AppBundle\ORM\Entity;
 
 /**
  * @Entity @Table(name="color")
+ *
+ * Basic definitions for colors
+ *
  **/
 class Color
 {
