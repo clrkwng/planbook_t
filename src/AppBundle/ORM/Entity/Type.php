@@ -40,20 +40,16 @@ class Type
     }
 
     /**
-     * @return string
+     * @var string
+     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Column(type="string")
+     *
+     * "ACTIVE"             = Type is active and can be used
+     * "DISABLED"           = Tenant has opted to turn off this role for their organization; Tenant can toggle back on
+     * "DELETED"            = Tenant has chosen to delete this role
+     *
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+    protected $state;
 
 
 }

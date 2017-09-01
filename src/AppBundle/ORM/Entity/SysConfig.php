@@ -14,7 +14,7 @@ namespace AppBundle\ORM\Entity;
  * Global configurations for the deployment environment
  *
  **/
-class Sys_Config
+class SysConfig
 {
     /**
      * @var int

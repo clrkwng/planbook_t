@@ -67,61 +67,24 @@ class Trophy
     protected $next_trophy;
 
     /**
+     * @var string
+     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Column(type="string")
+     *
+     * "ACTIVE"             = Trophy is active and can be awarded by Users
+     * "DISABLED"           = Tenant has opted to turn off this trophy for their organization; Tenant can toggle back on
+     * "DELETED"            = Tenant has chosen to delete this trophy
+     *
+     */
+    protected $state;
+
+    /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getImageId()
-    {
-        return $this->image_id;
-    }
-
-    /**
-     * @param int $image_id
-     */
-    public function setImageId($image_id)
-    {
-        $this->image_id = $image_id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param int $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-    }
-
 
 
 }

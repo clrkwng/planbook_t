@@ -11,7 +11,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="category")
  *
- * Container for similar tasks
+ * Container for similar tasks; defined on a per tenant basis
  *
  **/
 class Category
@@ -41,6 +41,16 @@ class Category
     protected $image_id;
 
     /**
+     * @var int
+     * @Id
+     * @Column(type="integer")
+     *
+     *  Realm that this category exists in
+     *
+     */
+    protected $organization_id;
+
+    /**
      * @return int
      */
     public function getId()
@@ -48,21 +58,6 @@ class Category
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
 
 
 }

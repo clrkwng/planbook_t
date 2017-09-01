@@ -39,20 +39,17 @@ class Theme
     }
 
     /**
-     * @return string
+     * @var string
+     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Column(type="string")
+     *
+     * "ACTIVE"             = Theme is active and can be chosen for use by Users
+     * "DISABLED"           = Admin has opted to turn off this Theme for their organization; Admin can toggle back on
+     * "DELETED"            = Admin has chosen to delete this theme entirely
+     *
      */
-    public function getName()
-    {
-        return $this->name;
-    }
+    protected $state;
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
 
 
 }

@@ -49,6 +49,15 @@ class User
     protected $password;
 
     /**
+     * @var string
+     * @Column(type="string")
+     *
+     * Generated UUID to uniquely link to this user
+     *
+     */
+    protected $uuid;
+
+    /**
      * @var int
      * @Id
      * @Column(type="integer")
@@ -124,6 +133,15 @@ class User
      *
      */
     protected $prize_points;
+
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
 
 

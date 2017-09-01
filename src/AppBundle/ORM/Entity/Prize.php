@@ -74,4 +74,12 @@ class Prize
      */
     protected $state;
 
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
 }

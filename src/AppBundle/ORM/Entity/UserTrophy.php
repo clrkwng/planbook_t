@@ -56,4 +56,13 @@ class UserTrophy
      *
      */
     protected $amount;
+
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

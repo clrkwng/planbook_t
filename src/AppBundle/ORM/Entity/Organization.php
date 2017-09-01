@@ -31,6 +31,15 @@ class Organization
     protected $name;
 
     /**
+     * @var string
+     * @Column(type="string")
+     *
+     * Generated UUID that can be used to link uniquely to a particular tenant
+     *
+     */
+    protected $uuid;
+
+    /**
      * @return int
      */
     public function getId()

@@ -45,37 +45,16 @@ class Color
     }
 
     /**
-     * @return string
+     * @var string
+     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Column(type="string")
+     *
+     * "ACTIVE"             = Color is active and available for use
+     * "DISABLED"           = Admin has opted to turn off access to this Color; Admin can toggle back on
+     * "DELETED"            = Admin has chosen to delete this Color entirely
+     *
      */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHexValue()
-    {
-        return $this->hex_value;
-    }
-
-    /**
-     * @param string $hex_value
-     */
-    public function setHexValue($hex_value)
-    {
-        $this->hex_value = $hex_value;
-    }
-
+    protected $state;
 
 
 }

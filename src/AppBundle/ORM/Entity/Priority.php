@@ -50,29 +50,24 @@ class Priority
     protected $completion_points;
 
     /**
+     * @var string
+     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Column(type="string")
+     *
+     * "ACTIVE"             = Priority is active and available for use
+     * "DISABLED"           = Admin has opted to turn off this Priority; Admin can toggle back on
+     * "DELETED"            = Admin has chosen to delete this Priority entirely
+     *
+     */
+    protected $state;
+
+    /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
 
 
 }
