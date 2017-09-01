@@ -31,14 +31,6 @@ class Theme
     protected $name;
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * @var string
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
@@ -49,6 +41,14 @@ class Theme
      *
      */
     protected $state;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
 
 
