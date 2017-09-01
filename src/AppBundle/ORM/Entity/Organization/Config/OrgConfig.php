@@ -7,12 +7,13 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use AppBundle\ORM\Organization;
 
 
 /**
  * @Entity @Table(name="org_config")
  *
- * Configurations for the deployment environment on a per tenant basis
+ * @label('Configurations for the deployment environment on a per tenant basis')
  *
  **/
 class OrgConfig
@@ -26,14 +27,14 @@ class OrgConfig
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Organization
      *
-     *  Allows for configurations to be set on a per tenant basis
+     * @Label('Allows for configurations to be set on a per tenant basis')
+     *
+     * @ManyToOne(targetEntity="Organization", inversedBy="orgConfigurations")
      *
      */
-    protected $organization_id;
+    protected $organization;
 
     /**
      * @var string
@@ -92,19 +93,19 @@ class OrgConfig
     }
 
     /**
-     * @return int
+     * @return Organization
      */
-    public function getOrganizationId()
+    public function getOrganization()
     {
-        return $this->organization_id;
+        return $this->organization;
     }
 
     /**
-     * @param int $organization_id
+     * @param Organization $organization
      */
-    public function setOrganizationId($organization_id)
+    public function setOrganizationId(Organization $organization)
     {
-        $this->organization_id = $organization_id;
+        $this->organization = $organization;
     }
 
     /**

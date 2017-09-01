@@ -7,6 +7,12 @@
  */
 
 namespace AppBundle\ORM;
+use AppBundle\ORM\Entity\Category;
+use AppBundle\ORM\Entity\Image;
+use AppBundle\ORM\Entity\OrgConfig;
+use AppBundle\ORM\Entity\Priority;
+use AppBundle\ORM\Entity\Trophy;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="organization")
@@ -25,6 +31,41 @@ class Organization
     protected $id;
 
     /**
+     * @OneToMany(targetEntity="Image", mappedBy="organization")
+     * @var Image[] An ArrayCollection of Image objects.
+     *
+     */
+    protected $images = null;
+
+    /**
+     * @OneToMany(targetEntity="OrgConfig", mappedBy="organization")
+     * @var OrgConfig[] An ArrayCollection of OrgConfig objects.
+     *
+     */
+    protected $orgConfigurations = null;
+
+    /**
+     * @OneToMany(targetEntity="Trophy", mappedBy="organization")
+     * @var Trophy[] An ArrayCollection of Trophy objects.
+     *
+     */
+    protected $trophies = null;
+
+    /**
+     * @OneToMany(targetEntity="Priority", mappedBy="organization")
+     * @var Priority[] An ArrayCollection of Priority objects.
+     *
+     */
+    protected $priorities = null;
+
+    /**
+     * @OneToMany(targetEntity="Category", mappedBy="organization")
+     * @var Category[] An ArrayCollection of Category objects.
+     *
+     */
+    protected $categories = null;
+
+    /**
      * @var string
      * @Column(type="string")
      */
@@ -38,6 +79,98 @@ class Organization
      *
      */
     protected $uuid;
+
+    /**
+     * Organization constructor.
+     */
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+        $this->orgConfigurations = new ArrayCollection();
+        $this->trophies = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->priorities = new ArrayCollection();
+    }
+
+    /**
+     * @param Image $image
+     */
+    public function addImage(Image $image)
+    {
+        $this->images[] = $image;
+    }
+
+    /**
+     * @return Image[]|ArrayCollection
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * @param Priority $priority
+     */
+    public function addPriority(Priority $priority)
+    {
+        $this->priorities[] = $priority;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getPriorities()
+    {
+        return $this->priorities;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function addCategory(Category $category)
+    {
+        $this->categories[] = $category;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param Trophy $trophy
+     */
+    public function addTrophy(Trophy $trophy)
+    {
+        $this->trophies[] = $trophy;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getTrophies()
+    {
+        return $this->trophies;
+    }
+
+    /**
+     * @param OrgConfig $orgConfig
+     */
+    public function addOrgConfiguration(OrgConfig $orgConfig)
+    {
+        $this->orgConfigurations[] = $orgConfig;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getOrgConfigurations()
+    {
+        return $this->orgConfigurations;
+    }
 
     /**
      * @return int

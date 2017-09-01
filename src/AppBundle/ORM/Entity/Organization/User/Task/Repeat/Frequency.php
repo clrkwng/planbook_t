@@ -7,12 +7,13 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
  * @Entity @Table(name="frequency")
  *
- * Base definition for a recurring task
+ * @label('Base definition for a recurring task')
  *
  **/
 class Frequency
@@ -30,23 +31,40 @@ class Frequency
      * @var string
      * @Column(type="string")
      *
-     * Name associated with this frequency set
-     *  (ex: "Every Tuesday", "Every Day", "Every n days", etc)
+     * @label('
+     *      Name associated with this frequency set
+     *          (ex: "Every Tuesday", "Every Day", "Every n days", etc)
+     * ')
      *
      */
     protected $name;
+
+    /**
+     * @OneToMany(targetEntity="FrequencyMeta", mappedBy="frequency")
+     * @var FrequencyMeta[] An ArrayCollection of FrequencyMeta objects.
+     *
+     */
+    protected $metaData = null;
 
     /**
      * @var string
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "ACTIVE"             = Frequency is active and available for use
-     * "DISABLED"           = Access to this Frequency has been turned off
-     * "DELETED"            = This Frequency has been removed from use
+     * @label('
+     *      "ACTIVE"             = Frequency is active and available for use
+     *      "DISABLED"           = Access to this Frequency has been turned off
+     *      "DELETED"            = This Frequency has been removed from use
+     *     ')
      *
      */
     protected $state;
+
+    public function __construct()
+    {
+        $this->metaData = new ArrayCollection();
+
+    }
 
     /**
      * @return int
@@ -54,6 +72,21 @@ class Frequency
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param FrequencyMeta $frequencyMeta
+     */
+    public function addMetaData(FrequencyMeta $frequencyMeta){
+        $this->metaData[] = $frequencyMeta;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getMetaData()
+    {
+        return $this->metaData;
     }
 
     /**

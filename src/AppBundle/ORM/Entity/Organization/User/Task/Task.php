@@ -11,7 +11,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="task")
  *
- * Base definition for a task
+ * @label('Base definition for a task')
  *
  **/
 class Task
@@ -25,14 +25,14 @@ class Task
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var User
      *
-     * User this task is assigned to
+     * @label('User this task is assigned to')
+     *
+     * @ManytoOne(targetEntity="User", inversedBy="taskTemplates")
      *
      */
-    protected $user_id;
+    protected $user;
 
     /**
      * @var string
@@ -67,19 +67,19 @@ class Task
     }
 
     /**
-     * @return int
+     * @return User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->user_id;
+        return $this->user;
     }
 
     /**
-     * @param int $user_id
+     * @param User $user
      */
-    public function setUserId($user_id)
+    public function setUser(User $user)
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
     }
 
     /**

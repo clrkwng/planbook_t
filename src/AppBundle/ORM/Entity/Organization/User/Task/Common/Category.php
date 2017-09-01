@@ -7,11 +7,12 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use AppBundle\ORM\Organization;
 
 /**
  * @Entity @Table(name="category")
  *
- * Container for similar tasks; defined on a per tenant basis
+ * @label('Container for similar tasks; defined on a per tenant basis')
  *
  **/
 class Category
@@ -35,20 +36,19 @@ class Category
      * @Id
      * @Column(type="integer")
      *
-     *  Icon rendered when the category is displayed
+     * @label('Icon rendered when the category is displayed')
      *
      */
     protected $image_id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Organization
+     * @ManyToOne(targetEntity="Organization", inversedBy="categories")
      *
-     *  Realm that this category exists in
+     * @label('Realm that this category exists in')
      *
      */
-    protected $organization_id;
+    protected $organization;
 
     /**
      * @return int
@@ -91,19 +91,19 @@ class Category
     }
 
     /**
-     * @return int
+     * @return Organization
      */
-    public function getOrganizationId()
+    public function getOrganization()
     {
-        return $this->organization_id;
+        return $this->organization;
     }
 
     /**
-     * @param int $organization_id
+     * @param Organization $organization
      */
-    public function setOrganizationId($organization_id)
+    public function setOrganization(Organization $organization)
     {
-        $this->organization_id = $organization_id;
+        $this->organization= $organization;
     }
 
 

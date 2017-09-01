@@ -12,7 +12,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="frequency_meta")
  *
- * Interval definition for a recurring task
+ * @label('Interval definition for a recurring task')
  *
  **/
 class FrequencyMeta
@@ -27,22 +27,24 @@ class FrequencyMeta
 
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Frequency
      *
-     * Associated base frequency
+     * @label('Associated base frequency')
+     *
+     * @ManytoOne(targetEntity="Frequency", inversedBy="metaData")
      *
      */
-    protected $frequency_id;
+    protected $frequency;
 
     /**
      * @var string
      * @Column(type="string")
      *
-     * Interval key:
-     *  Values will either be 'repeat_start' or 'repeat_interval_#", where # is the id of the row it is defining the
-     * range for
+     * @label('
+     *      Interval key:
+     *          Values will either be 'repeat_start' or 'repeat_interval_#", where # is the id of the row it is defining the
+     *          range for
+     *     ')
      *
      */
     protected $meta_key;
@@ -51,13 +53,16 @@ class FrequencyMeta
      * @var string
      * @Column(type="string")
      *
-     * Interval value:
-     *  If meta_key ==  'repeat_start'      , then this is a Unix timestamp defining when the first occurrence of the
-     * series will be
+     * @label('
+     *      Interval value:
+     *          If meta_key ==  "repeat_start"      , then this is a Unix timestamp defining when the first occurrence of the
+     *          series will be
      *
-     *  If meta_key ==  'repeat_interval_#' , then this is the number of seconds before this interval is over
-     *      For every 7 days, this is '604800'
-     *      For every 5 days, this is '432000'
+     *          If meta_key ==  "repeat_interval_#" , then this is the number of seconds before this interval is over
+     *              For every 7 days, this is "604800"
+     *              For every 5 days, this is "432000"
+     *
+     *     ')
      *
      */
     protected $meta_value;
@@ -71,19 +76,19 @@ class FrequencyMeta
     }
 
     /**
-     * @return int
+     * @return Frequency
      */
-    public function getFrequencyId()
+    public function getFrequency()
     {
-        return $this->frequency_id;
+        return $this->frequency;
     }
 
     /**
-     * @param int $frequency_id
+     * @param Frequency $frequency
      */
-    public function setFrequencyId($frequency_id)
+    public function setFrequencyId(Frequency $frequency)
     {
-        $this->frequency_id = $frequency_id;
+        $this->frequency = $frequency;
     }
 
     /**

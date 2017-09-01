@@ -12,7 +12,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="type")
  *
- * Role that a user has in the Realm
+ * @Label('Role that a user has in the Realm')
  *
  **/
 class Type
@@ -44,9 +44,11 @@ class Type
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "ACTIVE"             = Type is active and can be used
-     * "DISABLED"           = Tenant has opted to turn off this role for their organization; Tenant can toggle back on
-     * "DELETED"            = Tenant has chosen to delete this role
+     * @label('
+     *      "ACTIVE"             = Type is active and can be used
+     *      "DISABLED"           = Tenant has opted to turn off this role for their organization; Tenant can toggle back on
+     *      "DELETED"            = Tenant has chosen to delete this role
+     *     ')
      *
      */
     protected $state;

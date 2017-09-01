@@ -7,11 +7,12 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use AppBundle\ORM\Organization;
 
 /**
  * @Entity @Table(name="trophy")
  *
- * Per tenant definitions of trophies that are earned by a user completing tasks
+ * @Label('Per tenant definitions of trophies that are earned by a user completing tasks')
  *
  **/
 class Trophy
@@ -31,37 +32,38 @@ class Trophy
     protected $name;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Organization
      *
-     *  Allows for the trophies to be defined on a per tenant basis
+     * @ManyToOne(targetEntity="Organization", inversedBy="trophies")
+     *
+     * @label('Allows for the trophies to be defined on a per tenant basis')
      */
-    protected $organization_id;
+    protected $organization;
+
+    /**
+     * @var Image
+
+     * @label('Icon displayed for the trophy')
+     *
+     * @ManyToOne(targetEntity="Image", inversedBy="trophies")
+     *
+     */
+    protected $image;
 
     /**
      * @var int
      * @Column(type="integer")
-     * @Id
      *
-     * Icon displayed for the trophy
-     *
-     */
-    protected $image_id;
-
-    /**
-     * @var int
-     * @Column(type="integer")
-     *
-     *  Quantity of this trophy needed to increment to the next trophy
+     * @label('Quantity of this trophy needed to increment to the next trophy')
      */
     protected $amount_needed_next;
 
     /**
-     * @var int
-     * @Column(type="integer")
+     * @var Trophy
      *
-     *  The trophy to increment to after $amount_needed_next == UserTrophy.$amount
+     * @label('The trophy to increment to after $amount_needed_next == UserTrophy.$amount')
+     *
+     * @OneToOne(targetEntity="Trophy")
      *
      */
     protected $next_trophy;
@@ -71,9 +73,11 @@ class Trophy
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "ACTIVE"             = Trophy is active and can be awarded by Users
-     * "DISABLED"           = Tenant has opted to turn off this trophy for their organization; Tenant can toggle back on
-     * "DELETED"            = Tenant has chosen to delete this trophy
+     * @label('
+             * "ACTIVE"             = Trophy is active and can be awarded by Users
+             * "DISABLED"           = Tenant has opted to turn off this trophy for their organization; Tenant can toggle back on
+             * "DELETED"            = Tenant has chosen to delete this trophy
+     *     ')
      *
      */
     protected $state;
@@ -103,35 +107,35 @@ class Trophy
     }
 
     /**
-     * @return int
+     * @return Organization
      */
-    public function getOrganizationId()
+    public function getOrganization()
     {
-        return $this->organization_id;
+        return $this->organization;
     }
 
     /**
-     * @param int $organization_id
+     * @param Organization $organization
      */
-    public function setOrganizationId($organization_id)
+    public function setOrganization(Organization $organization)
     {
-        $this->organization_id = $organization_id;
+        $this->organization = $organization;
     }
 
     /**
-     * @return int
+     * @return Image
      */
-    public function getImageId()
+    public function getImage()
     {
-        return $this->image_id;
+        return $this->image;
     }
 
     /**
-     * @param int $image_id
+     * @param Image $image
      */
-    public function setImageId($image_id)
+    public function setImage(Image $image)
     {
-        $this->image_id = $image_id;
+        $this->image = $image;
     }
 
     /**
@@ -151,7 +155,7 @@ class Trophy
     }
 
     /**
-     * @return int
+     * @return Trophy
      */
     public function getNextTrophy()
     {
@@ -159,9 +163,9 @@ class Trophy
     }
 
     /**
-     * @param int $next_trophy
+     * @param Trophy $next_trophy
      */
-    public function setNextTrophy($next_trophy)
+    public function setNextTrophy(Trophy $next_trophy)
     {
         $this->next_trophy = $next_trophy;
     }

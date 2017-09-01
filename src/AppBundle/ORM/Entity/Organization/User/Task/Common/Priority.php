@@ -7,11 +7,12 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use AppBundle\ORM\Organization;
 
 /**
  * @Entity @Table(name="priority")
  *
- * Per tenant definitions of
+ * @label('Per tenant definitions of the priority placed on user tasks')
  *
  **/
 class Priority
@@ -31,20 +32,19 @@ class Priority
     protected $name;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Organization
+     * @ManyToOne(targetEntity="Organization", inversedBy="priorities")
      *
-     *  Allows for the organization to define their own custom priorities with associated values
+     * @label('Allows for the organization to define their own custom priorities with associated values')
      *
      */
-    protected $organization_id;
+    protected $organization;
 
     /**
      * @var int
      * @Column(type="integer")
      *
-     * How many points are given to the user upon completion of the task
+     * @label('How many points are given to the user upon completion of the task')
      *
      */
     protected $completion_points;
@@ -54,9 +54,11 @@ class Priority
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "ACTIVE"             = Priority is active and available for use
-     * "DISABLED"           = Admin has opted to turn off this Priority; Admin can toggle back on
-     * "DELETED"            = Admin has chosen to delete this Priority entirely
+     * @label('
+     *      "ACTIVE"             = Priority is active and available for use
+     *      "DISABLED"           = Admin has opted to turn off this Priority; Admin can toggle back on
+     *      "DELETED"            = Admin has chosen to delete this Priority entirely
+     *     ')
      *
      */
     protected $state;
@@ -86,19 +88,19 @@ class Priority
     }
 
     /**
-     * @return int
+     * @return Organization
      */
-    public function getOrganizationId()
+    public function getOrganization()
     {
-        return $this->organization_id;
+        return $this->organization;
     }
 
     /**
-     * @param int $organization_id
+     * @param Organization $organization
      */
-    public function setOrganizationId($organization_id)
+    public function setOrganization(Organization $organization)
     {
-        $this->organization_id = $organization_id;
+        $this->organization = $organization;
     }
 
     /**

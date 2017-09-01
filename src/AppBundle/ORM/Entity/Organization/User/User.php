@@ -7,11 +7,12 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="user")
  *
- * Account information for users on a per tenant basis
+ * @label('Account information for users on a per tenant basis')
  *
  **/
 class User
@@ -25,13 +26,18 @@ class User
     protected $id;
 
     /**
+     * @OneToMany(targetEntity="Task", mappedBy="user")
+     * @var Task[] An ArrayCollection of Task objects.
+     * @label('Base Tasks Associated with the User')
+     */
+    protected $taskTemplates = null;
+
+    /**
      * @var int
      * @Id
      * @Column(type="integer")
      *
-     * Foreign key to `Organization` table
-     *
-     * The realm that the user is in
+     * @label('The realm that the user is associated with')
      *
      */
     protected $organization_id;
@@ -52,7 +58,7 @@ class User
      * @var string
      * @Column(type="string")
      *
-     * Generated UUID to uniquely link to this user
+     * @label('Generated UUID to uniquely link to this user')
      *
      */
     protected $uuid;
@@ -62,9 +68,8 @@ class User
      * @Id
      * @Column(type="integer")
      *
-     * Foreign key to `Theme` table
      *
-     * The Theme the user has selected for use in their profile
+     * @label('The Theme the user has selected for use in their profile')
      *
      */
     protected $theme_id;
@@ -74,35 +79,33 @@ class User
      * @Enum({"NOT_ACTIVATED", "VERIFICATION_SENT", "VERIFIED", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "NOT_ACTIVATED"      = Account has been created, but user has not triggered a verification email
-     * "VERIFICATION_SENT"  = User has a verification email awaiting their confirmation
-     * "VERIFIED"           = User can login under normal conditions
-     * "DISABLED"           = User's account has been disabled by an admin; Login is blocked; Admin can re-enable
-     * "DELETED"            = Admin has deleted this user;
+     * @label('
+     *      "NOT_ACTIVATED"      = Account has been created, but user has not triggered a verification email
+     *      "VERIFICATION_SENT"  = User has a verification email awaiting their confirmation
+     *      "VERIFIED"           = User can login under normal conditions
+     *      "DISABLED"           = User's account has been disabled by an admin; Login is blocked; Admin can re-enable
+     *      "DELETED"            = Admin has deleted this user;
+     *     ')
      *
      */
     protected $state;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Image
      *
-     * Foreign key to `Image` table
+     * @OneToOne(targetEntity="Image")
      *
-     *  User Profile Picture
+     * @label('User Profile Picture')
      *
      */
-    protected $image_id;
+    protected $image;
 
     /**
      * @var int
      * @Id
      * @Column(type="integer")
      *
-     * Foreign key to `Type` table
-     *
-     * The role that a user has in the realm
+     * @label('The role that a user has in the realm')
      *
      */
     protected $type_id;
@@ -111,7 +114,7 @@ class User
      * @var int
      * @Column(type="integer")
      *
-     * The total points that a user has earned in the history of their account
+     * @label('The total points that a user has earned in the history of their account')
      *
      */
     protected $total_points;
@@ -120,7 +123,7 @@ class User
      * @var int
      * @Column(type="integer")
      *
-     * The points that a user is in progress towards earning their next trophy
+     * @label('The points that a user is in progress towards earning their next trophy')
      *
      */
     protected $trophy_points;
@@ -129,11 +132,35 @@ class User
      * @var int
      * @Column(type="integer")
      *
-     * The points that a user has available to spend on prizes
+     * @label('The points that a user has available to spend on prizes')
      *
      */
     protected $prize_points;
 
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        $this->taskTemplates = new ArrayCollection();
+
+    }
+
+    /**
+     * @param Task $task
+     */
+    public function addTaskTemplate(Task $task)
+    {
+        $this->taskTemplates[] = $task;
+    }
+
+    /**
+     * @return Task[]|ArrayCollection
+     */
+    public function getTaskTemplates()
+    {
+        return $this->taskTemplates;
+    }
 
     /**
      * @return int
@@ -240,19 +267,19 @@ class User
     }
 
     /**
-     * @return int
+     * @return Image
      */
-    public function getImageId()
+    public function getImage()
     {
-        return $this->image_id;
+        return $this->image;
     }
 
     /**
-     * @param int $image_id
+     * @param Image $image
      */
-    public function setImageId($image_id)
+    public function setImage($image)
     {
-        $this->image_id = $image_id;
+        $this->image = $image;
     }
 
     /**

@@ -7,11 +7,13 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use AppBundle\ORM\Organization;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="image")
  *
- * Per tenant container of uploaded images
+ * @label('Per tenant container of uploaded images')
  *
  **/
 class Image
@@ -25,14 +27,20 @@ class Image
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Organization
+     * @ManyToOne(targetEntity="Organization", inversedBy="images")
      *
-     * Allows for an organization to build up and manage their own repository of uploaded images
+     * @label('Allows for an organization to build up and manage their own repository of uploaded images')
      *
      */
-    protected $organization_id;
+    protected $organization;
+
+    /**
+     * @OneToMany(targetEntity="Trophy", mappedBy="image")
+     * @var Trophy[] An ArrayCollection of Trophy objects.
+     *
+     */
+    protected $trophies = null;
 
     /**
      * @var string
@@ -57,12 +65,38 @@ class Image
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "ACTIVE"             = Image is active and available for use
-     * "DISABLED"           = Admin has opted to turn off access to this Image; Admin can toggle back on
-     * "DELETED"            = Admin has chosen to delete this Image entirely
+     * @label('
+     *      "ACTIVE"             = Image is active and available for use
+     *      "DISABLED"           = Admin has opted to turn off access to this Image; Admin can toggle back on
+     *      "DELETED"            = Admin has chosen to delete this Image entirely
+     *  ')
      *
      */
     protected $state;
+
+    /**
+     * Image constructor.
+     */
+    public function __construct()
+    {
+        $this->trophies = new ArrayCollection();
+    }
+
+    /**
+     * @param Trophy $trophy
+     */
+    public function addTrophy(Trophy $trophy)
+    {
+        $this->trophies[] = $trophy;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getTrophies(){
+        return $this->trophies;
+    }
+
 
     /**
      * @return int
@@ -73,19 +107,19 @@ class Image
     }
 
     /**
-     * @return int
+     * @return Organization
      */
-    public function getOrganizationId()
+    public function getOrganization()
     {
-        return $this->organization_id;
+        return $this->organization;
     }
 
     /**
-     * @param int $organization_id
+     * @param Organization $organization
      */
-    public function setOrganizationId($organization_id)
+    public function setOrganization(Organization $organization)
     {
-        $this->organization_id = $organization_id;
+        $this->organization = $organization;
     }
 
     /**
