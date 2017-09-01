@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="color")
@@ -31,17 +32,24 @@ class Color
     protected $name;
 
     /**
+     * @OneToMany(targetEntity="ThemeColor", mappedBy="color")
+     * @var ThemeColor[] An ArrayCollection of ThemeColor objects.
+     * @label('Collection of themes associated with the color')
+     */
+    protected $themes = null;
+
+    /**
      * @var string
      * @Column(type="string")
      */
     protected $hex_value;
 
     /**
-     * @return int
+     * Color constructor.
      */
-    public function getId()
+    public function __construct()
     {
-        return $this->id;
+        $this->themes = new ArrayCollection();
     }
 
     /**
@@ -55,6 +63,29 @@ class Color
      *
      */
     protected $state;
+
+    /**
+     * @param ThemeColor $theme
+     */
+    public function addTheme(ThemeColor $theme){
+        $this->themes[] = $theme;
+    }
+
+    /**
+     * @return ThemeColor[]|ArrayCollection
+     */
+    public function getThemes()
+    {
+        return $this->themes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return string

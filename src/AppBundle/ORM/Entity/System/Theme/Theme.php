@@ -51,11 +51,35 @@ class Theme
     protected $users = null;
 
     /**
+     * @OneToMany(targetEntity="ThemeColor", mappedBy="theme")
+     * @var ThemeColor[] An ArrayCollection of ThemeColor objects.
+     * @label('Collection of colors associated with the Theme')
+     */
+    protected $colors = null;
+
+    /**
      * Theme constructor.
      */
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->colors = new ArrayCollection();
+    }
+
+    /**
+     * @param ThemeColor $color
+     */
+    public function addColor(ThemeColor $color)
+    {
+        $this->colors[] = $color;
+    }
+
+    /**
+     * @return ThemeColor[]|ArrayCollection
+     */
+    public function getColors()
+    {
+        return $this->colors;
     }
 
     /**

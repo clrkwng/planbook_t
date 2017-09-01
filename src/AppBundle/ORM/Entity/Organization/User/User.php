@@ -50,7 +50,7 @@ class User
     /**
      * @var Organization
      *
-     * @ManyToOne(targetEntity="Organization", mappedBy="users")
+     * @ManyToOne(targetEntity="Organization", inversedBy="users")
      *
      * @label('The realm that the user is associated with')
      *
@@ -81,7 +81,7 @@ class User
     /**
      * @var Theme
      *
-     * @OneToMany(targetEntity="Theme", mappedBy="users")
+     * @ManyToOne(targetEntity="Theme", invertedBy="users")
      *
      * @label('The Theme the user has selected for use in their profile')
      *
@@ -117,7 +117,7 @@ class User
     /**
      * @var Type
      *
-     * @ManyToOne(targetEntity="Type", mappedBy="users")
+     * @ManyToOne(targetEntity="Type", inversedBy="users")
      *
      * @label('The role that a user has in the realm')
      *

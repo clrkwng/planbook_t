@@ -27,7 +27,7 @@ class UserTrophy
     /**
      * @var User
      *
-     * @ManyToOne(targetEntity="User", mappedBy="trophies")
+     * @ManyToOne(targetEntity="User", inversedBy="trophies")
      *
      * @label('The associated User')
      *
@@ -37,7 +37,7 @@ class UserTrophy
     /**
      * @var Trophy
      *
-     * @ManyToOne(targetEntity="Trophy", mappedBy="users")
+     * @ManyToOne(targetEntity="Trophy", inversedBy="users")
      *
      * @label('The associated Trophy')
      *

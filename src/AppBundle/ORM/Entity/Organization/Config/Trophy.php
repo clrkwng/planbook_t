@@ -44,7 +44,7 @@ class Trophy
     /**
      * @var UserTrophy
      *
-     * @OneToMany(targetEntity="UserTrophy", inversedBy="trophies")
+     * @OneToMany(targetEntity="UserTrophy", mappedBy="trophies")
      *
      * @label('Collection of users with this trophy')
      */
@@ -73,10 +73,11 @@ class Trophy
      *
      * @label('The trophy to increment to after $amount_needed_next == UserTrophy.$amount')
      *
-     * @OneToOne(targetEntity="Trophy")
+     * @OneToOne(targetEntity="Trophy", inversedBy="prev_trophy")
      *
      */
     protected $next_trophy = null;
+
 
     /**
      * @var string
@@ -203,6 +204,7 @@ class Trophy
     {
         $this->next_trophy = $next_trophy;
     }
+
 
     /**
      * @return string

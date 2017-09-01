@@ -43,7 +43,7 @@ class Priority
 
     /**
      * @var TaskSingle
-     * @OneToMany(targetEntity="TaskSingle", inversedBy="priority")
+     * @OneToMany(targetEntity="TaskSingle", mappedBy="priority")
      *
      * @label('Collection of Single Tasks of this Priority')
      *
@@ -52,7 +52,7 @@ class Priority
 
     /**
      * @var TaskRepeat
-     * @OneToMany(targetEntity="TaskRepeat", inversedBy="priority")
+     * @OneToMany(targetEntity="TaskRepeat", mappedBy="priority")
      *
      * @label('Collection of Repeat Tasks of this Priority')
      *
@@ -61,7 +61,7 @@ class Priority
 
     /**
      * @var TaskRepeatSingle
-     * @OneToMany(targetEntity="TaskRepeatSingle", inversedBy="priority_ov")
+     * @OneToMany(targetEntity="TaskRepeatSingle", mappedBy="priority_ov")
      *
      * @label('Collection of Repeat Task Instances of this Priority')
      *

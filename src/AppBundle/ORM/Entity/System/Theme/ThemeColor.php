@@ -11,7 +11,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="theme_color")
  *
- * Association of a theme to a color
+ * @label('Association of a theme to a color')
  *
  **/
 class ThemeColor
@@ -25,28 +25,22 @@ class ThemeColor
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Theme
+     * @ManyToOne(targetEntity="Theme", inversedBy="colors")
      *
-     * Foreign key to `Theme` table
-     *
-     * The associated theme
+     * @label('The associated theme')
      *
      */
-    protected $theme_id;
+    protected $theme;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Color
+     * @ManyToOne(targetEntity="Color", inversedBy="themes")
      *
-     * Foreign key to `Color` table
-     *
-     * The associated color
+     * @label('The associated color')
      *
      */
-    protected $color_id;
+    protected $color;
 
 
     /**
@@ -58,35 +52,35 @@ class ThemeColor
     }
 
     /**
-     * @return int
+     * @return Theme
      */
-    public function getThemeId()
+    public function getTheme()
     {
-        return $this->theme_id;
+        return $this->theme;
     }
 
     /**
-     * @param int $theme_id
+     * @param Theme $theme
      */
-    public function setThemeId($theme_id)
+    public function setTheme(Theme $theme)
     {
-        $this->theme_id = $theme_id;
+        $this->theme = $theme;
     }
 
     /**
-     * @return int
+     * @return Color
      */
-    public function getColorId()
+    public function getColor()
     {
-        return $this->color_id;
+        return $this->color;
     }
 
     /**
-     * @param int $color_id
+     * @param Color $color
      */
-    public function setColorId($color_id)
+    public function setColor(Color $color)
     {
-        $this->color_id = $color_id;
+        $this->color = $color;
     }
 
 

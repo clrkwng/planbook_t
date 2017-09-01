@@ -45,7 +45,7 @@ class TaskRepeat
 
     /**
      * @var Priority
-     * @ManyToOne(targetEntity="Priority", mappedBy="repeatTasks")
+     * @ManyToOne(targetEntity="Priority", inversedBy="repeatTasks")
      *
      * @label('Task's default priority to be inherited by each single instance')
      *

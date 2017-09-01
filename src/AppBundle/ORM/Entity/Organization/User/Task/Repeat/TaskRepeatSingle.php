@@ -26,7 +26,7 @@ class TaskRepeatSingle
 
     /**
      * @var TaskRepeat
-     * @ManyToOne(targetEntity="TaskRepeat", mappedBy="repeatTaskInstances")
+     * @ManyToOne(targetEntity="TaskRepeat", inversedBy="repeatTaskInstances")
      *
      * @label('Base repeat task to inherit from')
      *
@@ -35,7 +35,7 @@ class TaskRepeatSingle
 
     /**
      * @var Priority
-     * @ManyToOne(targetEntity="Priority", mappedBy="repeatTasks")
+     * @ManyToOne(targetEntity="Priority", inversedBy="repeatTasks")
      *
      * @label('
      *     If provided, will override the priority defined in the corresponding
