@@ -52,7 +52,6 @@ class Trophy
 
     /**
      * @var Image
-
      * @label('Icon displayed for the trophy')
      *
      * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Image", inversedBy="trophies")

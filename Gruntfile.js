@@ -215,6 +215,15 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        phpdoc: {
+            options: {
+                verbose: true
+            },
+            src: [
+                'src/AppBundle/ORM'
+            ],
+            dest: 'doc/data-tier'
         }
     });
 
@@ -228,6 +237,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-properties-reader');
     grunt.loadNpmTasks('grunt-string-replace');
+    grunt.loadNpmTasks('grunt-phpdoc');
 
 
     //Build Task Registration
@@ -252,6 +262,12 @@ module.exports = function (grunt) {
         [
             'clean:' + target,
             'copy:' + target
+        ]
+    );
+
+    grunt.registerTask('documentation',
+        [
+            'phpdoc'
         ]
     );
 
