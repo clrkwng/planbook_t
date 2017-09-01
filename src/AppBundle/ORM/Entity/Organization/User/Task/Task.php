@@ -30,7 +30,7 @@ class Task
      *
      * @label('User this task is assigned to')
      *
-     * @ManytoOne(targetEntity="User", inversedBy="taskTemplates")
+     * @ManytoOne(targetEntity="AppBundle\ORM\Entity\User", inversedBy="taskTemplates")
      *
      */
     protected $user = null;

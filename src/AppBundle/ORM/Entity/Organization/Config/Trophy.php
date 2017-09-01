@@ -35,7 +35,7 @@ class Trophy
     /**
      * @var Organization
      *
-     * @ManyToOne(targetEntity="Organization", inversedBy="trophies")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="trophies")
      *
      * @label('Allows for the trophies to be defined on a per tenant basis')
      */
@@ -55,7 +55,7 @@ class Trophy
 
      * @label('Icon displayed for the trophy')
      *
-     * @ManyToOne(targetEntity="Image", inversedBy="trophies")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Image", inversedBy="trophies")
      *
      */
     protected $image = null;
@@ -73,7 +73,7 @@ class Trophy
      *
      * @label('The trophy to increment to after $amount_needed_next == UserTrophy.$amount')
      *
-     * @OneToOne(targetEntity="Trophy", inversedBy="prev_trophy")
+     * @OneToOne(targetEntity="AppBundle\ORM\Entity\Trophy", inversedBy="prev_trophy")
      *
      */
     protected $next_trophy = null;

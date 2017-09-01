@@ -44,7 +44,7 @@ class Theme
     protected $state;
 
     /**
-     * @OneToMany(targetEntity="User", mappedBy="theme")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\User", mappedBy="theme")
      * @var User[] An ArrayCollection of User objects.
      *
      */

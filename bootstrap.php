@@ -12,10 +12,10 @@ use Doctrine\ORM\EntityManager;
 require_once "vendor/autoload.php";
 
 $isDevMode = true;
-$config = Setup::createXMLMetadataConfiguration(array(__DIR__."/application/config/xml"), $isDevMode);
+$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src/AppBundle/ORM"), $isDevMode);
 
 $conn = array(
-    'dbname' => 'planbook_db1',
+    'dbname' => 'planbook_db',
     'user' => 'root',
     'password' => 'sysadm',
     'host' => 'localhost',

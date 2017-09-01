@@ -44,7 +44,7 @@ class Prize
 
     /**
      * @var User
-     * @ManyToOne(targetEntity="User", inversedBy="prizes")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\User", inversedBy="prizes")
      *
      * @label('The User that will have this prize appear in their marketplace')
      */
@@ -52,7 +52,7 @@ class Prize
 
     /**
      * @var Image
-     * @ManyToOne(targetEntity="Image", inversedBy="prizes")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Image", inversedBy="prizes")
      * @label('The image that is displayed when a user views the prize')
      *
      */

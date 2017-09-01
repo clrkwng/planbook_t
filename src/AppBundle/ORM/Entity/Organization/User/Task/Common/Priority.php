@@ -34,7 +34,7 @@ class Priority
 
     /**
      * @var Organization
-     * @ManyToOne(targetEntity="Organization", inversedBy="priorities")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="priorities")
      *
      * @label('Allows for the organization to define their own custom priorities with associated values')
      *

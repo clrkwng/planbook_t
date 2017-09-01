@@ -28,7 +28,7 @@ class Image
 
     /**
      * @var Organization
-     * @ManyToOne(targetEntity="Organization", inversedBy="images")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="images")
      *
      * @label('Allows for an organization to build up and manage their own repository of uploaded images')
      *
@@ -36,14 +36,14 @@ class Image
     protected $organization = null;
 
     /**
-     * @OneToMany(targetEntity="Trophy", mappedBy="image")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Trophy", mappedBy="image")
      * @var Trophy[] An ArrayCollection of Trophy objects.
      *
      */
     protected $trophies = null;
 
     /**
-     * @OneToMany(targetEntity="Category", mappedBy="image")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Category", mappedBy="image")
      * @var Category[] An ArrayCollection of Category objects.
      *
      */

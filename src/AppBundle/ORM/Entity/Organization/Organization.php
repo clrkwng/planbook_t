@@ -32,42 +32,42 @@ class Organization
     protected $id;
 
     /**
-     * @OneToMany(targetEntity="Image", mappedBy="organization")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Image", mappedBy="organization")
      * @var Image[] An ArrayCollection of Image objects.
      *
      */
     protected $images = null;
 
     /**
-     * @OneToMany(targetEntity="OrgConfig", mappedBy="organization")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\OrgConfig", mappedBy="organization")
      * @var OrgConfig[] An ArrayCollection of OrgConfig objects.
      *
      */
     protected $orgConfigurations = null;
 
     /**
-     * @OneToMany(targetEntity="Trophy", mappedBy="organization")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Trophy", mappedBy="organization")
      * @var Trophy[] An ArrayCollection of Trophy objects.
      *
      */
     protected $trophies = null;
 
     /**
-     * @OneToMany(targetEntity="Priority", mappedBy="organization")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Priority", mappedBy="organization")
      * @var Priority[] An ArrayCollection of Priority objects.
      *
      */
     protected $priorities = null;
 
     /**
-     * @OneToMany(targetEntity="User", mappedBy="organization")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\User", mappedBy="organization")
      * @var User[] An ArrayCollection of User objects.
      *
      */
     protected $users = null;
 
     /**
-     * @OneToMany(targetEntity="Category", mappedBy="organization")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Category", mappedBy="organization")
      * @var Category[] An ArrayCollection of Category objects.
      *
      */

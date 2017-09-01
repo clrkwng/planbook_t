@@ -35,7 +35,7 @@ class TaskRepeatSingle
 
     /**
      * @var Priority
-     * @ManyToOne(targetEntity="Priority", inversedBy="repeatTasks")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Priority", inversedBy="repeatTasks")
      *
      * @label('
      *     If provided, will override the priority defined in the corresponding

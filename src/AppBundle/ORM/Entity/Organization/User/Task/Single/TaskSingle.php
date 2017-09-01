@@ -35,7 +35,7 @@ class TaskSingle
     protected $task = null;
 
     /**
-     * @ManyToOne(targetEntity="Priority", inversedBy="singleTasks")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Priority", inversedBy="singleTasks")
      * @var Priority
      *
      */

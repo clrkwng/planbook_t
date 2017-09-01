@@ -50,7 +50,7 @@ class User
     /**
      * @var Organization
      *
-     * @ManyToOne(targetEntity="Organization", inversedBy="users")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="users")
      *
      * @label('The realm that the user is associated with')
      *
@@ -81,7 +81,7 @@ class User
     /**
      * @var Theme
      *
-     * @ManyToOne(targetEntity="Theme", invertedBy="users")
+     * @ManyToOne(targetEntity="Theme", inversedBy="users")
      *
      * @label('The Theme the user has selected for use in their profile')
      *
@@ -107,7 +107,7 @@ class User
     /**
      * @var Image
      *
-     * @OneToOne(targetEntity="Image")
+     * @OneToOne(targetEntity="AppBundle\ORM\Entity\Image")
      *
      * @label('User Profile Picture')
      *

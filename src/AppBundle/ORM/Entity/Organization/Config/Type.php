@@ -33,7 +33,7 @@ class Type
     protected $name;
 
     /**
-     * @OneToMany(targetEntity="User", mappedBy="type")
+     * @OneToMany(targetEntity="AppBundle\ORM\Entity\User", mappedBy="type")
      * @var User[] An ArrayCollection of User objects.
      *
      */

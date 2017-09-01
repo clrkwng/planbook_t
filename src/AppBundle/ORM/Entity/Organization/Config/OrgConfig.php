@@ -31,7 +31,7 @@ class OrgConfig
      *
      * @Label('Allows for configurations to be set on a per tenant basis')
      *
-     * @ManyToOne(targetEntity="Organization", inversedBy="orgConfigurations")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="orgConfigurations")
      *
      */
     protected $organization;
@@ -52,7 +52,7 @@ class OrgConfig
      * @var string
      * @Column(type="string")
      *
-     * Timestamp for when this record was created
+     * @label('Timestamp for when this record was created')
      *
      */
     protected $created_time;
@@ -61,7 +61,7 @@ class OrgConfig
      * @var string
      * @Column(type="string")
      *
-     * Timestamp for when this record was last updated
+     * @label('Timestamp for when this record was last updated')
      *
      */
     protected $updated_time;
@@ -70,7 +70,7 @@ class OrgConfig
      * @var string
      * @Column(type="string")
      *
-     * User that last updated this record
+     * @label('User that last updated this record')
      *
      */
     protected $updated_by;
@@ -79,7 +79,7 @@ class OrgConfig
      * @var string
      * @Column(type="string")
      *
-     * User that initially created this record
+     * @label('User that initially created this record')
      *
      */
     protected $created_by;

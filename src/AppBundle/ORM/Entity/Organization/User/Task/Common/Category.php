@@ -33,7 +33,7 @@ class Category
 
     /**
      * @var Image
-     * @ManyToOne(targetEntity="Image", inversedBy="categories"
+     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Image", inversedBy="categories")
      *
      * @label('Icon rendered when the category is displayed')
      *
@@ -42,7 +42,7 @@ class Category
 
     /**
      * @var Organization
-     * @ManyToOne(targetEntity="Organization", inversedBy="categories")
+     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="categories")
      *
      * @label('Realm that this category exists in')
      *
