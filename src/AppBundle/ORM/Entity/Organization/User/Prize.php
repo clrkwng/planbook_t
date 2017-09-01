@@ -37,29 +37,26 @@ class Prize
      * @var int
      * @Column(type="integer")
      *
-     *  The amount that it costs a user to purchase the prize
+     * @label('The amount that it costs a user to purchase the prize')
      *
      */
     protected $price;
 
     /**
-     * @var int
-     * @Column(type="integer")
-     * @Id
+     * @var User
+     * @ManyToOne(targetEntity="User", inversedBy="prizes")
      *
-     * The User that will have this prize appear in their marketplace
+     * @label('The User that will have this prize appear in their marketplace')
      */
-    protected $user_id;
+    protected $user;
 
     /**
-     * @var int
-     * @Column(type="integer")
-     * @Id
-     *
-     * The image that is displayed when a user views the prize
+     * @var Image
+     * @ManyToOne(targetEntity="Image", inversedBy="prizes")
+     * @label('The image that is displayed when a user views the prize')
      *
      */
-    protected $image_id;
+    protected $image;
 
     /**
      * @var string
@@ -131,35 +128,35 @@ class Prize
     }
 
     /**
-     * @return int
+     * @return User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->user_id;
+        return $this->user;
     }
 
     /**
-     * @param int $user_id
+     * @param User $user
      */
-    public function setUserId($user_id)
+    public function setUser(User $user)
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
     }
 
     /**
-     * @return int
+     * @return Image
      */
-    public function getImageId()
+    public function getImage()
     {
-        return $this->image_id;
+        return $this->image;
     }
 
     /**
-     * @param int $image_id
+     * @param Image $image
      */
-    public function setImageId($image_id)
+    public function setImage(Image $image)
     {
-        $this->image_id = $image_id;
+        $this->image = $image;
     }
 
     /**

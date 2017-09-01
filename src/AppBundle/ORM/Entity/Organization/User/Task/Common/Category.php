@@ -32,14 +32,13 @@ class Category
     protected $name;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Image
+     * @ManyToOne(targetEntity="Image", inversedBy="categories"
      *
      * @label('Icon rendered when the category is displayed')
      *
      */
-    protected $image_id;
+    protected $image;
 
     /**
      * @var Organization
@@ -48,7 +47,7 @@ class Category
      * @label('Realm that this category exists in')
      *
      */
-    protected $organization;
+    protected $organization = null;
 
     /**
      * @return int
@@ -75,19 +74,19 @@ class Category
     }
 
     /**
-     * @return int
+     * @return Image
      */
-    public function getImageId()
+    public function getImage()
     {
-        return $this->image_id;
+        return $this->image;
     }
 
     /**
-     * @param int $image_id
+     * @param Image $image
      */
-    public function setImageId($image_id)
+    public function setImageId(Image $image)
     {
-        $this->image_id = $image_id;
+        $this->image = $image;
     }
 
     /**

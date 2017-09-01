@@ -8,6 +8,7 @@
 
 namespace AppBundle\ORM\Entity;
 use AppBundle\ORM\Organization;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="trophy")
@@ -38,7 +39,16 @@ class Trophy
      *
      * @label('Allows for the trophies to be defined on a per tenant basis')
      */
-    protected $organization;
+    protected $organization = null;
+
+    /**
+     * @var UserTrophy
+     *
+     * @OneToMany(targetEntity="UserTrophy", inversedBy="trophies")
+     *
+     * @label('Collection of users with this trophy')
+     */
+    protected $users = null;
 
     /**
      * @var Image
@@ -48,7 +58,7 @@ class Trophy
      * @ManyToOne(targetEntity="Image", inversedBy="trophies")
      *
      */
-    protected $image;
+    protected $image = null;
 
     /**
      * @var int
@@ -66,7 +76,7 @@ class Trophy
      * @OneToOne(targetEntity="Trophy")
      *
      */
-    protected $next_trophy;
+    protected $next_trophy = null;
 
     /**
      * @var string
@@ -81,6 +91,30 @@ class Trophy
      *
      */
     protected $state;
+
+    /**
+     * Trophy constructor.
+     */
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+    }
+
+    /**
+     * @return UserTrophy|ArrayCollection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
 
     /**
      * @return int

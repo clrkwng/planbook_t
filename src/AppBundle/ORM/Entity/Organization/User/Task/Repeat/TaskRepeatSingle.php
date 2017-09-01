@@ -11,7 +11,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="task_repeat_single")
  *
- * A single occurrence of a task that occurs on a recurrent basis
+ * @label('A single occurrence of a task that occurs on a recurrent basis')
  *
  **/
 class TaskRepeatSingle
@@ -25,30 +25,31 @@ class TaskRepeatSingle
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var TaskRepeat
+     * @ManyToOne(targetEntity="TaskRepeat", mappedBy="repeatTaskInstances")
      *
-     * Base repeat task to inherit from
+     * @label('Base repeat task to inherit from')
      *
      */
-    protected $task_repeat_id;
+    protected $baseRepeatTask;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Priority
+     * @ManyToOne(targetEntity="Priority", mappedBy="repeatTasks")
      *
-     * If provided, will override the priority defined in the corresponding `Task_Repeat` record for this instance
+     * @label('
+     *     If provided, will override the priority defined in the corresponding
+     *      `Task_Repeat` record for this instance
+     *     ')
      *
      */
-    protected $priority_id_ov;
+    protected $priority_ov;
 
     /**
      * @var string
      * @Column(type="string")
      *
-     * UNIX timestamp for when the task must be completed by
+     * @label('UNIX timestamp for when the task must be completed by')
      *
      */
     protected $deadline;
@@ -57,7 +58,10 @@ class TaskRepeatSingle
      * @var string
      * @Column(type="string")
      *
-     * If provided, will override the name defined in the corresponding `Task_Repeat` record for this instance
+     * @label('
+     *        If provided, will override the name defined in the corresponding
+     *        `Task_Repeat` record for this instance
+     *     ')
      *
      */
     protected $name_ov;
@@ -66,7 +70,10 @@ class TaskRepeatSingle
      * @var string
      * @Column(type="string")
      *
-     * If provided, will override the description defined in the corresponding `Task_Repeat` record for this instance
+     * @label('
+     *     If provided, will override the description defined in the corresponding
+     *     `Task_Repeat` record for this instance
+     *     ')
      *
      */
     protected $description_ov;
@@ -76,11 +83,13 @@ class TaskRepeatSingle
      * @Enum({"NOT_VIEWED", "IN_PROGRESS", "COMPLETED", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "NOT_VIEWED"     = User is prompted with a notification
-     * "IN_PROGRESS"    = User can view in their task dashboard; User can mark as complete
-     * "COMPLETED"      = User can view in their task dashboard; User can not mark as complete; Points have been added
-     * "DISABLED"       = Hidden from user's display; Admin can see the task, edit, and toggle the task's visibility
-     * "DELETED"        = Hidden from both the user and the admin's display
+     * @label('
+     *      "NOT_VIEWED"     = User is prompted with a notification
+     *      "IN_PROGRESS"    = User can view in their task dashboard; User can mark as complete
+     *      "COMPLETED"      = User can view in their task dashboard; User can not mark as complete; Points have been added
+     *      "DISABLED"       = Hidden from user's display; Admin can see the task, edit, and toggle the task's visibility
+     *      "DELETED"        = Hidden from both the user and the admin's display
+     *     ')
      *
      */
     protected $state;
@@ -95,35 +104,35 @@ class TaskRepeatSingle
     }
 
     /**
-     * @return int
+     * @return TaskRepeat
      */
-    public function getTaskRepeatId()
+    public function getBaseTaskRepeat()
     {
-        return $this->task_repeat_id;
+        return $this->baseRepeatTask;
     }
 
     /**
-     * @param int $task_repeat_id
+     * @param TaskRepeat $repeatTask
      */
-    public function setTaskRepeatId($task_repeat_id)
+    public function setTaskRepeatId(TaskRepeat $repeatTask)
     {
-        $this->task_repeat_id = $task_repeat_id;
+        $this->baseRepeatTask = $repeatTask;
     }
 
     /**
-     * @return int
+     * @return Priority
      */
-    public function getPriorityIdOv()
+    public function getPriorityOv()
     {
-        return $this->priority_id_ov;
+        return $this->priority_ov;
     }
 
     /**
-     * @param int $priority_id_ov
+     * @param Priority $priority_ov
      */
-    public function setPriorityIdOv($priority_id_ov)
+    public function setPriorityIdOv(Priority $priority_ov)
     {
-        $this->priority_id_ov = $priority_id_ov;
+        $this->priority_ov = $priority_ov;
     }
 
     /**

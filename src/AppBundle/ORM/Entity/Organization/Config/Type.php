@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -30,6 +31,44 @@ class Type
      * @Column(type="string")
      */
     protected $name;
+
+    /**
+     * @OneToMany(targetEntity="User", mappedBy="type")
+     * @var User[] An ArrayCollection of User objects.
+     *
+     */
+    protected $users = null;
+
+    /**
+     * Type constructor.
+     */
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+
+    }
+
+    /**
+     * @return ArrayCollection|null
+     *
+     * @label('All users that are of this type.')
+     *
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @label('Set a user to this type.')
+     *
+     */
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+    }
 
     /**
      * @return int

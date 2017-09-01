@@ -34,7 +34,7 @@ class FrequencyMeta
      * @ManytoOne(targetEntity="Frequency", inversedBy="metaData")
      *
      */
-    protected $frequency;
+    protected $frequency = null;
 
     /**
      * @var string

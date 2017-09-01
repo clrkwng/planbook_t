@@ -8,6 +8,7 @@
 
 namespace AppBundle\ORM\Entity;
 use AppBundle\ORM\Organization;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="priority")
@@ -38,7 +39,34 @@ class Priority
      * @label('Allows for the organization to define their own custom priorities with associated values')
      *
      */
-    protected $organization;
+    protected $organization = null;
+
+    /**
+     * @var TaskSingle
+     * @OneToMany(targetEntity="TaskSingle", inversedBy="priority")
+     *
+     * @label('Collection of Single Tasks of this Priority')
+     *
+     */
+    protected $singleTasks = null;
+
+    /**
+     * @var TaskRepeat
+     * @OneToMany(targetEntity="TaskRepeat", inversedBy="priority")
+     *
+     * @label('Collection of Repeat Tasks of this Priority')
+     *
+     */
+    protected $repeatTasks = null;
+
+    /**
+     * @var TaskRepeatSingle
+     * @OneToMany(targetEntity="TaskRepeatSingle", inversedBy="priority_ov")
+     *
+     * @label('Collection of Repeat Task Instances of this Priority')
+     *
+     */
+    protected $repeatTaskInstances = null;
 
     /**
      * @var int
@@ -62,6 +90,65 @@ class Priority
      *
      */
     protected $state;
+
+    /**
+     * Priority constructor.
+     */
+    public function __construct()
+    {
+        $this->singleTasks = new ArrayCollection();
+        $this->repeatTasks = new ArrayCollection();
+        $this->repeatTaskInstances = new ArrayCollection();
+
+    }
+
+    /**
+     * @return TaskRepeatSingle|ArrayCollection
+     */
+    public function getRepeatTaskInstances()
+    {
+        return $this->repeatTaskInstances;
+    }
+
+    /**
+     * @param TaskRepeatSingle $repeatTaskInstance
+     */
+    public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
+    {
+        $this->repeatTaskInstances[] = $repeatTaskInstance;
+    }
+
+    /**
+     * @return TaskSingle|ArrayCollection
+     */
+    public function getSingleTasks()
+    {
+        return $this->singleTasks;
+    }
+
+    /**
+     * @param TaskSingle $singleTask
+     */
+    public function addSingleTask(TaskSingle $singleTask)
+    {
+        $this->singleTasks[] = $singleTask;
+    }
+
+    /**
+     * @return TaskRepeat|ArrayCollection
+     */
+    public function getRepeatTasks()
+    {
+        return $this->repeatTasks;
+    }
+
+    /**
+     * @param TaskRepeat $repeatTask
+     */
+    public function addRepeatTask(TaskRepeat $repeatTask)
+    {
+        $this->repeatTasks[] = $repeatTask;
+    }
 
     /**
      * @return int

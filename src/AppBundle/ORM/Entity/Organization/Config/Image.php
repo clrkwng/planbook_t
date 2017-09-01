@@ -33,7 +33,7 @@ class Image
      * @label('Allows for an organization to build up and manage their own repository of uploaded images')
      *
      */
-    protected $organization;
+    protected $organization = null;
 
     /**
      * @OneToMany(targetEntity="Trophy", mappedBy="image")
@@ -41,6 +41,20 @@ class Image
      *
      */
     protected $trophies = null;
+
+    /**
+     * @OneToMany(targetEntity="Category", mappedBy="image")
+     * @var Category[] An ArrayCollection of Category objects.
+     *
+     */
+    protected $categories = null;
+
+    /**
+     * @OneToMany(targetEntity="Prize", mappedBy="image")
+     * @var Prize[] An ArrayCollection of Prize objects.
+     *
+     */
+    protected $prizes = null;
 
     /**
      * @var string
@@ -80,6 +94,8 @@ class Image
     public function __construct()
     {
         $this->trophies = new ArrayCollection();
+        $this->prizes = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     /**
@@ -95,6 +111,38 @@ class Image
      */
     public function getTrophies(){
         return $this->trophies;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function addCategory(Category $category)
+    {
+        $this->categories[] = $category;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * @param Prize $prize
+     */
+    public function addPrize(Prize $prize)
+    {
+        $this->prizes[] = $prize;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getPrizes()
+    {
+        return $this->prizes;
     }
 
 

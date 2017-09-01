@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="theme")
@@ -41,6 +42,37 @@ class Theme
      *
      */
     protected $state;
+
+    /**
+     * @OneToMany(targetEntity="User", mappedBy="theme")
+     * @var User[] An ArrayCollection of User objects.
+     *
+     */
+    protected $users = null;
+
+    /**
+     * Theme constructor.
+     */
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+    }
+
+    /**
+     * @return User[]|ArrayCollection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
 
     /**
      * @return int

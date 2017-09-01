@@ -26,24 +26,20 @@ class TaskSingle
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Task
+     * @ManyToOne(targetEntity="Task", inversedBy="singleTasks")
      *
-     * Base task to inherit from
+     * @label('Base task to inherit from')
      *
      */
-    protected $task_id;
+    protected $task = null;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
-     *
-     * Task's priority
+     * @ManyToOne(targetEntity="Priority", mappedBy="singleTasks")
+     * @var Priority
      *
      */
-    protected $priority_id;
+    protected $priority = null;
 
     /**
      * @var string
@@ -95,35 +91,35 @@ class TaskSingle
     }
 
     /**
-     * @return int
+     * @return Task
      */
-    public function getTaskId()
+    public function getTask()
     {
-        return $this->task_id;
+        return $this->task;
     }
 
     /**
-     * @param int $task_id
+     * @param Task $task
      */
-    public function setTaskId($task_id)
+    public function setTaskId($task)
     {
-        $this->task_id = $task_id;
+        $this->task = $task;
     }
 
     /**
-     * @return int
+     * @return Priority
      */
-    public function getPriorityId()
+    public function getPriority()
     {
-        return $this->priority_id;
+        return $this->priority;
     }
 
     /**
-     * @param int $priority_id
+     * @param Priority $priority
      */
-    public function setPriorityId($priority_id)
+    public function setPriority(Priority $priority)
     {
-        $this->priority_id = $priority_id;
+        $this->priority = $priority;
     }
 
     /**

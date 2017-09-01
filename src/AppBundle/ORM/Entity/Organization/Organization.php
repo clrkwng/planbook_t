@@ -12,12 +12,13 @@ use AppBundle\ORM\Entity\Image;
 use AppBundle\ORM\Entity\OrgConfig;
 use AppBundle\ORM\Entity\Priority;
 use AppBundle\ORM\Entity\Trophy;
+use AppBundle\ORM\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="organization")
  *
- * Realm (collection) of users
+ * @label('Collection of users')
  *
  **/
 class Organization
@@ -59,6 +60,13 @@ class Organization
     protected $priorities = null;
 
     /**
+     * @OneToMany(targetEntity="User", mappedBy="organization")
+     * @var User[] An ArrayCollection of User objects.
+     *
+     */
+    protected $users = null;
+
+    /**
      * @OneToMany(targetEntity="Category", mappedBy="organization")
      * @var Category[] An ArrayCollection of Category objects.
      *
@@ -75,7 +83,7 @@ class Organization
      * @var string
      * @Column(type="string")
      *
-     * Generated UUID that can be used to link uniquely to a particular tenant
+     * @label('Generated UUID that can be used to link uniquely to a particular tenant')
      *
      */
     protected $uuid;
@@ -90,6 +98,7 @@ class Organization
         $this->trophies = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->priorities = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -106,6 +115,22 @@ class Organization
     public function getImages()
     {
         return $this->images;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+    }
+
+    /**
+     * @return User[]|ArrayCollection
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 
     /**

@@ -47,6 +47,13 @@ class Frequency
     protected $metaData = null;
 
     /**
+     * @ManyToMany(targetEntity="TaskRepeat", mappedBy="frequency")
+     * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
+     *
+     */
+    protected $repeatTasks = null;
+
+    /**
      * @var string
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
@@ -60,9 +67,13 @@ class Frequency
      */
     protected $state;
 
+    /**
+     * Frequency constructor.
+     */
     public function __construct()
     {
         $this->metaData = new ArrayCollection();
+        $this->repeatTasks = new ArrayCollection();
 
     }
 
@@ -72,6 +83,22 @@ class Frequency
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param TaskRepeat $repeatTask
+     */
+    public function addRepeatTask(TaskRepeat $repeatTask)
+    {
+        $this->repeatTasks[] = $repeatTask;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getRepeatTasks()
+    {
+        return $this->repeatTasks;
     }
 
     /**

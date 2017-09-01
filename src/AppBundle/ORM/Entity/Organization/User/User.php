@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use AppBundle\ORM\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -33,14 +34,28 @@ class User
     protected $taskTemplates = null;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @OneToMany(targetEntity="Prize", mappedBy="user")
+     * @var Prize[] An ArrayCollection of Prize objects.
+     * @label('Collection of prizes associated with the User')
+     */
+    protected $prizes = null;
+
+    /**
+     * @OneToMany(targetEntity="UserTrophy", mappedBy="user")
+     * @var UserTrophy[] An ArrayCollection of UserTrophy objects.
+     * @label('Collection of trophies associated with the User')
+     */
+    protected $trophies = null;
+
+    /**
+     * @var Organization
+     *
+     * @ManyToOne(targetEntity="Organization", mappedBy="users")
      *
      * @label('The realm that the user is associated with')
      *
      */
-    protected $organization_id;
+    protected $organization = null;
 
     /**
      * @var string
@@ -64,15 +79,14 @@ class User
     protected $uuid;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Theme
      *
+     * @OneToMany(targetEntity="Theme", mappedBy="users")
      *
      * @label('The Theme the user has selected for use in their profile')
      *
      */
-    protected $theme_id;
+    protected $theme = null;
 
     /**
      * @var string
@@ -98,17 +112,17 @@ class User
      * @label('User Profile Picture')
      *
      */
-    protected $image;
+    protected $image = null;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Type
+     *
+     * @ManyToOne(targetEntity="Type", mappedBy="users")
      *
      * @label('The role that a user has in the realm')
      *
      */
-    protected $type_id;
+    protected $type = null;
 
     /**
      * @var int
@@ -143,7 +157,25 @@ class User
     public function __construct()
     {
         $this->taskTemplates = new ArrayCollection();
+        $this->prizes = new ArrayCollection();
+        $this->trophies = new ArrayCollection();
 
+    }
+
+    /**
+     * @param UserTrophy $userTrophy
+     */
+    public function addTrophy(UserTrophy $userTrophy)
+    {
+        $this->trophies[] = $userTrophy;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getTrophies()
+    {
+        return $this->trophies;
     }
 
     /**
@@ -163,6 +195,22 @@ class User
     }
 
     /**
+     * @param Prize $prize
+     */
+    public function addPrize(Prize $prize)
+    {
+        $this->prizes[] = $prize;
+    }
+
+    /**
+     * @return ArrayCollection|null
+     */
+    public function getPrizes()
+    {
+        return $this->prizes;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -171,19 +219,19 @@ class User
     }
 
     /**
-     * @return int
+     * @return Organization
      */
-    public function getOrganizationId()
+    public function getOrganization()
     {
-        return $this->organization_id;
+        return $this->organization;
     }
 
     /**
-     * @param int $organization_id
+     * @param Organization $organization
      */
-    public function setOrganizationId($organization_id)
+    public function setOrganization(Organization $organization)
     {
-        $this->organization_id = $organization_id;
+        $this->organization = $organization;
     }
 
     /**
@@ -235,19 +283,19 @@ class User
     }
 
     /**
-     * @return int
+     * @return Theme
      */
-    public function getThemeId()
+    public function getTheme()
     {
-        return $this->theme_id;
+        return $this->theme;
     }
 
     /**
-     * @param int $theme_id
+     * @param Theme $theme
      */
-    public function setThemeId($theme_id)
+    public function setTheme(Theme $theme)
     {
-        $this->theme_id = $theme_id;
+        $this->theme = $theme;
     }
 
     /**
@@ -283,19 +331,19 @@ class User
     }
 
     /**
-     * @return int
+     * @return Type
      */
-    public function getTypeId()
+    public function getType()
     {
-        return $this->type_id;
+        return $this->type;
     }
 
     /**
-     * @param int $type_id
+     * @param Type $type
      */
-    public function setTypeId($type_id)
+    public function setType(Type $type)
     {
-        $this->type_id = $type_id;
+        $this->type = $type;
     }
 
     /**

@@ -11,7 +11,7 @@ namespace AppBundle\ORM\Entity;
 /**
  * @Entity @Table(name="user_trophy")
  *
- * Mapping of a User to their trophies and the associated quantities
+ * @label('Mapping of a User to their trophies and the associated quantities')
  *
  **/
 class UserTrophy
@@ -25,28 +25,24 @@ class UserTrophy
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var User
      *
-     * Foreign key to `User` table
+     * @ManyToOne(targetEntity="User", mappedBy="trophies")
      *
-     * The associated User
+     * @label('The associated User')
      *
      */
-    protected $user_id;
+    protected $user = null;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Trophy
      *
-     * Foreign key to `Trophy` table
+     * @ManyToOne(targetEntity="Trophy", mappedBy="users")
      *
-     * The associated Trophy
+     * @label('The associated Trophy')
      *
      */
-    protected $trophy_id;
+    protected $trophy = null;
 
     /**
      * @var int
@@ -67,35 +63,35 @@ class UserTrophy
     }
 
     /**
-     * @return int
+     * @return User
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->user_id;
+        return $this->user;
     }
 
     /**
-     * @param int $user_id
+     * @param User $user
      */
-    public function setUserId($user_id)
+    public function setUserId(User $user)
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
     }
 
     /**
-     * @return int
+     * @return Trophy
      */
-    public function getTrophyId()
+    public function getTrophy()
     {
-        return $this->trophy_id;
+        return $this->trophy;
     }
 
     /**
-     * @param int $trophy_id
+     * @param Trophy $trophy
      */
-    public function setTrophyId($trophy_id)
+    public function setTrophy(Trophy $trophy)
     {
-        $this->trophy_id = $trophy_id;
+        $this->trophy = $trophy;
     }
 
     /**

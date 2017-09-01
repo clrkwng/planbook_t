@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="task")
@@ -32,7 +33,27 @@ class Task
      * @ManytoOne(targetEntity="User", inversedBy="taskTemplates")
      *
      */
-    protected $user;
+    protected $user = null;
+
+    /**
+     * @var TaskSingle
+     *
+     * @label('Collection of single instance, child tasks')
+     *
+     * @OneToMany(targetEntity="TaskSingle", mappedBy="task")
+     *
+     */
+    protected $singleTasks = null;
+
+    /**
+     * @var TaskRepeat
+     *
+     * @label('Collection of repeating, child tasks')
+     *
+     * @OneToMany(targetEntity="TaskRepeat", mappedBy="task")
+     *
+     */
+    protected $repeatTasks = null;
 
     /**
      * @var string
@@ -57,6 +78,48 @@ class Task
      *
      */
     protected $state;
+
+    /**
+     * Task constructor.
+     */
+    public function __construct()
+    {
+        $this->singleTasks = new ArrayCollection();
+        $this->repeatTasks = new ArrayCollection();
+
+    }
+
+    /**
+     * @param TaskSingle $singleTask
+     */
+    public function addSingleTask(TaskSingle $singleTask)
+    {
+        $this->singleTasks[] = $singleTask;
+    }
+
+    /**
+     * @return TaskSingle|ArrayCollection
+     */
+    public function getSingleTasks()
+    {
+        return $this->singleTasks;
+    }
+
+    /**
+     * @param TaskRepeat $repeatTask
+     */
+    public function addRepeatTask(TaskRepeat $repeatTask)
+    {
+        $this->repeatTasks[] = $repeatTask;
+    }
+
+    /**
+     * @return TaskRepeat|ArrayCollection
+     */
+    public function getRepeatTasks()
+    {
+        return $this->repeatTasks;
+    }
 
     /**
      * @return int

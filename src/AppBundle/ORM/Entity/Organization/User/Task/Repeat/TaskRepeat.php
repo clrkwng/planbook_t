@@ -7,11 +7,12 @@
  */
 
 namespace AppBundle\ORM\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity @Table(name="task_repeat")
  *
- * Definition for a task that occurs on a recurrent basis
+ * @label('Definition for a task that occurs on a recurrent basis')
  *
  **/
 class TaskRepeat
@@ -25,40 +26,45 @@ class TaskRepeat
     protected $id;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Task
+     * @ManyToOne(targetEntity="Task", inversedBy="repeatTasks")
      *
-     * Base task to inherit from
+     * @label('Base task to inherit from')
      *
      */
-    protected $task_id;
+    protected $task;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
+     * @ManyToOne(targetEntity="TaskRepeat", inversedBy="baseRepeatTask")
      *
-     * Task's default priority to be inherited by each single instance
+     * @label('Base task to inherit from')
      *
      */
-    protected $priority_id;
+    protected $repeatTaskInstances;
 
     /**
-     * @var int
-     * @Id
-     * @Column(type="integer")
+     * @var Priority
+     * @ManyToOne(targetEntity="Priority", mappedBy="repeatTasks")
      *
-     * Task's repetition frequency; used for creation of `Task_Repeat_Single`
+     * @label('Task's default priority to be inherited by each single instance')
      *
      */
-    protected $frequency_id;
+    protected $priority;
+
+    /**
+     * @var Frequency[] An ArrayCollection of Frequency objects.
+     * @ManyToMany(targetEntity="Frequency", mappedBy="repeatTasks")
+     * @label('Task's repetition frequency; used for creation of `Task_Repeat_Single`')
+     *
+     */
+    protected $frequencies;
 
     /**
      * @var string
      * @Column(type="string")
      *
-     * If provided, this will override the name specified in the associated base task
+     * @label('If provided, this will override the name specified in the associated base task')
      *
      */
     protected $name_ov;
@@ -67,7 +73,7 @@ class TaskRepeat
      * @var string
      * @Column(type="string")
      *
-     * If provided, this will override the description specified in the associated base task
+     * @label('If provided, this will override the description specified in the associated base task')
      *
      */
     protected $description_ov;
@@ -77,13 +83,56 @@ class TaskRepeat
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
      * @Column(type="string")
      *
-     * "ACTIVE"             = TaskRepeat is active and actively created new single occurrences
-     * "DISABLED"           = User has opted to temporarily turn off this TaskRepeat; User can toggle back on
-     * "DELETED"            = User has chosen to delete this TaskRepeat entirely
+     * @label('
+     *      "ACTIVE"             = TaskRepeat is active and actively created new single occurrences
+     *      "DISABLED"           = User has opted to temporarily turn off this TaskRepeat; User can toggle back on
+     *      "DELETED"            = User has chosen to delete this TaskRepeat entirely
+     *     ')
      *
      */
     protected $state;
 
+    /**
+     * TaskRepeat constructor.
+     */
+    public function __construct()
+    {
+        $this->frequencies = new ArrayCollection();
+        $this->repeatTaskInstances = new ArrayCollection();
+
+    }
+
+    /**
+     * @return TaskRepeat[]|ArrayCollection
+     */
+    public function getRepeatTaskInstances()
+    {
+        return $this->repeatTaskInstances;
+    }
+
+    /**
+     * @param TaskRepeatSingle $repeatTaskInstance
+     */
+    public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
+    {
+        $this->repeatTaskInstances[] = $repeatTaskInstance;
+    }
+
+    /**
+     * @return Frequency[]|ArrayCollection
+     */
+    public function getFrequencies()
+    {
+        return $this->frequencies;
+    }
+
+    /**
+     * @param Frequency $frequency
+     */
+    public function addFrequency(Frequency $frequency)
+    {
+        $this->frequencies[] = $frequency;
+    }
 
     /**
      * @return int
@@ -94,51 +143,35 @@ class TaskRepeat
     }
 
     /**
-     * @return int
+     * @return Task
      */
-    public function getTaskId()
+    public function getTask()
     {
-        return $this->task_id;
+        return $this->task;
     }
 
     /**
-     * @param int $task_id
+     * @param Task $task
      */
-    public function setTaskId($task_id)
+    public function setTask(Task $task)
     {
-        $this->task_id = $task_id;
+        $this->task = $task;
     }
 
     /**
-     * @return int
+     * @return Priority
      */
-    public function getPriorityId()
+    public function getPriority()
     {
-        return $this->priority_id;
+        return $this->priority;
     }
 
     /**
-     * @param int $priority_id
+     * @param Priority $priority
      */
-    public function setPriorityId($priority_id)
+    public function setPriority($priority)
     {
-        $this->priority_id = $priority_id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFrequencyId()
-    {
-        return $this->frequency_id;
-    }
-
-    /**
-     * @param int $frequency_id
-     */
-    public function setFrequencyId($frequency_id)
-    {
-        $this->frequency_id = $frequency_id;
+        $this->priority = $priority;
     }
 
     /**
