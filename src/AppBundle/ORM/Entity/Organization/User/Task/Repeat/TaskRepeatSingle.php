@@ -93,4 +93,102 @@ class TaskRepeatSingle
     {
         return $this->id;
     }
+
+    /**
+     * @return int
+     */
+    public function getTaskRepeatId()
+    {
+        return $this->task_repeat_id;
+    }
+
+    /**
+     * @param int $task_repeat_id
+     */
+    public function setTaskRepeatId($task_repeat_id)
+    {
+        $this->task_repeat_id = $task_repeat_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriorityIdOv()
+    {
+        return $this->priority_id_ov;
+    }
+
+    /**
+     * @param int $priority_id_ov
+     */
+    public function setPriorityIdOv($priority_id_ov)
+    {
+        $this->priority_id_ov = $priority_id_ov;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeadline()
+    {
+        return $this->deadline;
+    }
+
+    /**
+     * @param string $deadline
+     */
+    public function setDeadline($deadline)
+    {
+        $this->deadline = $deadline;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameOv()
+    {
+        return $this->name_ov;
+    }
+
+    /**
+     * @param string $name_ov
+     */
+    public function setNameOv($name_ov)
+    {
+        $this->name_ov = $name_ov;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescriptionOv()
+    {
+        return $this->description_ov;
+    }
+
+    /**
+     * @param string $description_ov
+     */
+    public function setDescriptionOv($description_ov)
+    {
+        $this->description_ov = $description_ov;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+
 }

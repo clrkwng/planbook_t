@@ -56,5 +56,54 @@ class Color
      */
     protected $state;
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHexValue()
+    {
+        return $this->hex_value;
+    }
+
+    /**
+     * @param string $hex_value
+     */
+    public function setHexValue($hex_value)
+    {
+        $this->hex_value = $hex_value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+
 
 }

@@ -69,5 +69,71 @@ class Priority
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrganizationId()
+    {
+        return $this->organization_id;
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    public function setOrganizationId($organization_id)
+    {
+        $this->organization_id = $organization_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCompletionPoints()
+    {
+        return $this->completion_points;
+    }
+
+    /**
+     * @param int $completion_points
+     */
+    public function setCompletionPoints($completion_points)
+    {
+        $this->completion_points = $completion_points;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+
+
 
 }

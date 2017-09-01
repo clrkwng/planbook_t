@@ -58,6 +58,56 @@ class Category
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageId()
+    {
+        return $this->image_id;
+    }
+
+    /**
+     * @param int $image_id
+     */
+    public function setImageId($image_id)
+    {
+        $this->image_id = $image_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOrganizationId()
+    {
+        return $this->organization_id;
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    public function setOrganizationId($organization_id)
+    {
+        $this->organization_id = $organization_id;
+    }
+
+
+
 
 
 }

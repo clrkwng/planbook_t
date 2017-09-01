@@ -65,4 +65,54 @@ class UserTrophy
     {
         return $this->id;
     }
+
+    /**
+     * @return int
+     */
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @param int $user_id
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = $user_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTrophyId()
+    {
+        return $this->trophy_id;
+    }
+
+    /**
+     * @param int $trophy_id
+     */
+    public function setTrophyId($trophy_id)
+    {
+        $this->trophy_id = $trophy_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param int $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+
+
 }

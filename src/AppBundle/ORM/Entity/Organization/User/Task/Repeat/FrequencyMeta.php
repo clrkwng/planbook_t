@@ -70,4 +70,54 @@ class FrequencyMeta
         return $this->id;
     }
 
+    /**
+     * @return int
+     */
+    public function getFrequencyId()
+    {
+        return $this->frequency_id;
+    }
+
+    /**
+     * @param int $frequency_id
+     */
+    public function setFrequencyId($frequency_id)
+    {
+        $this->frequency_id = $frequency_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetaKey()
+    {
+        return $this->meta_key;
+    }
+
+    /**
+     * @param string $meta_key
+     */
+    public function setMetaKey($meta_key)
+    {
+        $this->meta_key = $meta_key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetaValue()
+    {
+        return $this->meta_value;
+    }
+
+    /**
+     * @param string $meta_value
+     */
+    public function setMetaValue($meta_value)
+    {
+        $this->meta_value = $meta_value;
+    }
+
+
+
 }

@@ -56,4 +56,38 @@ class ThemeColor
     {
         return $this->id;
     }
+
+    /**
+     * @return int
+     */
+    public function getThemeId()
+    {
+        return $this->theme_id;
+    }
+
+    /**
+     * @param int $theme_id
+     */
+    public function setThemeId($theme_id)
+    {
+        $this->theme_id = $theme_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getColorId()
+    {
+        return $this->color_id;
+    }
+
+    /**
+     * @param int $color_id
+     */
+    public function setColorId($color_id)
+    {
+        $this->color_id = $color_id;
+    }
+
+
 }

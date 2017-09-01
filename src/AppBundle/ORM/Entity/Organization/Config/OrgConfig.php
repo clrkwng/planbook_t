@@ -91,4 +91,118 @@ class OrgConfig
         return $this->id;
     }
 
+    /**
+     * @return int
+     */
+    public function getOrganizationId()
+    {
+        return $this->organization_id;
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    public function setOrganizationId($organization_id)
+    {
+        $this->organization_id = $organization_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVariable()
+    {
+        return $this->variable;
+    }
+
+    /**
+     * @param string $variable
+     */
+    public function setVariable($variable)
+    {
+        $this->variable = $variable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param string $value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedTime()
+    {
+        return $this->created_time;
+    }
+
+    /**
+     * @param string $created_time
+     */
+    public function setCreatedTime($created_time)
+    {
+        $this->created_time = $created_time;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedTime()
+    {
+        return $this->updated_time;
+    }
+
+    /**
+     * @param string $updated_time
+     */
+    public function setUpdatedTime($updated_time)
+    {
+        $this->updated_time = $updated_time;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updated_by;
+    }
+
+    /**
+     * @param string $updated_by
+     */
+    public function setUpdatedBy($updated_by)
+    {
+        $this->updated_by = $updated_by;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedBy()
+    {
+        return $this->created_by;
+    }
+
+    /**
+     * @param string $created_by
+     */
+    public function setCreatedBy($created_by)
+    {
+        $this->created_by = $created_by;
+    }
+
+
+
 }

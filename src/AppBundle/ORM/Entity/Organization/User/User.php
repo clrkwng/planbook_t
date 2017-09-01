@@ -143,6 +143,184 @@ class User
         return $this->id;
     }
 
+    /**
+     * @return int
+     */
+    public function getOrganizationId()
+    {
+        return $this->organization_id;
+    }
+
+    /**
+     * @param int $organization_id
+     */
+    public function setOrganizationId($organization_id)
+    {
+        $this->organization_id = $organization_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string $uuid
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+    }
+
+    /**
+     * @return int
+     */
+    public function getThemeId()
+    {
+        return $this->theme_id;
+    }
+
+    /**
+     * @param int $theme_id
+     */
+    public function setThemeId($theme_id)
+    {
+        $this->theme_id = $theme_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageId()
+    {
+        return $this->image_id;
+    }
+
+    /**
+     * @param int $image_id
+     */
+    public function setImageId($image_id)
+    {
+        $this->image_id = $image_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTypeId()
+    {
+        return $this->type_id;
+    }
+
+    /**
+     * @param int $type_id
+     */
+    public function setTypeId($type_id)
+    {
+        $this->type_id = $type_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalPoints()
+    {
+        return $this->total_points;
+    }
+
+    /**
+     * @param int $total_points
+     */
+    public function setTotalPoints($total_points)
+    {
+        $this->total_points = $total_points;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTrophyPoints()
+    {
+        return $this->trophy_points;
+    }
+
+    /**
+     * @param int $trophy_points
+     */
+    public function setTrophyPoints($trophy_points)
+    {
+        $this->trophy_points = $trophy_points;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPrizePoints()
+    {
+        return $this->prize_points;
+    }
+
+    /**
+     * @param int $prize_points
+     */
+    public function setPrizePoints($prize_points)
+    {
+        $this->prize_points = $prize_points;
+    }
+
+
+
 
 
 }
