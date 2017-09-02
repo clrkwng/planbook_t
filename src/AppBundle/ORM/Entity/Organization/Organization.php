@@ -16,7 +16,7 @@ use AppBundle\ORM\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="organization")
+ * @Entity(repositoryClass="OrganizationRepository") @Table(name="organization")
  *
  * @label('Collection of users')
  *

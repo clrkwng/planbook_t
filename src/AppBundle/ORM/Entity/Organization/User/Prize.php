@@ -9,7 +9,7 @@
 namespace AppBundle\ORM\Entity;
 
 /**
- * @Entity @Table(name="prize")
+ * @Entity(repositoryClass="PrizeRepository") @Table(name="prize")
  **/
 class Prize
 {

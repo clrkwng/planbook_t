@@ -9,7 +9,7 @@
 namespace AppBundle\ORM\Entity;
 
 /**
- * @Entity @Table(name="sys_config")
+ * @Entity(repositoryClass="SysConfigRepository") @Table(name="sys_config")
  *
  * Global configurations for the deployment environment
  *

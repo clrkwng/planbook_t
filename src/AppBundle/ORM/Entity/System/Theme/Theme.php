@@ -10,7 +10,7 @@ namespace AppBundle\ORM\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="theme")
+ * @Entity(repositoryClass="ThemeRepository") @Table(name="theme")
  *
  *  Container of related colors
  *
@@ -21,7 +21,7 @@ class Theme
      * @var int
      * @Id
      * @Column(type="integer")
-     * @GeneratedValue
+     * @GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
@@ -51,8 +51,23 @@ class Theme
     protected $users = null;
 
     /**
-     * @OneToMany(targetEntity="ThemeColor", mappedBy="theme")
-     * @var ThemeColor[] An ArrayCollection of ThemeColor objects.
+     * @ManyToMany(targetEntity="Color", cascade={"persist"})
+     * @JoinTable(
+     *      name="map_theme_color",
+     *      joinColumns={
+     *          @JoinColumn(
+     *              name="theme_id",
+     *              referencedColumnName="id"
+     *          )
+     *      },
+     *      inverseJoinColumns={
+     *          @JoinColumn(
+     *              name="color_id",
+     *              referencedColumnName="id"
+     *          )
+     *      }
+     * )
+     * @var Color[] An ArrayCollection of Color objects.
      * @label('Collection of colors associated with the Theme')
      */
     protected $colors = null;
@@ -67,15 +82,15 @@ class Theme
     }
 
     /**
-     * @param ThemeColor $color
+     * @param Color $color
      */
-    public function addColor(ThemeColor $color)
+    public function addColor(Color $color)
     {
         $this->colors[] = $color;
     }
 
     /**
-     * @return ThemeColor[]|ArrayCollection
+     * @return Color[]|ArrayCollection
      */
     public function getColors()
     {

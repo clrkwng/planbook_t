@@ -10,7 +10,7 @@ namespace AppBundle\ORM\Entity;
 
 
 /**
- * @Entity @Table(name="frequency_meta")
+ * @Entity(repositoryClass="FrequencyMetaRepository") @Table(name="frequency_meta")
  *
  * @label('Interval definition for a recurring task')
  *

@@ -10,7 +10,7 @@ namespace AppBundle\ORM\Entity;
 use AppBundle\ORM\Organization;
 
 /**
- * @Entity @Table(name="category")
+ * @Entity(repositoryClass="CategoryRepository") @Table(name="category")
  *
  * @label('Container for similar tasks; defined on a per tenant basis')
  *

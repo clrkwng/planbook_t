@@ -11,7 +11,7 @@ use AppBundle\ORM\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="image")
+ * @Entity(repositoryClass="ImageRepository") @Table(name="image")
  *
  * @label('Per tenant container of uploaded images')
  *

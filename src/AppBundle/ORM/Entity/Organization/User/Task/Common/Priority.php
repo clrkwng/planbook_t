@@ -11,7 +11,7 @@ use AppBundle\ORM\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="priority")
+ * @Entity(repositoryClass="PriorityRepository") @Table(name="priority")
  *
  * @label('Per tenant definitions of the priority placed on user tasks')
  *

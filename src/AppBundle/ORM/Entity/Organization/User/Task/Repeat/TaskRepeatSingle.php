@@ -9,7 +9,7 @@
 namespace AppBundle\ORM\Entity;
 
 /**
- * @Entity @Table(name="task_repeat_single")
+ * @Entity(repositoryClass="TaskRepeatSingleRepository") @Table(name="task_repeat_single")
  *
  * @label('A single occurrence of a task that occurs on a recurrent basis')
  *

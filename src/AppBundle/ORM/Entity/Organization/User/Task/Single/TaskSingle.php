@@ -10,7 +10,7 @@ namespace AppBundle\ORM\Entity;
 
 
 /**
- * @Entity @Table(name="task_single")
+ * @Entity(repositoryClass="TaskSingleRepository") @Table(name="task_single")
  *
  * Definition for a task that occurs only once
  *

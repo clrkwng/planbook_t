@@ -11,7 +11,7 @@ use AppBundle\ORM\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="user")
+ * @Entity(repositoryClass="UserRepository") @Table(name="user")
  *
  * @label('Account information for users on a per tenant basis')
  *
@@ -41,8 +41,23 @@ class User
     protected $prizes = null;
 
     /**
-     * @OneToMany(targetEntity="UserTrophy", mappedBy="user")
-     * @var UserTrophy[] An ArrayCollection of UserTrophy objects.
+     * @ManyToMany(targetEntity="Trophy", cascade={"persist"})
+     * @JoinTable(
+     *      name="map_user_trophy",
+     *      joinColumns={
+     *          @JoinColumn(
+     *              name="user_id",
+     *              referencedColumnName="id"
+     *          )
+     *      },
+     *      inverseJoinColumns={
+     *          @JoinColumn(
+     *              name="trophy_id",
+     *              referencedColumnName="id"
+     *          )
+     *      }
+     * )
+     * @var Trophy[] An ArrayCollection of Trophy objects.
      * @label('Collection of trophies associated with the User')
      */
     protected $trophies = null;
@@ -163,11 +178,11 @@ class User
     }
 
     /**
-     * @param UserTrophy $userTrophy
+     * @param Trophy $trophy
      */
-    public function addTrophy(UserTrophy $userTrophy)
+    public function addTrophy(Trophy $trophy)
     {
-        $this->trophies[] = $userTrophy;
+        $this->trophies[] = $trophy;
     }
 
     /**

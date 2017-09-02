@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
- * @Entity @Table(name="frequency")
+ * @Entity(repositoryClass="FrequencyRepository") @Table(name="frequency")
  *
  * @label('Base definition for a recurring task')
  *

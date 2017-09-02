@@ -11,7 +11,7 @@ use AppBundle\ORM\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="trophy")
+ * @Entity(repositoryClass="TrophyRepository") @Table(name="trophy")
  *
  * @Label('Per tenant definitions of trophies that are earned by a user completing tasks')
  *
@@ -42,15 +42,6 @@ class Trophy
     protected $organization = null;
 
     /**
-     * @var UserTrophy
-     *
-     * @OneToMany(targetEntity="UserTrophy", mappedBy="trophies")
-     *
-     * @label('Collection of users with this trophy')
-     */
-    protected $users = null;
-
-    /**
      * @var Image
      * @label('Icon displayed for the trophy')
      *
@@ -77,7 +68,6 @@ class Trophy
      */
     protected $next_trophy = null;
 
-
     /**
      * @var string
      * @Enum({"ACTIVE", "DISABLED", "DELETED"})
@@ -97,23 +87,7 @@ class Trophy
      */
     public function __construct()
     {
-        $this->users = new ArrayCollection();
-    }
 
-    /**
-     * @param User $user
-     */
-    public function addUser(User $user)
-    {
-        $this->users[] = $user;
-    }
-
-    /**
-     * @return UserTrophy|ArrayCollection
-     */
-    public function getUsers()
-    {
-        return $this->users;
     }
 
     /**

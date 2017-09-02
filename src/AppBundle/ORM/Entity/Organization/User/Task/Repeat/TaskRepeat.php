@@ -10,7 +10,7 @@ namespace AppBundle\ORM\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="task_repeat")
+ * @Entity(repositoryClass="TaskRepeatRepository") @Table(name="task_repeat")
  *
  * @label('Definition for a task that occurs on a recurrent basis')
  *

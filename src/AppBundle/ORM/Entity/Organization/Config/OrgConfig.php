@@ -11,7 +11,7 @@ use AppBundle\ORM\Organization;
 
 
 /**
- * @Entity @Table(name="org_config")
+ * @Entity(repositoryClass="OrgConfigRepository") @Table(name="org_config")
  *
  * @label('Configurations for the deployment environment on a per tenant basis')
  *

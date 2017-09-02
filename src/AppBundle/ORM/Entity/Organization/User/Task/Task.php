@@ -10,7 +10,7 @@ namespace AppBundle\ORM\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity @Table(name="task")
+ * @Entity(repositoryClass="TaskRepository") @Table(name="task")
  *
  * @label('Base definition for a task')
  *

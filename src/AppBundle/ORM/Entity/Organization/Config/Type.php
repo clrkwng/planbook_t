@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
- * @Entity @Table(name="type")
+ * @Entity(repositoryClass="TypeRepository") @Table(name="type")
  *
  * @Label('Role that a user has in the Realm')
  *
