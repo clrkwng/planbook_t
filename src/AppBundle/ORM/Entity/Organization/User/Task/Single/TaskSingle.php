@@ -57,12 +57,19 @@ class TaskSingle
      *
      * UNIX timestamp for when the task must be completed by
      *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 4)
+     *
      */
     protected $deadline;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
+     *
      *
      * If provided, this will override the name specified in the associated base task
      *
@@ -71,7 +78,10 @@ class TaskSingle
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      *
      * If provided, this will override the description specified in the associated base task
      *

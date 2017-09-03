@@ -47,6 +47,9 @@ class FrequencyMeta
      *          range for
      *     ')
      *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1)
+     *
      */
     protected $meta_key;
 
@@ -64,6 +67,9 @@ class FrequencyMeta
      *              For every 5 days, this is "432000"
      *
      *     ')
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1)
      *
      */
     protected $meta_value;

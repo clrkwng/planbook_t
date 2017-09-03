@@ -56,12 +56,18 @@ class TaskRepeatSingle
      *
      * @label('UNIX timestamp for when the task must be completed by')
      *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 4)
+     *
      */
     protected $deadline;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      *
      * @label('
      *        If provided, will override the name defined in the corresponding
@@ -73,7 +79,10 @@ class TaskRepeatSingle
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      *
      * @label('
      *     If provided, will override the description defined in the corresponding

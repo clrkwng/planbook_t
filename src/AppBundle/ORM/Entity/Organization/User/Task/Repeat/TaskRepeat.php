@@ -72,7 +72,10 @@ class TaskRepeat
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      *
      * @label('If provided, this will override the name specified in the associated base task')
      *
@@ -81,7 +84,10 @@ class TaskRepeat
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      *
      * @label('If provided, this will override the description specified in the associated base task')
      *

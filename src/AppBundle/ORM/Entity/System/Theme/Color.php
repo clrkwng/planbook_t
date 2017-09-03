@@ -28,12 +28,18 @@ class Color
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 3)
      */
     protected $name;
 
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 4)
      */
     protected $hex_value;
 

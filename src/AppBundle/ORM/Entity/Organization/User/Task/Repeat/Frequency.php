@@ -38,6 +38,9 @@ class Frequency
      *          (ex: "Every Tuesday", "Every Day", "Every n days", etc)
      * ')
      *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 2)
+     *
      */
     protected $name;
 

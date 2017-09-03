@@ -82,18 +82,27 @@ class User
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 4)
      */
     protected $username;
 
     /**
      * @var Email
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 4)
      */
     protected $email;
 
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 4)
      */
     protected $password;
 
@@ -105,6 +114,8 @@ class User
      * )
      *
      * @label('Generated UUID to uniquely link to this user')
+     *
+     * @Assert\NotBlank
      *
      */
     protected $uuid;

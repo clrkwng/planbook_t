@@ -39,18 +39,25 @@ class OrgConfig
      *     inversedBy="orgConfigurations"
      * )
      *
+     *
      */
     protected $organization;
 
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1)
      */
     protected $variable;
 
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1)
      */
     protected $value;
 

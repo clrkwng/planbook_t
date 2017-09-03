@@ -97,6 +97,9 @@ class Organization
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 3)
      */
     protected $name;
 
@@ -108,6 +111,8 @@ class Organization
      * )
      *
      * @label('Generated UUID that can be used to link uniquely to a particular tenant')
+     *
+     * @Assert\NotBlank
      *
      */
     protected $uuid;

@@ -31,6 +31,10 @@ class Trophy
 
     /**
      * @var string
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1)
+     *
      * @Column(type="string")
      */
     protected $name;

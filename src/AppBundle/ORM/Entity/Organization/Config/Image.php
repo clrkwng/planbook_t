@@ -72,6 +72,9 @@ class Image
     /**
      * @var string
      * @Column(type="string")
+     *
+     * @Assert\NotBlank
+     * @Assert\Length(min = 2)
      */
     protected $name;
 
