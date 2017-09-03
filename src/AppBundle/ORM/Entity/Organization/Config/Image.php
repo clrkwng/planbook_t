@@ -87,14 +87,13 @@ class Image
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\Config\ImageUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
-     *
-     * @label('
-     *      "ACTIVE"             = Image is active and available for use
-     *      "DISABLED"           = Admin has opted to turn off access to this Image; Admin can toggle back on
-     *      "DELETED"            = Admin has chosen to delete this Image entirely
-     *  ')
      *
      */
     protected $state;

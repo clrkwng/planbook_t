@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
 
 class ColorRepository extends EntityRepository
 {
-//    public function findColorsByThemeId($themeId, $number = 10)
+//    public function findColorByHexValue($hexValue)
 //    {
 //        $qb = $this->createQueryBuilder('p');
 //        $qb->join('p.platform', 'f')

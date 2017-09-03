@@ -84,20 +84,17 @@ class TaskRepeatSingle
 
     /**
      * @var string
-     * @Enum({"NOT_VIEWED", "IN_PROGRESS", "COMPLETED", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\User\Task\Repeat\TaskRepeatSingleUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
      *
-     * @label('
-     *      "NOT_VIEWED"     = User is prompted with a notification
-     *      "IN_PROGRESS"    = User can view in their task dashboard; User can mark as complete
-     *      "COMPLETED"      = User can view in their task dashboard; User can not mark as complete; Points have been added
-     *      "DISABLED"       = Hidden from user's display; Admin can see the task, edit, and toggle the task's visibility
-     *      "DELETED"        = Hidden from both the user and the admin's display
-     *     ')
      *
      */
     protected $state;
-
 
     /**
      * @return int

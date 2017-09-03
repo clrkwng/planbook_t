@@ -88,14 +88,13 @@ class TaskRepeat
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\User\Task\Repeat\TaskRepeatUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
-     *
-     * @label('
-     *      "ACTIVE"             = TaskRepeat is active and actively created new single occurrences
-     *      "DISABLED"           = User has opted to temporarily turn off this TaskRepeat; User can toggle back on
-     *      "DELETED"            = User has chosen to delete this TaskRepeat entirely
-     *     ')
      *
      */
     protected $state;

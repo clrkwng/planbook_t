@@ -112,16 +112,14 @@ class User
 
     /**
      * @var string
-     * @Enum({"NOT_ACTIVATED", "VERIFICATION_SENT", "VERIFIED", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\User\UserUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
      *
-     * @label('
-     *      "NOT_ACTIVATED"      = Account has been created, but user has not triggered a verification email
-     *      "VERIFICATION_SENT"  = User has a verification email awaiting their confirmation
-     *      "VERIFIED"           = User can login under normal conditions
-     *      "DISABLED"           = User's account has been disabled by an admin; Login is blocked; Admin can re-enable
-     *      "DELETED"            = Admin has deleted this user;
-     *     ')
      *
      */
     protected $state;

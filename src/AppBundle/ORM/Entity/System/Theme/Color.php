@@ -46,13 +46,13 @@ class Color
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\System\Theme\ColorUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
-     *
-     * "ACTIVE"             = Color is active and available for use
-     * "DISABLED"           = Admin has opted to turn off access to this Color; Admin can toggle back on
-     * "DELETED"            = Admin has chosen to delete this Color entirely
-     *
      */
     protected $state;
 

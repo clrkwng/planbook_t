@@ -79,14 +79,13 @@ class Trophy
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\Config\TrophyUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
-     *
-     * @label('
-             * "ACTIVE"             = Trophy is active and can be awarded by Users
-             * "DISABLED"           = Tenant has opted to turn off this trophy for their organization; Tenant can toggle back on
-             * "DELETED"            = Tenant has chosen to delete this trophy
-     *     ')
      *
      */
     protected $state;

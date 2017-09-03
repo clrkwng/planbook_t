@@ -63,7 +63,10 @@ class OrgConfig
 
     /**
      * @var DateTime
-     * @Column(type="date")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      *
      * @label('Timestamp for when this record was last updated')
      *
@@ -72,7 +75,10 @@ class OrgConfig
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      *
      * @label('User that last updated this record')
      *

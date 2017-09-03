@@ -9,6 +9,7 @@
 namespace AppBundle\ORM\Entity\System\Theme;
 use AppBundle\ORM\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Entity(repositoryClass="ThemeRepository") @Table(name="theme")
@@ -34,12 +35,14 @@ class Theme
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\System\Theme\ThemeUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
      *
-     * "ACTIVE"             = Theme is active and can be chosen for use by Users
-     * "DISABLED"           = Admin has opted to turn off this Theme for their organization; Admin can toggle back on
-     * "DELETED"            = Admin has chosen to delete this theme entirely
      *
      */
     protected $state;

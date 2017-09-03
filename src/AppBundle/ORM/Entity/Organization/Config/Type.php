@@ -84,14 +84,13 @@ class Type
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\Config\TypeUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
-     *
-     * @label('
-     *      "ACTIVE"             = Type is active and can be used
-     *      "DISABLED"           = Tenant has opted to turn off this role for their organization; Tenant can toggle back on
-     *      "DELETED"            = Tenant has chosen to delete this role
-     *     ')
      *
      */
     protected $state;

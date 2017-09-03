@@ -94,14 +94,14 @@ class Priority
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\User\Task\Common\PriorityUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
      *
-     * @label('
-     *      "ACTIVE"             = Priority is active and available for use
-     *      "DISABLED"           = Admin has opted to turn off this Priority; Admin can toggle back on
-     *      "DELETED"            = Admin has chosen to delete this Priority entirely
-     *     ')
      *
      */
     protected $state;

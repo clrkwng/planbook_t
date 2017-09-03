@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\ORM\Entity\Organization\User;
+use AppBundle\ORM\Entity\Organization\Config\Trophy;
 
 
 /**

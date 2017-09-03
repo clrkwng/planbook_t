@@ -82,12 +82,13 @@ class Task
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\User\Task\TaskUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
-     *
-     * "ACTIVE"             = Task is active and available for Users to create instances of
-     * "DISABLED"           = User has opted to temporarily turn off this Task; User can toggle back on
-     * "DELETED"            = User has chosen to delete this Task entirely
      *
      */
     protected $state;

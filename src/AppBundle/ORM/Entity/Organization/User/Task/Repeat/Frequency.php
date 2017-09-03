@@ -55,14 +55,13 @@ class Frequency
 
     /**
      * @var string
-     * @Enum({"ACTIVE", "DISABLED", "DELETED"})
+     * @Assert\Choice(
+     *     callback = {
+     *          "AppBundle\ORM\Util\Organization\User\Task\Repeat\FrequencyUtil",
+     *          "getStates"
+     *      }
+     * )
      * @Column(type="string")
-     *
-     * @label('
-     *      "ACTIVE"             = Frequency is active and available for use
-     *      "DISABLED"           = Access to this Frequency has been turned off
-     *      "DELETED"            = This Frequency has been removed from use
-     *     ')
      *
      */
     protected $state;
