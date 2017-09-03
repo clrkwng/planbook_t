@@ -6,8 +6,10 @@
  * Time: 8:53 PM
  */
 
-namespace AppBundle\ORM\Entity;
-use AppBundle\ORM\Organization;
+namespace AppBundle\ORM\Entity\Organization\Config;
+use AppBundle\ORM\Entity\Organization\Organization;
+use AppBundle\ORM\Entity\Organization\User\Prize;
+use AppBundle\ORM\Entity\Organization\User\Task\Common\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -28,7 +30,10 @@ class Image
 
     /**
      * @var Organization
-     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="images")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     inversedBy="images"
+     * )
      *
      * @label('Allows for an organization to build up and manage their own repository of uploaded images')
      *
@@ -36,21 +41,27 @@ class Image
     protected $organization = null;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Trophy", mappedBy="image")
+     * @OneToMany(targetEntity="Trophy", mappedBy="image")
      * @var Trophy[] An ArrayCollection of Trophy objects.
      *
      */
     protected $trophies = null;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Category", mappedBy="image")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Category",
+     *     mappedBy="image"
+     * )
      * @var Category[] An ArrayCollection of Category objects.
      *
      */
     protected $categories = null;
 
     /**
-     * @OneToMany(targetEntity="Prize", mappedBy="image")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Prize",
+     *     mappedBy="image"
+     * )
      * @var Prize[] An ArrayCollection of Prize objects.
      *
      */

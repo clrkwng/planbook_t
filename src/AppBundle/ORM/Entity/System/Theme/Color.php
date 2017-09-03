@@ -6,7 +6,7 @@
  * Time: 8:57 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\System\Theme;
 
 /**
  * @Entity(repositoryClass="ColorRepository") @Table(name="color")

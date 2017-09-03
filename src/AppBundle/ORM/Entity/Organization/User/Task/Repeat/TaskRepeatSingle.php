@@ -6,7 +6,8 @@
  * Time: 9:04 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
+use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
 
 /**
  * @Entity(repositoryClass="TaskRepeatSingleRepository") @Table(name="task_repeat_single")
@@ -35,7 +36,10 @@ class TaskRepeatSingle
 
     /**
      * @var Priority
-     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Priority", inversedBy="repeatTasks")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Priority",
+     *     inversedBy="repeatTasks"
+     * )
      *
      * @label('
      *     If provided, will override the priority defined in the corresponding

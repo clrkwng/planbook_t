@@ -6,8 +6,9 @@
  * Time: 9:32 PM
  */
 
-namespace AppBundle\ORM\Entity;
-use AppBundle\ORM\Organization;
+namespace AppBundle\ORM\Entity\Organization\Config;
+use AppBundle\ORM\Entity\Organization\Organization;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 
 /**
@@ -31,7 +32,10 @@ class OrgConfig
      *
      * @Label('Allows for configurations to be set on a per tenant basis')
      *
-     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="orgConfigurations")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     inversedBy="orgConfigurations"
+     * )
      *
      */
     protected $organization;
@@ -49,8 +53,8 @@ class OrgConfig
     protected $value;
 
     /**
-     * @var string
-     * @Column(type="string")
+     * @var DateTime
+     * @Column(type="date")
      *
      * @label('Timestamp for when this record was created')
      *
@@ -58,8 +62,8 @@ class OrgConfig
     protected $created_time;
 
     /**
-     * @var string
-     * @Column(type="string")
+     * @var DateTime
+     * @Column(type="date")
      *
      * @label('Timestamp for when this record was last updated')
      *
@@ -141,7 +145,7 @@ class OrgConfig
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getCreatedTime()
     {
@@ -149,15 +153,15 @@ class OrgConfig
     }
 
     /**
-     * @param string $created_time
+     * @param DateTime $created_time
      */
-    public function setCreatedTime($created_time)
+    public function setCreatedTime(DateTime $created_time)
     {
         $this->created_time = $created_time;
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getUpdatedTime()
     {
@@ -165,9 +169,9 @@ class OrgConfig
     }
 
     /**
-     * @param string $updated_time
+     * @param DateTime $updated_time
      */
-    public function setUpdatedTime($updated_time)
+    public function setUpdatedTime(DateTime $updated_time)
     {
         $this->updated_time = $updated_time;
     }

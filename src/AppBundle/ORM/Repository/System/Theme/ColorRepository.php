@@ -12,11 +12,11 @@ use Doctrine\ORM\EntityRepository;
 
 class ColorRepository extends EntityRepository
 {
-    public function findColorsByThemeId($themeId, $number = 10)
-    {
-        $qb = $this->createQueryBuilder('p');
-        $qb->join('p.platform', 'f')
-            ->where($qb->expr()->eq('f.id', $id));
-        return $qb;
-    }
+//    public function findColorsByThemeId($themeId, $number = 10)
+//    {
+//        $qb = $this->createQueryBuilder('p');
+//        $qb->join('p.platform', 'f')
+//            ->where($qb->expr()->eq('f.id', $id));
+//        return $qb;
+//    }
 }

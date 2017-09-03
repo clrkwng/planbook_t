@@ -6,8 +6,9 @@
  * Time: 8:46 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\Organization\Config;
 use Doctrine\Common\Collections\ArrayCollection;
+use AppBundle\ORM\Entity\Organization\User\User;
 
 
 /**
@@ -33,7 +34,10 @@ class Type
     protected $name;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\User", mappedBy="type")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     mappedBy="type"
+     * )
      * @var User[] An ArrayCollection of User objects.
      *
      */

@@ -6,8 +6,9 @@
  * Time: 8:50 PM
  */
 
-namespace AppBundle\ORM\Entity;
-use AppBundle\ORM\Organization;
+namespace AppBundle\ORM\Entity\Organization\User\Task\Common;
+use AppBundle\ORM\Entity\Organization\Config\Image;
+use AppBundle\ORM\Entity\Organization\Organization;
 
 /**
  * @Entity(repositoryClass="CategoryRepository") @Table(name="category")
@@ -33,7 +34,10 @@ class Category
 
     /**
      * @var Image
-     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Image", inversedBy="categories")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     inversedBy="categories"
+     * )
      *
      * @label('Icon rendered when the category is displayed')
      *
@@ -42,7 +46,10 @@ class Category
 
     /**
      * @var Organization
-     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="categories")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     inversedBy="categories"
+     * )
      *
      * @label('Realm that this category exists in')
      *

@@ -6,7 +6,9 @@
  * Time: 9:02 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
+use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
+use AppBundle\ORM\Entity\Organization\User\Task\Task;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -27,7 +29,10 @@ class TaskRepeat
 
     /**
      * @var Task
-     * @ManyToOne(targetEntity="Task", inversedBy="repeatTasks")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Task",
+     *     inversedBy="repeatTasks"
+     * )
      *
      * @label('Base task to inherit from')
      *
@@ -45,7 +50,10 @@ class TaskRepeat
 
     /**
      * @var Priority
-     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Priority", inversedBy="repeatTasks")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Priority",
+     *     inversedBy="repeatTasks"
+     * )
      *
      * @label('Task's default priority to be inherited by each single instance')
      *

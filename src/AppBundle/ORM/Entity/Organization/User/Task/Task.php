@@ -6,7 +6,11 @@
  * Time: 9:03 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\Organization\User\Task;
+
+use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat;
+use AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle;
+use AppBundle\ORM\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -30,7 +34,10 @@ class Task
      *
      * @label('User this task is assigned to')
      *
-     * @ManytoOne(targetEntity="AppBundle\ORM\Entity\User", inversedBy="taskTemplates")
+     * @ManytoOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     inversedBy="taskTemplates"
+     * )
      *
      */
     protected $user = null;
@@ -40,7 +47,10 @@ class Task
      *
      * @label('Collection of single instance, child tasks')
      *
-     * @OneToMany(targetEntity="TaskSingle", mappedBy="task")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle",
+     *     mappedBy="task"
+     * )
      *
      */
     protected $singleTasks = null;
@@ -50,7 +60,10 @@ class Task
      *
      * @label('Collection of repeating, child tasks')
      *
-     * @OneToMany(targetEntity="TaskRepeat", mappedBy="task")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat",
+     *     mappedBy="task"
+     * )
      *
      */
     protected $repeatTasks = null;

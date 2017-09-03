@@ -6,7 +6,9 @@
  * Time: 8:29 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\Organization\User\Task\Single;
+use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
+use AppBundle\ORM\Entity\Organization\User\Task\Task;
 
 
 /**
@@ -27,7 +29,10 @@ class TaskSingle
 
     /**
      * @var Task
-     * @ManyToOne(targetEntity="Task", inversedBy="singleTasks")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Task",
+     *     inversedBy="singleTasks"
+     * )
      *
      * @label('Base task to inherit from')
      *
@@ -35,7 +40,10 @@ class TaskSingle
     protected $task = null;
 
     /**
-     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Priority", inversedBy="singleTasks")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Priority",
+     *     inversedBy="singleTasks"
+     * )
      * @var Priority
      *
      */

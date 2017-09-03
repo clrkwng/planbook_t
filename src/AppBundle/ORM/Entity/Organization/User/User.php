@@ -6,8 +6,12 @@
  * Time: 9:05 PM
  */
 
-namespace AppBundle\ORM\Entity;
-use AppBundle\ORM\Organization;
+namespace AppBundle\ORM\Entity\Organization\User;
+use AppBundle\ORM\Entity\Organization\Config\Image;
+use AppBundle\ORM\Entity\Organization\Config\Type;
+use AppBundle\ORM\Entity\Organization\Organization;
+use AppBundle\ORM\Entity\Organization\User\Task\Task;
+use AppBundle\ORM\Entity\System\Theme\Theme;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -27,7 +31,10 @@ class User
     protected $id;
 
     /**
-     * @OneToMany(targetEntity="Task", mappedBy="user")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Task",
+     *     mappedBy="user"
+     * )
      * @var Task[] An ArrayCollection of Task objects.
      * @label('Base Tasks Associated with the User')
      */
@@ -41,31 +48,28 @@ class User
     protected $prizes = null;
 
     /**
-     * @ManyToMany(targetEntity="Trophy", cascade={"persist"})
-     * @JoinTable(
-     *      name="map_user_trophy",
-     *      joinColumns={
-     *          @JoinColumn(
-     *              name="user_id",
-     *              referencedColumnName="id"
-     *          )
+     * @OneToMany(
+     *     targetEntity="Achievement",
+     *     mappedBy="user",
+     *     cascade={
+     *          "persist",
+     *          "remove"
      *      },
-     *      inverseJoinColumns={
-     *          @JoinColumn(
-     *              name="trophy_id",
-     *              referencedColumnName="id"
-     *          )
-     *      }
+     *     orphanRemoval=TRUE
      * )
-     * @var Trophy[] An ArrayCollection of Trophy objects.
-     * @label('Collection of trophies associated with the User')
+     *
+     * @var Achievement[] An ArrayCollection of Achievement objects.
+     * @label('Collection of Achievement associated with the User')
      */
-    protected $trophies = null;
+    protected $achievements = null;
 
     /**
      * @var Organization
      *
-     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="users")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     inversedBy="users"
+     * )
      *
      * @label('The realm that the user is associated with')
      *
@@ -96,7 +100,10 @@ class User
     /**
      * @var Theme
      *
-     * @ManyToOne(targetEntity="Theme", inversedBy="users")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\System\Theme\Theme",
+     *     inversedBy="users"
+     * )
      *
      * @label('The Theme the user has selected for use in their profile')
      *
@@ -122,7 +129,7 @@ class User
     /**
      * @var Image
      *
-     * @OneToOne(targetEntity="AppBundle\ORM\Entity\Image")
+     * @OneToOne(targetEntity="AppBundle\ORM\Entity\Organization\Config\Image")
      *
      * @label('User Profile Picture')
      *
@@ -132,7 +139,10 @@ class User
     /**
      * @var Type
      *
-     * @ManyToOne(targetEntity="Type", inversedBy="users")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Type",
+     *     inversedBy="users"
+     * )
      *
      * @label('The role that a user has in the realm')
      *
@@ -173,24 +183,38 @@ class User
     {
         $this->taskTemplates = new ArrayCollection();
         $this->prizes = new ArrayCollection();
-        $this->trophies = new ArrayCollection();
+        $this->achievements = new ArrayCollection();
 
     }
 
     /**
-     * @param Trophy $trophy
+     * @param Achievement $achievement
      */
-    public function addTrophy(Trophy $trophy)
+    public function addAchievement(Achievement $achievement)
     {
-        $this->trophies[] = $trophy;
+        $this->achievements[] = $achievement;
     }
 
     /**
      * @return ArrayCollection|null
      */
-    public function getTrophies()
+    public function getAchievements()
     {
-        return $this->trophies;
+        return $this->achievements;
+    }
+
+    /**
+     * @param Achievement $achievement
+     * @return $this
+     */
+    public function removeAchievement(Achievement $achievement)
+    {
+        if ($this->achievements->contains($achievement)) {
+            $this->achievements->removeElement($achievement);
+            $achievement->setUser(null);
+        }
+
+        return $this;
     }
 
     /**

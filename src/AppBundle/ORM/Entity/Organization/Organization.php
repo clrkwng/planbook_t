@@ -6,13 +6,13 @@
  * Time: 8:27 PM
  */
 
-namespace AppBundle\ORM;
-use AppBundle\ORM\Entity\Category;
-use AppBundle\ORM\Entity\Image;
-use AppBundle\ORM\Entity\OrgConfig;
-use AppBundle\ORM\Entity\Priority;
-use AppBundle\ORM\Entity\Trophy;
-use AppBundle\ORM\Entity\User;
+namespace AppBundle\ORM\Entity\Organization;
+use AppBundle\ORM\Entity\Organization\Config\Image;
+use AppBundle\ORM\Entity\Organization\Config\OrgConfig;
+use AppBundle\ORM\Entity\Organization\Config\Trophy;
+use AppBundle\ORM\Entity\Organization\User\Task\Common\Category;
+use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
+use AppBundle\ORM\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -32,42 +32,60 @@ class Organization
     protected $id;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Image", mappedBy="organization")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     mappedBy="organization"
+     * )
      * @var Image[] An ArrayCollection of Image objects.
      *
      */
     protected $images = null;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\OrgConfig", mappedBy="organization")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\OrgConfig",
+     *     mappedBy="organization"
+     * )
      * @var OrgConfig[] An ArrayCollection of OrgConfig objects.
      *
      */
     protected $orgConfigurations = null;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Trophy", mappedBy="organization")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Trophy",
+     *     mappedBy="organization"
+     * )
      * @var Trophy[] An ArrayCollection of Trophy objects.
      *
      */
     protected $trophies = null;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Priority", mappedBy="organization")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Priority",
+     *     mappedBy="organization"
+     * )
      * @var Priority[] An ArrayCollection of Priority objects.
      *
      */
     protected $priorities = null;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\User", mappedBy="organization")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     mappedBy="organization"
+     * )
      * @var User[] An ArrayCollection of User objects.
      *
      */
     protected $users = null;
 
     /**
-     * @OneToMany(targetEntity="AppBundle\ORM\Entity\Category", mappedBy="organization")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Category",
+     *     mappedBy="organization"
+     * )
      * @var Category[] An ArrayCollection of Category objects.
      *
      */

@@ -6,7 +6,8 @@
  * Time: 9:28 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\Organization\User;
+use AppBundle\ORM\Entity\Organization\Config\Image;
 
 /**
  * @Entity(repositoryClass="PrizeRepository") @Table(name="prize")
@@ -44,7 +45,10 @@ class Prize
 
     /**
      * @var User
-     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\User", inversedBy="prizes")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     inversedBy="prizes"
+     * )
      *
      * @label('The User that will have this prize appear in their marketplace')
      */
@@ -52,7 +56,10 @@ class Prize
 
     /**
      * @var Image
-     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Image", inversedBy="prizes")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     inversedBy="prizes"
+     * )
      * @label('The image that is displayed when a user views the prize')
      *
      */

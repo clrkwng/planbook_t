@@ -6,7 +6,8 @@
  * Time: 9:13 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\System\Config;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @Entity(repositoryClass="SysConfigRepository") @Table(name="sys_config")
@@ -38,7 +39,7 @@ class SysConfig
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(type="date")
      *
      * Timestamp for when this record was created
      *
@@ -46,8 +47,8 @@ class SysConfig
     protected $created_time;
 
     /**
-     * @var string
-     * @Column(type="string")
+     * @var DateTime
+     * @Column(type="date")
      *
      * Timestamp for when this record was last updated
      *
@@ -113,7 +114,7 @@ class SysConfig
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getCreatedTime()
     {
@@ -121,15 +122,15 @@ class SysConfig
     }
 
     /**
-     * @param string $created_time
+     * @param DateTime $created_time
      */
-    public function setCreatedTime($created_time)
+    public function setCreatedTime(DateTime $created_time)
     {
         $this->created_time = $created_time;
     }
 
     /**
-     * @return string
+     * @return DateTime
      */
     public function getUpdatedTime()
     {
@@ -137,9 +138,9 @@ class SysConfig
     }
 
     /**
-     * @param string $updated_time
+     * @param DateTime $updated_time
      */
-    public function setUpdatedTime($updated_time)
+    public function setUpdatedTime(DateTime $updated_time)
     {
         $this->updated_time = $updated_time;
     }

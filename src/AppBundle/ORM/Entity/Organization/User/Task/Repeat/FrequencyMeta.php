@@ -6,7 +6,7 @@
  * Time: 8:41 PM
  */
 
-namespace AppBundle\ORM\Entity;
+namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
 
 
 /**

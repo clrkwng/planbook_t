@@ -6,8 +6,9 @@
  * Time: 8:47 PM
  */
 
-namespace AppBundle\ORM\Entity;
-use AppBundle\ORM\Organization;
+namespace AppBundle\ORM\Entity\Organization\Config;
+use AppBundle\ORM\Entity\Organization\Organization;
+use AppBundle\ORM\Entity\Organization\User\Achievement;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -35,7 +36,10 @@ class Trophy
     /**
      * @var Organization
      *
-     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="trophies")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     inversedBy="trophies"
+     * )
      *
      * @label('Allows for the trophies to be defined on a per tenant basis')
      */
@@ -45,7 +49,10 @@ class Trophy
      * @var Image
      * @label('Icon displayed for the trophy')
      *
-     * @ManyToOne(targetEntity="AppBundle\ORM\Entity\Image", inversedBy="trophies")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     inversedBy="trophies"
+     * )
      *
      */
     protected $image = null;
@@ -63,7 +70,9 @@ class Trophy
      *
      * @label('The trophy to increment to after $amount_needed_next == UserTrophy.$amount')
      *
-     * @OneToOne(targetEntity="AppBundle\ORM\Entity\Trophy", inversedBy="prev_trophy")
+     * @OneToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Trophy"
+     * )
      *
      */
     protected $next_trophy = null;
@@ -83,11 +92,28 @@ class Trophy
     protected $state;
 
     /**
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Achievement",
+     *     mappedBy="trophy",
+     *     cascade={
+     *          "persist",
+     *          "remove"
+     *      },
+     *     orphanRemoval=TRUE
+     * )
+     *
+     * @var Achievement[] An ArrayCollection of Achievement objects.
+     * @label('Collection of Achievement associated with the User')
+     */
+    protected $achievements = null;
+
+
+    /**
      * Trophy constructor.
      */
     public function __construct()
     {
-
+        $this->achievements = new ArrayCollection();
     }
 
     /**
@@ -144,6 +170,36 @@ class Trophy
     public function setImage(Image $image)
     {
         $this->image = $image;
+    }
+
+    /**
+     * @return Achievement[]|ArrayCollection
+     */
+    public function getAchievements()
+    {
+        return $this->achievements;
+    }
+
+    /**
+     * @param Achievement $achievement
+     */
+    public function addAchievement(Achievement $achievement)
+    {
+        $this->achievements[] = $achievement;
+    }
+
+    /**
+     * @param Achievement $achievement
+     * @return $this
+     */
+    public function removeAchievement(Achievement $achievement)
+    {
+        if ($this->achievements->contains($achievement)) {
+            $this->achievements->removeElement($achievement);
+            $achievement->setTrophy(null);
+        }
+
+        return $this;
     }
 
     /**

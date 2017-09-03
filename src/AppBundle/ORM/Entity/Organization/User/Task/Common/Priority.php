@@ -6,8 +6,11 @@
  * Time: 8:54 PM
  */
 
-namespace AppBundle\ORM\Entity;
-use AppBundle\ORM\Organization;
+namespace AppBundle\ORM\Entity\Organization\User\Task\Common;
+use AppBundle\ORM\Entity\Organization\Organization;
+use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat;
+use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeatSingle;
+use AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -34,7 +37,10 @@ class Priority
 
     /**
      * @var Organization
-     * @ManyToOne(targetEntity="AppBundle\ORM\Organization", inversedBy="priorities")
+     * @ManyToOne(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     inversedBy="priorities"
+     * )
      *
      * @label('Allows for the organization to define their own custom priorities with associated values')
      *
@@ -43,7 +49,10 @@ class Priority
 
     /**
      * @var TaskSingle
-     * @OneToMany(targetEntity="TaskSingle", mappedBy="priority")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle",
+     *     mappedBy="priority"
+     * )
      *
      * @label('Collection of Single Tasks of this Priority')
      *
@@ -52,7 +61,10 @@ class Priority
 
     /**
      * @var TaskRepeat
-     * @OneToMany(targetEntity="TaskRepeat", mappedBy="priority")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat",
+     *     mappedBy="priority"
+     * )
      *
      * @label('Collection of Repeat Tasks of this Priority')
      *
@@ -61,7 +73,10 @@ class Priority
 
     /**
      * @var TaskRepeatSingle
-     * @OneToMany(targetEntity="TaskRepeatSingle", mappedBy="priority_ov")
+     * @OneToMany(
+     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeatSingle",
+     *     mappedBy="priority_ov"
+     * )
      *
      * @label('Collection of Repeat Task Instances of this Priority')
      *
