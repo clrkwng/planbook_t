@@ -8,6 +8,7 @@
 
 namespace AppBundle\ORM\Entity\Organization\User;
 use AppBundle\ORM\Entity\Organization\Config\Image;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Entity(repositoryClass="PrizeRepository") @Table(name="prize")
@@ -37,6 +38,8 @@ class Prize
     /**
      * @var int
      * @Column(type="integer")
+     *
+     * @Assert\GreaterThan(0)
      *
      * @label('The amount that it costs a user to purchase the prize')
      *

@@ -9,6 +9,8 @@
 namespace AppBundle\ORM\Entity\Organization\User\Task\Common;
 use AppBundle\ORM\Entity\Organization\Config\Image;
 use AppBundle\ORM\Entity\Organization\Organization;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Entity(repositoryClass="CategoryRepository") @Table(name="category")

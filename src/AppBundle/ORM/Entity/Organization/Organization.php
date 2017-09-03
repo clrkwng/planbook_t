@@ -14,6 +14,9 @@ use AppBundle\ORM\Entity\Organization\User\Task\Common\Category;
 use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\ORM\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Entity(repositoryClass="OrganizationRepository") @Table(name="organization")
@@ -98,8 +101,11 @@ class Organization
     protected $name;
 
     /**
-     * @var string
-     * @Column(type="string")
+     * @var uuid
+     * @Column(
+     *     type="guid",
+     *     unique=true
+     * )
      *
      * @label('Generated UUID that can be used to link uniquely to a particular tenant')
      *

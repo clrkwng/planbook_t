@@ -7,6 +7,8 @@
  */
 
 namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 /**
@@ -24,7 +26,6 @@ class FrequencyMeta
      * @GeneratedValue
      */
     protected $id;
-
 
     /**
      * @var Frequency

@@ -8,6 +8,8 @@
 
 namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 /**

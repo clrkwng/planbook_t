@@ -12,6 +12,8 @@ use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat;
 use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeatSingle;
 use AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Entity(repositoryClass="PriorityRepository") @Table(name="priority")
@@ -86,6 +88,8 @@ class Priority
     /**
      * @var int
      * @Column(type="integer")
+     *
+     * @Assert\GreaterThan(0)
      *
      * @label('How many points are given to the user upon completion of the task')
      *

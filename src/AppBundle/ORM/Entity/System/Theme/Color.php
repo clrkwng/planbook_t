@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\ORM\Entity\System\Theme;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Entity(repositoryClass="ColorRepository") @Table(name="color")

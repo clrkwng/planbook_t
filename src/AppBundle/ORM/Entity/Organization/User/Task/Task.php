@@ -12,6 +12,8 @@ use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat;
 use AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle;
 use AppBundle\ORM\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Entity(repositoryClass="TaskRepository") @Table(name="task")
@@ -76,7 +78,11 @@ class Task
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
+     *
      */
     protected $description;
 

@@ -13,6 +13,9 @@ use AppBundle\ORM\Entity\Organization\Organization;
 use AppBundle\ORM\Entity\Organization\User\Task\Task;
 use AppBundle\ORM\Entity\System\Theme\Theme;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Entity(repositoryClass="UserRepository") @Table(name="user")
@@ -83,14 +86,23 @@ class User
     protected $username;
 
     /**
+     * @var Email
+     * @Column(type="string")
+     */
+    protected $email;
+
+    /**
      * @var string
      * @Column(type="string")
      */
     protected $password;
 
     /**
-     * @var string
-     * @Column(type="string")
+     * @var uuid
+     * @Column(
+     *     type="guid",
+     *     unique=true
+     * )
      *
      * @label('Generated UUID to uniquely link to this user')
      *
@@ -151,6 +163,8 @@ class User
      * @var int
      * @Column(type="integer")
      *
+     * @Assert\GreaterThanOrEqual(0)
+     *
      * @label('The total points that a user has earned in the history of their account')
      *
      */
@@ -160,6 +174,8 @@ class User
      * @var int
      * @Column(type="integer")
      *
+     * @Assert\GreaterThanOrEqual(0)
+     *
      * @label('The points that a user is in progress towards earning their next trophy')
      *
      */
@@ -168,6 +184,8 @@ class User
     /**
      * @var int
      * @Column(type="integer")
+     *
+     * @Assert\GreaterThanOrEqual(0)
      *
      * @label('The points that a user has available to spend on prizes')
      *
@@ -214,6 +232,24 @@ class User
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+
 
     /**
      * @param Task $task

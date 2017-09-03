@@ -10,6 +10,8 @@ namespace AppBundle\ORM\Entity\Organization\Config;
 use AppBundle\ORM\Entity\Organization\Organization;
 use AppBundle\ORM\Entity\Organization\User\Achievement;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Entity(repositoryClass="TrophyRepository") @Table(name="trophy")
@@ -60,6 +62,8 @@ class Trophy
     /**
      * @var int
      * @Column(type="integer")
+     *
+     * @Assert\GreaterThan(0)
      *
      * @label('Quantity of this trophy needed to increment to the next trophy')
      */

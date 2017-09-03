@@ -11,6 +11,8 @@ use AppBundle\ORM\Entity\Organization\Organization;
 use AppBundle\ORM\Entity\Organization\User\Prize;
 use AppBundle\ORM\Entity\Organization\User\Task\Common\Category;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Entity(repositoryClass="ImageRepository") @Table(name="image")
@@ -75,7 +77,10 @@ class Image
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     nullable=true
+     * )
      */
     protected $description;
 

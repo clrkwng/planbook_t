@@ -10,6 +10,8 @@ namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
 use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\ORM\Entity\Organization\User\Task\Task;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @Entity(repositoryClass="TaskRepeatRepository") @Table(name="task_repeat")

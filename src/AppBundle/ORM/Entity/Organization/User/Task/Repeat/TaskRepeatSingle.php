@@ -8,6 +8,7 @@
 
 namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
 use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Entity(repositoryClass="TaskRepeatSingleRepository") @Table(name="task_repeat_single")

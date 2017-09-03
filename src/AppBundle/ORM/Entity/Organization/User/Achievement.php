@@ -8,6 +8,7 @@
 
 namespace AppBundle\ORM\Entity\Organization\User;
 use AppBundle\ORM\Entity\Organization\Config\Trophy;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -45,6 +46,8 @@ class Achievement
 
     /**
      * @Column(type="integer", name="quantity")
+     *
+     * @Assert\GreaterThanOrEqual(0)
      */
     protected $quantity;
 

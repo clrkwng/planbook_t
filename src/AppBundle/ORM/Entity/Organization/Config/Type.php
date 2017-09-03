@@ -9,6 +9,8 @@
 namespace AppBundle\ORM\Entity\Organization\Config;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\ORM\Entity\Organization\User\User;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 /**
