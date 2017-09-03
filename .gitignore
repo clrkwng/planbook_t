@@ -8,3 +8,5 @@ doc/
 node_modules/
 npm-debug.log
 /testApplication/.idea_index/
+/vendor/
+/composer.lock
