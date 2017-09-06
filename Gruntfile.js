@@ -4,16 +4,16 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        resourcesPath: 'src/Planbook/AppBundle/Resources',
-        adminResourcesPath: 'src/Planbook/AdminBundle/Resources',
+        resourcesPath: 'planbook/src/Planbook/AppBundle/Resources',
+        adminResourcesPath: 'planbook/src/Planbook/AdminBundle/Resources',
 
         uglify: {
             options: {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
-                src: 'src/<%= pkg.name %>.js',
-                dest: 'build/<%= pkg.name %>.min.js'
+                src: 'planbook/src/<%= pkg.name %>.js',
+                dest: 'planbook/<%= pkg.name %>.min.js'
             }
         },
 
@@ -22,7 +22,7 @@ module.exports = function (grunt) {
                 options: {
                     stdout: true
                 },
-                command: 'php bin/console cache:clear --env=prod --no-debug'
+                command: 'php planbook/bin/console cache:clear --env=prod --no-debug'
             },
             composer_dump_autoload: {
                 options: {
@@ -34,13 +34,13 @@ module.exports = function (grunt) {
 
         clean: {
             options: { force: true },
-            js_app: ['web/js/app/*'],
-            img_app: ['web/img/*'],
-            js_app_build: ['web/js-app-build'],
-            js_admin: ['web/js/admin/*'],
-            js_admin_build: ['web/js-admin-build'],
-            css_app: ['web/css/app/*'],
-            css_admin: ['web/css/admin/*'],
+            js_app: ['planbook/web/js/app/*'],
+            img_app: ['planbook/web/img/*'],
+            js_app_build: ['planbook/web/js-app-build'],
+            js_admin: ['planbook/web/js/admin/*'],
+            js_admin_build: ['planbook/web/js-admin-build'],
+            css_app: ['planbook/web/css/app/*'],
+            css_admin: ['planbook/web/css/admin/*'],
             xampp: [
                 xamppDir + '/htdocs/planbook/*'
             ]
@@ -52,7 +52,7 @@ module.exports = function (grunt) {
                     compress: true
                 },
                 files: {
-                    'web/css/app/style.min.css': '<%= resourcesPath %>/public/less/style.less'
+                    'planbook/web/css/app/style.min.css': '<%= resourcesPath %>/public/less/style.less'
                 }
             },
             admin: {
@@ -61,56 +61,47 @@ module.exports = function (grunt) {
                     compress: true
                 },
                 files: {
-                    'web/css/admin/style.min.css': '<%= adminResourcesPath %>/public/less/style.less'
+                    'planbook/web/css/admin/style.min.css': '<%= adminResourcesPath %>/public/less/style.less'
                 }
             }
-        },
-        properties: {
-            xampp: [
-                'application/config/profiles/dev/base.properties',
-                'application/config/profiles/dev/windows.properties'
-            ]
         },
         copy: {
             js_app: {
                 expand: true,
                 cwd: '<%= resourcesPath %>/public/js/',
                 src: '**',
-                dest: 'web/js/app'
+                dest: 'planbook/web/js/app'
             },
             js_app_build: {
                 expand: true,
                 cwd: 'web/js-app-build/',
                 src: '**',
-                dest: 'web/js/app'
+                dest: 'planbook/web/js/app'
             },
             js_admin: {
                 expand: true,
                 cwd: '<%= adminResourcesPath %>/public/js/',
                 src: '**',
-                dest: 'web/js/admin'
+                dest: 'planbook/web/js/admin'
             },
             js_admin_build: {
                 expand: true,
                 cwd: 'web/js-admin-build/',
                 src: '**',
-                dest: 'web/js/admin'
+                dest: 'planbook/web/js/admin'
             },
             img_app: {
                 expand: true,
                 cwd: '<%= resourcesPath %>/public/img/',
                 src: '**',
-                dest: 'web/img'
+                dest: 'planbook/web/img'
             },
             xampp: {
                 files: [
                    {
                        expand: true,
-                       src: [
-                           'web/*',
-                           'src/Planbook/AppBundle/*',
-                           'app/*'
-                       ],
+                       cwd: 'planbook/',
+                       src: ['**'],
                        dest: xamppDir + '/htdocs/planbook/'
                    }
                ]
@@ -120,30 +111,30 @@ module.exports = function (grunt) {
         requirejs: {
             compile_app: {
                 options: {
-                    mainConfigFile: 'web/js/app/main.js',
+                    mainConfigFile: 'planbook/web/js/app/main.js',
                     baseUrl: './',
-                    appDir: 'web/js/app',
-                    dir: 'web/js-app-build',
+                    appDir: 'planbook/web/js/app',
+                    dir: 'planbook/web/js-app-build',
                     removeCombined: true,
                     findNestedDependencies: true,
                     modules: [
                         { name: 'main' },
                         { name: 'pages/home', exclude: ['main'] },
                         { name: 'pages/orderCheckout', exclude: ['main'] },
-                        { name: 'pages/productDetail', exclude: ['main'] },
+                        { name: 'pages/productDetail', exclude: ['main'] }
                     ],
                     done: function(done, output) {
-                        grunt.file.delete('web/js-app-build/build.txt', { force: true});
+                        grunt.file.delete('planbook/web/js-app-build/build.txt', { force: true});
                         done();
                     }
                 }
             },
             compile_admin: {
                 options: {
-                    mainConfigFile: 'web/js/admin/main.js',
+                    mainConfigFile: 'planbook/web/js/admin/main.js',
                     baseUrl: './',
-                    appDir: 'web/js/admin',
-                    dir: 'web/js-admin-build',
+                    appDir: 'planbook/web/js/admin',
+                    dir: 'planbook/web/js-admin-build',
                     removeCombined: true,
                     findNestedDependencies: true,
                     wrapShim: true,
@@ -155,7 +146,7 @@ module.exports = function (grunt) {
                         { name: 'pages/productDetail', exclude: ['main'] }
                     ],
                     done: function(done, output) {
-                        grunt.file.delete('web/js-admin-build/build.txt', { force: true});
+                        grunt.file.delete('planbook/web/js-admin-build/build.txt', { force: true});
                         done();
                     }
                 }
@@ -180,7 +171,7 @@ module.exports = function (grunt) {
                 tasks: ['clean:js_admin', 'copy:js_admin']
             },
             css: {
-                files: 'web/css/**/*.css',
+                files: 'planbook/web/css/**/*.css',
                 tasks: [],
                 options: {
                     livereload: true
@@ -194,43 +185,12 @@ module.exports = function (grunt) {
                 }
             }
         },
-
-        'string-replace': {
-            bin: {
-                files: [{
-                    expand: true,
-                    cwd: 'bin/',
-                    src: '**/*.php',
-                    dest: 'bin/'
-                }],
-                options: {
-                    replacements: [
-                        {
-                            pattern: '{db.host}',
-                            replacement: '<%= windows.dbHost %>'
-                        },
-                        {
-                            pattern: '{db.name}',
-                            replacement: '<%= windows.dbName %>'
-                        },
-                        {
-                            pattern: '{db.user}',
-                            replacement: '<%= windows.dbUser %>'
-                        },
-                        {
-                            pattern: '{db.password}',
-                            replacement: '<%= windows.dbPassword %>'
-                        }
-                    ]
-                }
-            }
-        },
         phpdoc: {
             options: {
                 verbose: true
             },
             src: [
-                'src/AppBundle/'
+                'planbook/src/AppBundle/'
             ],
             dest: 'doc/App'
         }
@@ -256,6 +216,7 @@ module.exports = function (grunt) {
         grunt.task.run("copy:js_app");
         grunt.task.run("copy:img_app");
         grunt.task.run("copy:js_admin");
+        grunt.task.run("copy:xampp");
     });
 
     grunt.registerTask('xampp-deploy',

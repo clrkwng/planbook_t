@@ -161,3 +161,4 @@ typings/
 .env
 
 
+/node_modules/
