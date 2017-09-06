@@ -1,16 +1,11 @@
 module.exports = function (grunt) {
 
-    var isApple = false; //This flag needs to be set based on the dev environment's base OS
     var xamppDir = "C:/Users/andrew.parise/Projects/3rdParty/xampp";
-    var target;
-    if(isApple){
-        target = grunt.option('target') || 'devApple';
-    }else{
-        target = grunt.option('target') || 'devWindows'
-    }
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        resourcesPath: 'src/Planbook/AppBundle/Resources',
+        adminResourcesPath: 'src/Planbook/AdminBundle/Resources',
 
         uglify: {
             options: {
@@ -21,171 +16,185 @@ module.exports = function (grunt) {
                 dest: 'build/<%= pkg.name %>.min.js'
             }
         },
+
+        shell: {
+            cache_clear_prod: {
+                options: {
+                    stdout: true
+                },
+                command: 'php bin/console cache:clear --env=prod --no-debug'
+            },
+            composer_dump_autoload: {
+                options: {
+                    stdout: true
+                },
+                command: 'composer dump-autoload --optimize'
+            }
+        },
+
         clean: {
             options: { force: true },
-
-            bin: [
-                'bin/*'
-            ],
-            devWindows: [
+            js_app: ['web/js/app/*'],
+            img_app: ['web/img/*'],
+            js_app_build: ['web/js-app-build'],
+            js_admin: ['web/js/admin/*'],
+            js_admin_build: ['web/js-admin-build'],
+            css_app: ['web/css/app/*'],
+            css_admin: ['web/css/admin/*'],
+            xampp: [
                 xamppDir + '/htdocs/planbook/*'
-            ],
-            devApple: [
-                //insert Apple unique paths to clean here
             ]
         },
         less: {
-            bin: {
+            app: {
                 options: {
-                    compress: true,
-                    yuicompress: true,
-                    optimization: 2
+                    paths: ['<%= resourcesPath %>/public/less'],
+                    compress: true
                 },
                 files: {
-                    "bin/css/admin/admin.css": "web/less/admin/*.less",
-                    "bin/css/auth/account-verification.css": "web/less/auth/account-verification/*.less",
-                    "bin/css/auth/create-account.css": "web/less/auth/create-account/*.less",
-                    "bin/css/auth/login.css": "web/less/auth/login/*.less",
-                    "bin/css/email-sender/email-sender.css": "web/less/email-sender/*.less",
-                    "bin/css/error/error.css": "web/less/error/*.less",
-                    "bin/css/user/homepage.css": "web/less/user/homepage.less",
-                    "bin/css/user/market.css": "web/less/user/market.less",
-                    "bin/css/user/user-profile.css": "web/less/user/user-profile.less",
-                    "bin/css/user/redeem.css": "web/less/user/redeem.less"
+                    'web/css/app/style.min.css': '<%= resourcesPath %>/public/less/style.less'
+                }
+            },
+            admin: {
+                options: {
+                    paths: ['<%= adminResourcesPath %>/public/less'],
+                    compress: true
+                },
+                files: {
+                    'web/css/admin/style.min.css': '<%= adminResourcesPath %>/public/less/style.less'
                 }
             }
         },
         properties: {
-            devWindows: [
+            xampp: [
                 'application/config/profiles/dev/base.properties',
                 'application/config/profiles/dev/windows.properties'
-            ],
-            devApple: [
-                'application/config/profiles/dev/base.properties',
-                'application/config/profiles/dev/apple.properties'
             ]
         },
         copy: {
-            bin: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'web/css',
-                        src: ['**'],
-                        dest: 'bin/css/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'web/img',
-                        src: ['**'],
-                        dest: 'bin/resources/img/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'web/js',
-                        src: ['**'],
-                        dest: 'bin/scripts/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'src/AppBundle/views',
-                        src: [
-                            '**'
-                        ],
-                        dest: 'bin/modules/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/font-awesome',
-                        src: ['**'],
-                        dest: 'bin/libs/font-awesome/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/jquery',
-                        src: ['**'],
-                        dest: 'bin/libs/jquery/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/freelancer',
-                        src: ['**'],
-                        dest: 'bin/libs/freelancer/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/bootstrap',
-                        src: ['**'],
-                        dest: 'bin/libs/bootstrap/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/fullpage.js',
-                        src: ['**'],
-                        dest: 'bin/libs/fullpage-js/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/html5shiv',
-                        src: ['**'],
-                        dest: 'bin/libs/html5shiv/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/jquery.easing',
-                        src: ['**'],
-                        dest: 'bin/libs/jquery-easing/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/jquery-backstretch',
-                        src: ['**'],
-                        dest: 'bin/libs/jquery-backstretch/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/jquery-ui',
-                        src: ['**'],
-                        dest: 'bin/libs/jquery-ui/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'node_modules/w3-css',
-                        src: ['**'],
-                        dest: 'bin/libs/w3-css/'
-                    },
-                    {
-                        expand: true,
-                        cwd: 'vendor',
-                        src: ['**'],
-                        dest: 'bin/libs/vendor/'
-                    }
-
-                ]
+            js_app: {
+                expand: true,
+                cwd: '<%= resourcesPath %>/public/js/',
+                src: '**',
+                dest: 'web/js/app'
             },
-            devWindows: {
-
+            js_app_build: {
+                expand: true,
+                cwd: 'web/js-app-build/',
+                src: '**',
+                dest: 'web/js/app'
+            },
+            js_admin: {
+                expand: true,
+                cwd: '<%= adminResourcesPath %>/public/js/',
+                src: '**',
+                dest: 'web/js/admin'
+            },
+            js_admin_build: {
+                expand: true,
+                cwd: 'web/js-admin-build/',
+                src: '**',
+                dest: 'web/js/admin'
+            },
+            img_app: {
+                expand: true,
+                cwd: '<%= resourcesPath %>/public/img/',
+                src: '**',
+                dest: 'web/img'
+            },
+            xampp: {
                 files: [
                    {
                        expand: true,
-                       cwd: 'bin',
-                       src: ['**'],
+                       src: [
+                           'web/*',
+                           'src/Planbook/AppBundle/*',
+                           'app/*'
+                       ],
                        dest: xamppDir + '/htdocs/planbook/'
                    }
                ]
-            },
-            devApple: {
-
-                // files: [
-                //     {
-                //         expand: true,
-                //         cwd: 'bin',
-                //         src: ['**'],
-                //         dest: ''
-                //     }
-                // ]
             }
         },
+
+        requirejs: {
+            compile_app: {
+                options: {
+                    mainConfigFile: 'web/js/app/main.js',
+                    baseUrl: './',
+                    appDir: 'web/js/app',
+                    dir: 'web/js-app-build',
+                    removeCombined: true,
+                    findNestedDependencies: true,
+                    modules: [
+                        { name: 'main' },
+                        { name: 'pages/home', exclude: ['main'] },
+                        { name: 'pages/orderCheckout', exclude: ['main'] },
+                        { name: 'pages/productDetail', exclude: ['main'] },
+                    ],
+                    done: function(done, output) {
+                        grunt.file.delete('web/js-app-build/build.txt', { force: true});
+                        done();
+                    }
+                }
+            },
+            compile_admin: {
+                options: {
+                    mainConfigFile: 'web/js/admin/main.js',
+                    baseUrl: './',
+                    appDir: 'web/js/admin',
+                    dir: 'web/js-admin-build',
+                    removeCombined: true,
+                    findNestedDependencies: true,
+                    wrapShim: true,
+                    modules: [
+                        { name: 'main' },
+                        { name: 'pages/accountForm', exclude: ['main'] },
+                        { name: 'pages/administratorForm', exclude: ['main'] },
+                        { name: 'pages/orderDetail', exclude: ['main'] },
+                        { name: 'pages/productDetail', exclude: ['main'] }
+                    ],
+                    done: function(done, output) {
+                        grunt.file.delete('web/js-admin-build/build.txt', { force: true});
+                        done();
+                    }
+                }
+            }
+        },
+
+        watch: {
+            less_app: {
+                files: '<%= resourcesPath %>/public/less/**/*.less',
+                tasks: ['clean:css_app', 'less:app']
+            },
+            less_admin: {
+                files: '<%= adminResourcesPath %>/public/less/**/*.less',
+                tasks: ['clean:css_admin', 'less:admin']
+            },
+            js_app: {
+                files: '<%= resourcesPath %>/public/js/**/*.js',
+                tasks: ['clean:js_app', 'copy:js_app']
+            },
+            js_admin: {
+                files: '<%= adminResourcesPath %>/public/js/**/*.js',
+                tasks: ['clean:js_admin', 'copy:js_admin']
+            },
+            css: {
+                files: 'web/css/**/*.css',
+                tasks: [],
+                options: {
+                    livereload: true
+                }
+            },
+            img_app: {
+                files: '<%= resourcesPath %>/public/img/*',
+                tasks: ['clean:img_app', 'copy:img_app'],
+                options: {
+                    livereload: true
+                }
+            }
+        },
+
         'string-replace': {
             bin: {
                 files: [{
@@ -198,27 +207,34 @@ module.exports = function (grunt) {
                     replacements: [
                         {
                             pattern: '{db.host}',
-                            replacement: '<%= '+ target +'.dbHost %>'
+                            replacement: '<%= windows.dbHost %>'
                         },
                         {
                             pattern: '{db.name}',
-                            replacement: '<%= '+ target +'.dbName %>'
+                            replacement: '<%= windows.dbName %>'
                         },
                         {
                             pattern: '{db.user}',
-                            replacement: '<%= '+ target +'.dbUser %>'
+                            replacement: '<%= windows.dbUser %>'
                         },
                         {
                             pattern: '{db.password}',
-                            replacement: '<%= '+ target +'.dbPassword %>'
+                            replacement: '<%= windows.dbPassword %>'
                         }
                     ]
                 }
             }
+        },
+        phpdoc: {
+            options: {
+                verbose: true
+            },
+            src: [
+                'src/AppBundle/'
+            ],
+            dest: 'doc/App'
         }
     });
-
-
 
     //Grunt plugins
     grunt.loadNpmTasks('grunt-contrib-copy');
@@ -228,30 +244,54 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-properties-reader');
     grunt.loadNpmTasks('grunt-string-replace');
-
+    grunt.loadNpmTasks('grunt-phpdoc');
+    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     //Build Task Registration
-    grunt.registerTask('default',
+    grunt.registerTask('default', function() {
+        grunt.task.run("clean");
+        grunt.task.run("less");
+        grunt.task.run("copy:js_app");
+        grunt.task.run("copy:img_app");
+        grunt.task.run("copy:js_admin");
+    });
+
+    grunt.registerTask('xampp-deploy',
         [
-            'buildToBin',
-            'deploy'
+            'clean:xampp',
+            'copy:xampp'
         ]
     );
 
-    grunt.registerTask('buildToBin',
-        [
-            'properties',
-            'clean:bin',
-            'copy:bin',
-            'less:bin',
-            'string-replace:bin'
+    grunt.registerTask('dev', ['default', 'watch']);
 
-        ]
-    );
-    grunt.registerTask('deploy',
+    grunt.registerTask('optimizejs', function() {
+        grunt.task.run("clean:js_app");
+        grunt.task.run("clean:js_admin");
+        grunt.task.run("copy:js_app");
+        grunt.task.run("copy:js_admin");
+        grunt.task.run("requirejs");
+        grunt.task.run("clean:js_app");
+        grunt.task.run("clean:js_admin");
+        grunt.task.run("copy:js_app_build");
+        grunt.task.run("clean:js_app_build");
+        grunt.task.run("copy:js_admin_build");
+        grunt.task.run("clean:js_admin_build");
+    });
+
+    grunt.registerTask('prod', function() {
+        grunt.task.run("clean");
+        grunt.task.run("less");
+        grunt.task.run("shell:cache_clear_prod");
+        grunt.task.run("shell:composer_dump_autoload");
+        grunt.task.run("optimizejs");
+    });
+
+    grunt.registerTask('documentation',
         [
-            'clean:' + target,
-            'copy:' + target
+            'phpdoc'
         ]
     );
 
