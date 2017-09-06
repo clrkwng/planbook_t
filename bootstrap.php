@@ -9,7 +9,7 @@
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 
-require_once "vendor/autoload.php";
+$loader = require_once "vendor/autoload.php";
 
 $isDevMode = true;
 $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src/AppBundle/ORM"), $isDevMode);
@@ -24,3 +24,5 @@ $conn = array(
 
 // obtaining the entity manager
 $entityManager = EntityManager::create($conn, $config);
+
+Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));

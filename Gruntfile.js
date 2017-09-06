@@ -92,7 +92,15 @@ module.exports = function (grunt) {
                         src: [
                             '**'
                         ],
-                        dest: 'bin/modules/'
+                        dest: 'bin/modules/views/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'src/AppBundle/ORM',
+                        src: [
+                            '**'
+                        ],
+                        dest: 'bin/modules/ORM/'
                     },
                     {
                         expand: true,
@@ -242,6 +250,13 @@ module.exports = function (grunt) {
 
     //Build Task Registration
     grunt.registerTask('default',
+        [
+            'buildToBin',
+            'deploy'
+        ]
+    );
+
+    grunt.registerTask('symfony-build-deploy',
         [
             'buildToBin',
             'deploy'

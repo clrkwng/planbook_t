@@ -12,24 +12,30 @@ use AppBundle\ORM\Entity\Organization\Config\Type;
 use AppBundle\ORM\Entity\Organization\Organization;
 use AppBundle\ORM\Entity\Organization\User\Task\Task;
 use AppBundle\ORM\Entity\System\Theme\Theme;
+use AppBundle\ORM\Util\Organization\User\UserUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Uuid;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints as Assert;;
+use Symfony\Component\Security\Core\User\UserInterface;
+use FOS\UserBundle\Model\User as BaseUser;
 
 /**
  * @Entity(repositoryClass="UserRepository") @Table(name="user")
  *
  * @label('Account information for users on a per tenant basis')
  *
+ * @Constraints\UniqueEntity(fields="username", message="Username already taken")
+ * @Constraints\UniqueEntity(fields="email", message="Email already taken")
+ *
  **/
-class User
+class User extends BaseUser implements UserInterface, \Serializable
 {
     /**
      * @var int
      * @Id
      * @Column(type="integer")
-     * @GeneratedValue
+     * @GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
@@ -81,7 +87,11 @@ class User
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(
+     *     type="string",
+     *     length=255,
+     *     unique=true
+     * )
      *
      * @Assert\NotBlank
      * @Assert\Length(min = 4)
@@ -89,22 +99,33 @@ class User
     protected $username;
 
     /**
-     * @var Email
-     * @Column(type="string")
+     * @var string
+     * @Column(
+     *     type="string",
+     *     length=255,
+     *     unique=true
+     * )
      *
      * @Assert\NotBlank
-     * @Assert\Length(min = 4)
+     * @Assert\Email()
      */
     protected $email;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @Column(type="string", length=64)
      *
      * @Assert\NotBlank
      * @Assert\Length(min = 4)
      */
     protected $password;
+
+    /**
+     * @var string
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
 
     /**
      * @var uuid
@@ -208,6 +229,8 @@ class User
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->taskTemplates = new ArrayCollection();
         $this->prizes = new ArrayCollection();
         $this->achievements = new ArrayCollection();
@@ -328,6 +351,7 @@ class User
 
     /**
      * @param string $username
+     * @return $this|\FOS\UserBundle\Model\UserInterface|void
      */
     public function setUsername($username)
     {
@@ -344,6 +368,7 @@ class User
 
     /**
      * @param string $password
+     * @return $this|\FOS\UserBundle\Model\UserInterface|void
      */
     public function setPassword($password)
     {
@@ -478,8 +503,66 @@ class User
         $this->prize_points = $prize_points;
     }
 
+    /**
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
 
+    /**
+     * @param string $plainPassword
+     * @return $this|\FOS\UserBundle\Model\UserInterface|void
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+    }
 
+    /**
+     * The bcrypt algorithm doesn't require a separate salt.
+     *
+     * @return null
+     */
+    public function getSalt()
+    {
+        return null;
+    }
 
+    /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        return UserUtil::getStates();
+    }
 
+    /**
+     *
+     */
+    public function eraseCredentials()
+    {
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+        ));
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->password,
+
+            ) = unserialize($serialized);
+    }
 }

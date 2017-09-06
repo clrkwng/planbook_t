@@ -9,29 +9,31 @@
 namespace AppBundle\ORM\Repository\Organization\User\Task;
 
 
+use AppBundle\ORM\Entity\Organization\Config\Trophy;
+use AppBundle\ORM\Entity\Organization\User\User;
 use Doctrine\ORM\EntityRepository;
 
 class AchievementRepository extends EntityRepository
 {
-    public function findAllByUserId($userId)
+    public function findAllByUser(User $user)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('a')
             ->from('Achievements', 'a')
             ->where('a.user_id = :identifier')
             ->orderBy('a.id', 'ASC')
-            ->setParameter('identifier', $userId);
+            ->setParameter('identifier', $user->getId());
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByTrophyId($trophyId)
+    public function findAllByTrophy(Trophy $trophy)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('a')
             ->from('Achievements', 'a')
             ->where('a.trophy_id = :identifier')
             ->orderBy('a.id', 'ASC')
-            ->setParameter('identifier', $trophyId);
+            ->setParameter('identifier', $trophy->getId());
         return $qb->getQuery()->getResult();
     }
 

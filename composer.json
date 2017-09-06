@@ -2,8 +2,11 @@
   "require": {
     "doctrine/orm": "2.4.*",
     "symfony/yaml": "2.*",
-    "phpdocumentor/phpdocumentor": "2.*"
-
+    "phpdocumentor/phpdocumentor": "2.*",
+    "friendsofsymfony/user-bundle": "~2.0",
+    "sensio/framework-extra-bundle": "^3.0",
+    "doctrine/doctrine-bundle": "^1.6",
+    "symfony/assetic-bundle": "^2.8"
   },
   "autoload": {
     "psr-0": {"": "src/"}
