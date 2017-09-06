@@ -5,8 +5,7 @@
     "phpdocumentor/phpdocumentor": "2.*",
     "friendsofsymfony/user-bundle": "~2.0",
     "sensio/framework-extra-bundle": "^3.0",
-    "doctrine/doctrine-bundle": "^1.6",
-    "symfony/assetic-bundle": "^2.8"
+    "doctrine/doctrine-bundle": "^1.6"
   },
   "autoload": {
     "psr-0": {"": "src/"}
