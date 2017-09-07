@@ -6,11 +6,11 @@
  * Time: 8:54 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User\Task\Common;
-use AppBundle\ORM\Entity\Organization\Organization;
-use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat;
-use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeatSingle;
-use AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle;
+namespace AppBundle\Entity\Organization\User\Task\Common;
+use AppBundle\Entity\Organization\Organization;
+use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat;
+use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeatSingle;
+use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -43,7 +43,7 @@ class Priority
     /**
      * @var Organization
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="priorities"
      * )
      *
@@ -55,7 +55,7 @@ class Priority
     /**
      * @var TaskSingle
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Single\TaskSingle",
      *     mappedBy="priority"
      * )
      *
@@ -67,7 +67,7 @@ class Priority
     /**
      * @var TaskRepeat
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat",
      *     mappedBy="priority"
      * )
      *
@@ -79,7 +79,7 @@ class Priority
     /**
      * @var TaskRepeatSingle
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeatSingle",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeatSingle",
      *     mappedBy="priority_ov"
      * )
      *
@@ -103,7 +103,7 @@ class Priority
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\User\Task\Common\PriorityUtil",
+     *          "AppBundle\Util\Organization\User\Task\Common\PriorityUtil",
      *          "getStates"
      *      }
      * )

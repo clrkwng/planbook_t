@@ -6,11 +6,10 @@
  * Time: 11:03 AM
  */
 
-namespace AppBundle\ORM\Repository\Organization\Config;
+namespace AppBundle\Repository\Organization\Config;
 
-
-use AppBundle\ORM\Entity\Organization\Config\Image;
-use AppBundle\ORM\Entity\Organization\Organization;
+use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Entity\Organization\Organization;
 use Doctrine\ORM\EntityRepository;
 
 class TrophyRepository extends EntityRepository

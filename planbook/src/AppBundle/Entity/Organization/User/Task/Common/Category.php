@@ -6,9 +6,9 @@
  * Time: 8:50 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User\Task\Common;
-use AppBundle\ORM\Entity\Organization\Config\Image;
-use AppBundle\ORM\Entity\Organization\Organization;
+namespace AppBundle\Entity\Organization\User\Task\Common;
+use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Entity\Organization\Organization;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -40,7 +40,7 @@ class Category
     /**
      * @var Image
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     inversedBy="categories"
      * )
      *
@@ -52,7 +52,7 @@ class Category
     /**
      * @var Organization
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="categories"
      * )
      *

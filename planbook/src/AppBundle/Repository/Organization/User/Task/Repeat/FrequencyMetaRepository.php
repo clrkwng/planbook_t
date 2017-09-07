@@ -6,10 +6,9 @@
  * Time: 11:06 AM
  */
 
-namespace AppBundle\ORM\Repository\Organization\User\Task\Repeat;
+namespace AppBundle\Repository\Organization\User\Task\Repeat;
 
-
-use AppBundle\ORM\Entity\Organization\User\Task\Repeat\Frequency;
+use AppBundle\Entity\Organization\User\Task\Repeat\Frequency;
 use Doctrine\ORM\EntityRepository;
 
 class FrequencyMetaRepository extends EntityRepository

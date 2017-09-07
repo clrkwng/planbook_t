@@ -6,8 +6,8 @@
  * Time: 8:57 PM
  */
 
-namespace AppBundle\ORM\Entity\System\Theme;
-use AppBundle\ORM\Entity\Organization\User\User;
+namespace AppBundle\Entity\System\Theme;
+use AppBundle\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,7 +40,7 @@ class Theme
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\System\Theme\ThemeUtil",
+     *          "AppBundle\Util\System\Theme\ThemeUtil",
      *          "getStates"
      *      }
      * )
@@ -52,7 +52,7 @@ class Theme
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     mappedBy="theme"
      * )
      * @var User[] An ArrayCollection of User objects.

@@ -6,8 +6,7 @@
  * Time: 9:41 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\User\Task\Common;
-
+namespace AppBundle\Util\Organization\User\Task\Common;
 
 class PriorityUtil
 {

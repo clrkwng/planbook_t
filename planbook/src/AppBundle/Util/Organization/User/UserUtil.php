@@ -6,8 +6,7 @@
  * Time: 9:26 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\User;
-
+namespace AppBundle\Util\Organization\User;
 
 class UserUtil
 {

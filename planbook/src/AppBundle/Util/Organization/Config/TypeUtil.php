@@ -6,8 +6,7 @@
  * Time: 9:47 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\Config;
-
+namespace AppBundle\Util\Organization\Config;
 
 class TypeUtil
 {

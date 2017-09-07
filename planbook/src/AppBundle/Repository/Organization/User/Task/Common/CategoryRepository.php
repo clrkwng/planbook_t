@@ -6,11 +6,10 @@
  * Time: 11:05 AM
  */
 
-namespace AppBundle\ORM\Repository\Organization\User\Task\Common;
+namespace AppBundle\Repository\Organization\User\Task\Common;
 
-
-use AppBundle\ORM\Entity\Organization\Config\Image;
-use AppBundle\ORM\Entity\Organization\Organization;
+use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Entity\Organization\Organization;
 use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository

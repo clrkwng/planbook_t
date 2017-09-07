@@ -6,11 +6,10 @@
  * Time: 8:15 PM
  */
 
-namespace AppBundle\ORM\Repository\Organization\User\Task;
+namespace AppBundle\Repository\Organization\User\Task;
 
-
-use AppBundle\ORM\Entity\Organization\Config\Trophy;
-use AppBundle\ORM\Entity\Organization\User\User;
+use AppBundle\Entity\Organization\Config\Trophy;
+use AppBundle\Entity\Organization\User\User;
 use Doctrine\ORM\EntityRepository;
 
 class AchievementRepository extends EntityRepository

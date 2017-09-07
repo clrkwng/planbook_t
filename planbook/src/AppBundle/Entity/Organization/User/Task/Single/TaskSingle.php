@@ -6,9 +6,9 @@
  * Time: 8:29 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User\Task\Single;
-use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
-use AppBundle\ORM\Entity\Organization\User\Task\Task;
+namespace AppBundle\Entity\Organization\User\Task\Single;
+use AppBundle\Entity\Organization\User\Task\Common\Priority;
+use AppBundle\Entity\Organization\User\Task\Task;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -32,7 +32,7 @@ class TaskSingle
     /**
      * @var Task
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Task",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Task",
      *     inversedBy="singleTasks"
      * )
      *
@@ -43,7 +43,7 @@ class TaskSingle
 
     /**
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Priority",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
      *     inversedBy="singleTasks"
      * )
      * @var Priority
@@ -92,7 +92,7 @@ class TaskSingle
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\User\Task\Single\TaskSingleUtil",
+     *          "AppBundle\Util\Organization\User\Task\Single\TaskSingleUtil",
      *          "getStates"
      *      }
      * )

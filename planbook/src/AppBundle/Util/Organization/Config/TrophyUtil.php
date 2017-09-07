@@ -6,8 +6,7 @@
  * Time: 9:46 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\Config;
-
+namespace AppBundle\Util\Organization\Config;
 
 class TrophyUtil
 {

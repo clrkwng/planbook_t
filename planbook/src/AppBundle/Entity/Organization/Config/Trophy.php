@@ -6,9 +6,9 @@
  * Time: 8:47 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\Config;
-use AppBundle\ORM\Entity\Organization\Organization;
-use AppBundle\ORM\Entity\Organization\User\Achievement;
+namespace AppBundle\Entity\Organization\Config;
+use AppBundle\Entity\Organization\Organization;
+use AppBundle\Entity\Organization\User\Achievement;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -43,7 +43,7 @@ class Trophy
      * @var Organization
      *
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="trophies"
      * )
      *
@@ -56,7 +56,7 @@ class Trophy
      * @label('Icon displayed for the trophy')
      *
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     inversedBy="trophies"
      * )
      *
@@ -79,7 +79,7 @@ class Trophy
      * @label('The trophy to increment to after $amount_needed_next == UserTrophy.$amount')
      *
      * @OneToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Trophy"
+     *     targetEntity="AppBundle\Entity\Organization\Config\Trophy"
      * )
      *
      */
@@ -89,7 +89,7 @@ class Trophy
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\Config\TrophyUtil",
+     *          "AppBundle\Util\Organization\Config\TrophyUtil",
      *          "getStates"
      *      }
      * )
@@ -100,7 +100,7 @@ class Trophy
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Achievement",
+     *     targetEntity="AppBundle\Entity\Organization\User\Achievement",
      *     mappedBy="trophy",
      *     cascade={
      *          "persist",

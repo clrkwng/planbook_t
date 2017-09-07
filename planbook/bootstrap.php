@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManager;
 $loader = require_once "vendor/autoload.php";
 
 $isDevMode = true;
-$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src/AppBundle/ORM"), $isDevMode);
+$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src/AppBundle"), $isDevMode);
 
 $conn = array(
     'dbname' => 'planbook_db',

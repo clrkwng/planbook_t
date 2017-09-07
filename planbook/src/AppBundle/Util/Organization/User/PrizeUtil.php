@@ -6,8 +6,7 @@
  * Time: 9:28 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\User;
-
+namespace AppBundle\Util\Organization\User;
 
 class PrizeUtil
 {

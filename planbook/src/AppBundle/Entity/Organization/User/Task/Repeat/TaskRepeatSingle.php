@@ -6,8 +6,8 @@
  * Time: 9:04 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
-use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
+namespace AppBundle\Entity\Organization\User\Task\Repeat;
+use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -38,7 +38,7 @@ class TaskRepeatSingle
     /**
      * @var Priority
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Priority",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
      *     inversedBy="repeatTasks"
      * )
      *
@@ -96,7 +96,7 @@ class TaskRepeatSingle
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\User\Task\Repeat\TaskRepeatSingleUtil",
+     *          "AppBundle\Util\Organization\User\Task\Repeat\TaskRepeatSingleUtil",
      *          "getStates"
      *      }
      * )

@@ -6,8 +6,7 @@
  * Time: 9:16 PM
  */
 
-namespace AppBundle\ORM\Util\System\Theme;
-
+namespace AppBundle\Util\System\Theme;
 
 class ThemeUtil
 {

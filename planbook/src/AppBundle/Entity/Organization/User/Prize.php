@@ -6,8 +6,8 @@
  * Time: 9:28 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User;
-use AppBundle\ORM\Entity\Organization\Config\Image;
+namespace AppBundle\Entity\Organization\User;
+use AppBundle\Entity\Organization\Config\Image;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -55,7 +55,7 @@ class Prize
     /**
      * @var User
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     inversedBy="prizes"
      * )
      *
@@ -66,7 +66,7 @@ class Prize
     /**
      * @var Image
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     inversedBy="prizes"
      * )
      * @label('The image that is displayed when a user views the prize')
@@ -78,7 +78,7 @@ class Prize
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\User\PrizeUtil",
+     *          "AppBundle\Util\Organization\User\PrizeUtil",
      *          "getStates"
      *      }
      * )

@@ -6,8 +6,8 @@
  * Time: 9:32 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\Config;
-use AppBundle\ORM\Entity\Organization\Organization;
+namespace AppBundle\Entity\Organization\Config;
+use AppBundle\Entity\Organization\Organization;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,7 +35,7 @@ class OrgConfig
      * @Label('Allows for configurations to be set on a per tenant basis')
      *
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="orgConfigurations"
      * )
      *

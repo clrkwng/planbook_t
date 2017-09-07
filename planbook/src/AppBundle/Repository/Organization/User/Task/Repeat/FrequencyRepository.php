@@ -6,8 +6,7 @@
  * Time: 11:06 AM
  */
 
-namespace AppBundle\ORM\Repository\Organization\User\Task\Repeat;
-
+namespace AppBundle\Repository\Organization\User\Task\Repeat;
 
 use Doctrine\ORM\EntityRepository;
 

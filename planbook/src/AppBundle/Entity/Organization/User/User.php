@@ -6,13 +6,13 @@
  * Time: 9:05 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User;
-use AppBundle\ORM\Entity\Organization\Config\Image;
-use AppBundle\ORM\Entity\Organization\Config\Type;
-use AppBundle\ORM\Entity\Organization\Organization;
-use AppBundle\ORM\Entity\Organization\User\Task\Task;
-use AppBundle\ORM\Entity\System\Theme\Theme;
-use AppBundle\ORM\Util\Organization\User\UserUtil;
+namespace AppBundle\Entity\Organization\User;
+use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Entity\Organization\Config\Type;
+use AppBundle\Entity\Organization\Organization;
+use AppBundle\Entity\Organization\User\Task\Task;
+use AppBundle\Entity\System\Theme\Theme;
+use AppBundle\Util\Organization\User\UserUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Uuid;
@@ -41,7 +41,7 @@ class User extends BaseUser implements UserInterface, \Serializable
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Task",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Task",
      *     mappedBy="user"
      * )
      * @var Task[] An ArrayCollection of Task objects.
@@ -76,7 +76,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      * @var Organization
      *
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="users"
      * )
      *
@@ -145,7 +145,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      * @var Theme
      *
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\System\Theme\Theme",
+     *     targetEntity="AppBundle\Entity\System\Theme\Theme",
      *     inversedBy="users"
      * )
      *
@@ -158,7 +158,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\User\UserUtil",
+     *          "AppBundle\Util\Organization\User\UserUtil",
      *          "getStates"
      *      }
      * )
@@ -171,7 +171,7 @@ class User extends BaseUser implements UserInterface, \Serializable
     /**
      * @var Image
      *
-     * @OneToOne(targetEntity="AppBundle\ORM\Entity\Organization\Config\Image")
+     * @OneToOne(targetEntity="AppBundle\Entity\Organization\Config\Image")
      *
      * @label('User Profile Picture')
      *
@@ -182,7 +182,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      * @var Type
      *
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Type",
+     *     targetEntity="AppBundle\Entity\Organization\Config\Type",
      *     inversedBy="users"
      * )
      *

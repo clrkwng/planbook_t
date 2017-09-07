@@ -6,13 +6,12 @@
  * Time: 11:04 AM
  */
 
-namespace AppBundle\ORM\Repository\Organization\User\Task;
+namespace AppBundle\Repository\Organization\User\Task;
 
-
-use AppBundle\ORM\Entity\Organization\Config\Image;
-use AppBundle\ORM\Entity\Organization\Config\Type;
-use AppBundle\ORM\Entity\Organization\Organization;
-use AppBundle\ORM\Entity\System\Theme\Theme;
+use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Entity\Organization\Config\Type;
+use AppBundle\Entity\Organization\Organization;
+use AppBundle\Entity\System\Theme\Theme;
 use Doctrine\ORM\EntityRepository;
 
 class UserRepository extends EntityRepository

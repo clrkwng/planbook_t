@@ -6,8 +6,8 @@
  * Time: 7:53 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User;
-use AppBundle\ORM\Entity\Organization\Config\Trophy;
+namespace AppBundle\Entity\Organization\User;
+use AppBundle\Entity\Organization\Config\Trophy;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -28,7 +28,7 @@ class Achievement
 
     /**
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     inversedBy="achievements"
      * )
      * @JoinColumn(name="user_id", referencedColumnName="id", nullable=FALSE)
@@ -37,7 +37,7 @@ class Achievement
 
     /**
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Trophy",
+     *     targetEntity="AppBundle\Entity\Organization\Config\Trophy",
      *     inversedBy="achievements"
      * )
      * @JoinColumn(name="trophy_id", referencedColumnName="id", nullable=FALSE)

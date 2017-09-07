@@ -6,7 +6,7 @@
  * Time: 9:13 PM
  */
 
-namespace AppBundle\ORM\Entity\System\Config;
+namespace AppBundle\Entity\System\Config;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 

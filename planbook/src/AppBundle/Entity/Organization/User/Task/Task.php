@@ -6,11 +6,11 @@
  * Time: 9:03 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User\Task;
+namespace AppBundle\Entity\Organization\User\Task;
 
-use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat;
-use AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle;
-use AppBundle\ORM\Entity\Organization\User\User;
+use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat;
+use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
+use AppBundle\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -37,7 +37,7 @@ class Task
      * @label('User this task is assigned to')
      *
      * @ManytoOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     inversedBy="taskTemplates"
      * )
      *
@@ -50,7 +50,7 @@ class Task
      * @label('Collection of single instance, child tasks')
      *
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Single\TaskSingle",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Single\TaskSingle",
      *     mappedBy="task"
      * )
      *
@@ -63,7 +63,7 @@ class Task
      * @label('Collection of repeating, child tasks')
      *
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat",
      *     mappedBy="task"
      * )
      *
@@ -93,7 +93,7 @@ class Task
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\User\Task\TaskUtil",
+     *          "AppBundle\Util\Organization\User\Task\TaskUtil",
      *          "getStates"
      *      }
      * )

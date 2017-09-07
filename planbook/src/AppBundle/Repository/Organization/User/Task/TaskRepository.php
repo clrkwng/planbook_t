@@ -6,10 +6,9 @@
  * Time: 11:05 AM
  */
 
-namespace AppBundle\ORM\Repository\Organization\User\Task;
+namespace AppBundle\Repository\Organization\User\Task;
 
-
-use AppBundle\ORM\Entity\Organization\User\User;
+use AppBundle\Entity\Organization\User\User;
 use Doctrine\ORM\EntityRepository;
 
 class TaskRepository extends EntityRepository

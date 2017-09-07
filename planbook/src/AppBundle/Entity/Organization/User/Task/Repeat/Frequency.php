@@ -6,7 +6,7 @@
  * Time: 8:39 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\User\Task\Repeat;
+namespace AppBundle\Entity\Organization\User\Task\Repeat;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -62,7 +62,7 @@ class Frequency
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\User\Task\Repeat\FrequencyUtil",
+     *          "AppBundle\Util\Organization\User\Task\Repeat\FrequencyUtil",
      *          "getStates"
      *      }
      * )

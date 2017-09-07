@@ -6,10 +6,9 @@
  * Time: 11:07 AM
  */
 
-namespace AppBundle\ORM\Repository\Organization\User\Task\Repeat;
+namespace AppBundle\Repository\Organization\User\Task\Repeat;
 
-
-use AppBundle\ORM\Entity\Organization\User\Task\Repeat\TaskRepeat;
+use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat;
 use Doctrine\ORM\EntityRepository;
 
 class TaskRepeatSingleRepository extends EntityRepository

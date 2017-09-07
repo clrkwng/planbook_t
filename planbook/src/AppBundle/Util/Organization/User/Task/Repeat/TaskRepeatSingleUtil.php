@@ -6,8 +6,7 @@
  * Time: 9:39 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\User\Task\Repeat;
-
+namespace AppBundle\Util\Organization\User\Task\Repeat;
 
 class TaskRepeatSingleUtil
 {

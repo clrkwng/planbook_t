@@ -6,13 +6,13 @@
  * Time: 8:27 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization;
-use AppBundle\ORM\Entity\Organization\Config\Image;
-use AppBundle\ORM\Entity\Organization\Config\OrgConfig;
-use AppBundle\ORM\Entity\Organization\Config\Trophy;
-use AppBundle\ORM\Entity\Organization\User\Task\Common\Category;
-use AppBundle\ORM\Entity\Organization\User\Task\Common\Priority;
-use AppBundle\ORM\Entity\Organization\User\User;
+namespace AppBundle\Entity\Organization;
+use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Entity\Organization\Config\OrgConfig;
+use AppBundle\Entity\Organization\Config\Trophy;
+use AppBundle\Entity\Organization\User\Task\Common\Category;
+use AppBundle\Entity\Organization\User\Task\Common\Priority;
+use AppBundle\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,7 +36,7 @@ class Organization
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Image",
+     *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     mappedBy="organization"
      * )
      * @var Image[] An ArrayCollection of Image objects.
@@ -46,7 +46,7 @@ class Organization
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\OrgConfig",
+     *     targetEntity="AppBundle\Entity\Organization\Config\OrgConfig",
      *     mappedBy="organization"
      * )
      * @var OrgConfig[] An ArrayCollection of OrgConfig objects.
@@ -56,7 +56,7 @@ class Organization
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Config\Trophy",
+     *     targetEntity="AppBundle\Entity\Organization\Config\Trophy",
      *     mappedBy="organization"
      * )
      * @var Trophy[] An ArrayCollection of Trophy objects.
@@ -66,7 +66,7 @@ class Organization
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Priority",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
      *     mappedBy="organization"
      * )
      * @var Priority[] An ArrayCollection of Priority objects.
@@ -76,7 +76,7 @@ class Organization
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     mappedBy="organization"
      * )
      * @var User[] An ArrayCollection of User objects.
@@ -86,7 +86,7 @@ class Organization
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Category",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Category",
      *     mappedBy="organization"
      * )
      * @var Category[] An ArrayCollection of Category objects.

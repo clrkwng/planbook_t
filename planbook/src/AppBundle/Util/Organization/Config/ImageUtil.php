@@ -6,8 +6,7 @@
  * Time: 9:44 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\Config;
-
+namespace AppBundle\Util\Organization\Config;
 
 class ImageUtil
 {

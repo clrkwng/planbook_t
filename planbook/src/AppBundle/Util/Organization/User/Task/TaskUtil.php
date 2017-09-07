@@ -6,8 +6,7 @@
  * Time: 9:31 PM
  */
 
-namespace AppBundle\ORM\Util\Organization\User\Task;
-
+namespace AppBundle\Util\Organization\User\Task;
 
 class TaskUtil
 {

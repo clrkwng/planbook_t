@@ -6,7 +6,7 @@
  * Time: 8:57 PM
  */
 
-namespace AppBundle\ORM\Entity\System\Theme;
+namespace AppBundle\Entity\System\Theme;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -55,7 +55,7 @@ class Color
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\System\Theme\ColorUtil",
+     *          "AppBundle\Util\System\Theme\ColorUtil",
      *          "getStates"
      *      }
      * )

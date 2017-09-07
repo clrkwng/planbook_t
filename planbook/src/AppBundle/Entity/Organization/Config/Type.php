@@ -6,11 +6,10 @@
  * Time: 8:46 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\Config;
+namespace AppBundle\Entity\Organization\Config;
 use Doctrine\Common\Collections\ArrayCollection;
-use AppBundle\ORM\Entity\Organization\User\User;
+use AppBundle\Entity\Organization\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 
 /**
@@ -40,7 +39,7 @@ class Type
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\User",
+     *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     mappedBy="type"
      * )
      * @var User[] An ArrayCollection of User objects.
@@ -91,7 +90,7 @@ class Type
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\Config\TypeUtil",
+     *          "AppBundle\Util\Organization\Config\TypeUtil",
      *          "getStates"
      *      }
      * )

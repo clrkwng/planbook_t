@@ -8,7 +8,7 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\ORM\Entity\Organization\User\User;
+use AppBundle\Entity\Organization\User\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;

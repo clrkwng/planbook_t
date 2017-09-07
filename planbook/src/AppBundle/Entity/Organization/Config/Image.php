@@ -6,10 +6,10 @@
  * Time: 8:53 PM
  */
 
-namespace AppBundle\ORM\Entity\Organization\Config;
-use AppBundle\ORM\Entity\Organization\Organization;
-use AppBundle\ORM\Entity\Organization\User\Prize;
-use AppBundle\ORM\Entity\Organization\User\Task\Common\Category;
+namespace AppBundle\Entity\Organization\Config;
+use AppBundle\Entity\Organization\Organization;
+use AppBundle\Entity\Organization\User\Prize;
+use AppBundle\Entity\Organization\User\Task\Common\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,7 +33,7 @@ class Image
     /**
      * @var Organization
      * @ManyToOne(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\Organization",
+     *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="images"
      * )
      *
@@ -51,7 +51,7 @@ class Image
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Task\Common\Category",
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Category",
      *     mappedBy="image"
      * )
      * @var Category[] An ArrayCollection of Category objects.
@@ -61,7 +61,7 @@ class Image
 
     /**
      * @OneToMany(
-     *     targetEntity="AppBundle\ORM\Entity\Organization\User\Prize",
+     *     targetEntity="AppBundle\Entity\Organization\User\Prize",
      *     mappedBy="image"
      * )
      * @var Prize[] An ArrayCollection of Prize objects.
@@ -97,7 +97,7 @@ class Image
      * @var string
      * @Assert\Choice(
      *     callback = {
-     *          "AppBundle\ORM\Util\Organization\Config\ImageUtil",
+     *          "AppBundle\Util\Organization\Config\ImageUtil",
      *          "getStates"
      *      }
      * )
