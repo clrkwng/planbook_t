@@ -5,7 +5,9 @@
  * Date: 8/25/2017
  * Time: 7:14 PM
  */
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
 
-require_once "bootstrap.php";
+// replace with file to your own project bootstrap
+require_once 'bootstrap.php';
 
-return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet($entityManager);
+return ConsoleRunner::createHelperSet($entityManager); //$entityManager inherited from bootstrap.php

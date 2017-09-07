@@ -216,7 +216,6 @@ module.exports = function (grunt) {
         grunt.task.run("copy:js_app");
         grunt.task.run("copy:img_app");
         grunt.task.run("copy:js_admin");
-        grunt.task.run("copy:xampp");
     });
 
     grunt.registerTask('xampp-deploy',
@@ -226,7 +225,7 @@ module.exports = function (grunt) {
         ]
     );
 
-    grunt.registerTask('dev', ['default', 'watch']);
+    grunt.registerTask('dev', ['default', 'xampp-deploy']);
 
     grunt.registerTask('optimizejs', function() {
         grunt.task.run("clean:js_app");

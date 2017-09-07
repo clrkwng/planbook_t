@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 
 /**
- * @Entity(repositoryClass="UserRepository") @Table(name="user")
+ * @Entity(repositoryClass="UserRepository") @Table(name="`user`")
  *
  * @label('Account information for users on a per tenant basis')
  *
