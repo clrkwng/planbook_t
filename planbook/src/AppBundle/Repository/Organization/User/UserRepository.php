@@ -6,7 +6,7 @@
  * Time: 11:04 AM
  */
 
-namespace AppBundle\Repository\Organization\User\Task;
+namespace AppBundle\Repository\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Config\Type;

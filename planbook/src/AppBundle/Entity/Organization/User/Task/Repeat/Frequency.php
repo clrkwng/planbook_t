@@ -7,52 +7,53 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-
-
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="FrequencyRepository") @Table(name="frequency")
+ * @ORM\Table(name="frequency")
+ * @ORM\Entity(repositoryClass="FrequencyRepository")
  *
- * @label('Base definition for a recurring task')
+ * Base definition for a recurring task
  *
  **/
 class Frequency
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @label('
-     *      Name associated with this frequency set
-     *          (ex: "Every Tuesday", "Every Day", "Every n days", etc)
-     * ')
      *
-     * @Assert\NotBlank
+     *  Name associated with this frequency set
+     *   (ex: "Every Tuesday", "Every Day", "Every n days", etc)
+     *
+     *
+     * @Assert\NotBlank()
      * @Assert\Length(min = 2)
      *
      */
     protected $name;
 
     /**
-     * @OneToMany(targetEntity="FrequencyMeta", mappedBy="frequency")
+     * @ORM\OneToMany(targetEntity="FrequencyMeta", mappedBy="frequency")
      * @var FrequencyMeta[] An ArrayCollection of FrequencyMeta objects.
      *
      */
     protected $metaData = null;
 
     /**
-     * @ManyToMany(targetEntity="TaskRepeat", mappedBy="frequency")
+     * @ORM\ManyToMany(targetEntity="TaskRepeat", mappedBy="frequency")
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
      *
      */
@@ -66,7 +67,7 @@ class Frequency
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;

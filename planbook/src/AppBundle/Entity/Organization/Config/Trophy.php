@@ -11,51 +11,54 @@ use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Achievement;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
 
 
 /**
- * @Entity(repositoryClass="TrophyRepository") @Table(name="trophy")
+ * @ORM\Table(name="trophy")
+ * @ORM\Entity(repositoryClass="TrophyRepository")
  *
- * @Label('Per tenant definitions of trophies that are earned by a user completing tasks')
+ * Per tenant definitions of trophies that are earned by a user completing tasks
  *
  **/
 class Trophy
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      *
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $name;
 
     /**
      * @var Organization
      *
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="trophies"
      * )
      *
-     * @label('Allows for the trophies to be defined on a per tenant basis')
+     * Allows for the trophies to be defined on a per tenant basis
      */
     protected $organization = null;
 
     /**
      * @var Image
-     * @label('Icon displayed for the trophy')
+     * Icon displayed for the trophy
      *
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     inversedBy="trophies"
      * )
@@ -65,20 +68,21 @@ class Trophy
 
     /**
      * @var int
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      *
      * @Assert\GreaterThan(0)
      *
-     * @label('Quantity of this trophy needed to increment to the next trophy')
+     * Quantity of this trophy needed to increment to the next trophy
+     *
      */
     protected $amount_needed_next;
 
     /**
      * @var Trophy
      *
-     * @label('The trophy to increment to after $amount_needed_next == UserTrophy.$amount')
+     * The trophy to increment to after $amount_needed_next == UserTrophy.$amount
      *
-     * @OneToOne(
+     * @ORM\OneToOne(
      *     targetEntity="AppBundle\Entity\Organization\Config\Trophy"
      * )
      *
@@ -93,13 +97,13 @@ class Trophy
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Achievement",
      *     mappedBy="trophy",
      *     cascade={
@@ -110,7 +114,9 @@ class Trophy
      * )
      *
      * @var Achievement[] An ArrayCollection of Achievement objects.
-     * @label('Collection of Achievement associated with the User')
+     *
+     * Collection of Achievement associated with the User
+     *
      */
     protected $achievements = null;
 

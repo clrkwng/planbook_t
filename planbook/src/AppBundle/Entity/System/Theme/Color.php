@@ -7,10 +7,14 @@
  */
 
 namespace AppBundle\Entity\System\Theme;
+
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
 
 /**
- * @Entity(repositoryClass="ColorRepository") @Table(name="color")
+ * @ORM\Table(name="color")
+ * @ORM\Entity(repositoryClass="ColorRepository")
  *
  * Basic definitions for colors
  *
@@ -19,26 +23,26 @@ class Color
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 3)
      */
     protected $name;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 4)
      */
     protected $hex_value;
@@ -59,7 +63,7 @@ class Color
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     protected $state;
 

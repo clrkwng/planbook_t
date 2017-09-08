@@ -7,14 +7,15 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Single;
+
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\Entity\Organization\User\Task\Task;
 use Symfony\Component\Validator\Constraints as Assert;
-
-
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="TaskSingleRepository") @Table(name="task_single")
+ * @ORM\Table(name="task_single")
+ * @ORM\Entity(repositoryClass="TaskSingleRepository")
  *
  * Definition for a task that occurs only once
  *
@@ -23,26 +24,26 @@ class TaskSingle
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var Task
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Task",
      *     inversedBy="singleTasks"
      * )
      *
-     * @label('Base task to inherit from')
+     * Base task to inherit from
      *
      */
     protected $task = null;
 
     /**
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
      *     inversedBy="singleTasks"
      * )
@@ -53,11 +54,11 @@ class TaskSingle
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      * UNIX timestamp for when the task must be completed by
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 4)
      *
      */
@@ -65,7 +66,7 @@ class TaskSingle
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
@@ -78,7 +79,7 @@ class TaskSingle
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
@@ -96,7 +97,7 @@ class TaskSingle
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;

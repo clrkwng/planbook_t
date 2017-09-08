@@ -10,31 +10,33 @@ namespace AppBundle\Entity\Organization\Config;
 use AppBundle\Entity\Organization\Organization;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 
 
 /**
- * @Entity(repositoryClass="OrgConfigRepository") @Table(name="org_config")
+ * @ORM\Table(name="org_config")
+ * @ORM\Entity(repositoryClass="OrgConfigRepository")
  *
- * @label('Configurations for the deployment environment on a per tenant basis')
+ * Configurations for the deployment environment on a per tenant basis
  *
  **/
 class OrgConfig
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var Organization
      *
-     * @Label('Allows for configurations to be set on a per tenant basis')
+     * llows for configurations to be set on a per tenant basis
      *
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="orgConfigurations"
      * )
@@ -45,60 +47,60 @@ class OrgConfig
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      */
     protected $variable;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      */
     protected $value;
 
     /**
      * @var DateTime
-     * @Column(type="date")
+     * @ORM\Column(type="date")
      *
-     * @label('Timestamp for when this record was created')
+     * Timestamp for when this record was created
      *
      */
     protected $created_time;
 
     /**
      * @var DateTime
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
      *
-     * @label('Timestamp for when this record was last updated')
+     * Timestamp for when this record was last updated
      *
      */
     protected $updated_time;
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
      *
-     * @label('User that last updated this record')
+     * User that last updated this record
      *
      */
     protected $updated_by;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @label('User that initially created this record')
+     * User that initially created this record
      *
      */
     protected $created_by;

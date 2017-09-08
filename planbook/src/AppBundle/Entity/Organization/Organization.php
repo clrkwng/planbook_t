@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\Entity\Organization;
+
 use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Config\OrgConfig;
 use AppBundle\Entity\Organization\Config\Trophy;
@@ -16,26 +17,28 @@ use AppBundle\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @Entity(repositoryClass="OrganizationRepository") @Table(name="organization")
+ * @ORM\Table(name="organization")
+ * @ORM\Entity(repositoryClass="OrganizationRepository")
  *
- * @label('Collection of users')
+ * Collection of users
  *
  **/
 class Organization
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     mappedBy="organization"
      * )
@@ -45,7 +48,7 @@ class Organization
     protected $images = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\Config\OrgConfig",
      *     mappedBy="organization"
      * )
@@ -55,7 +58,7 @@ class Organization
     protected $orgConfigurations = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\Config\Trophy",
      *     mappedBy="organization"
      * )
@@ -65,7 +68,7 @@ class Organization
     protected $trophies = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
      *     mappedBy="organization"
      * )
@@ -75,7 +78,7 @@ class Organization
     protected $priorities = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     mappedBy="organization"
      * )
@@ -85,7 +88,7 @@ class Organization
     protected $users = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Category",
      *     mappedBy="organization"
      * )
@@ -96,23 +99,23 @@ class Organization
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 3)
      */
     protected $name;
 
     /**
      * @var uuid
-     * @Column(
+     * @ORM\Column(
      *     type="guid",
      *     unique=true
      * )
      *
-     * @label('Generated UUID that can be used to link uniquely to a particular tenant')
+     * Generated UUID that can be used to link uniquely to a particular tenant
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      *
      */
     protected $uuid;

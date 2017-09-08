@@ -7,56 +7,59 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
+
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="TaskRepeatSingleRepository") @Table(name="task_repeat_single")
+ * @ORM\Table(name="task_repeat_single")
+ * @ORM\Entity(repositoryClass="TaskRepeatSingleRepository")
  *
- * @label('A single occurrence of a task that occurs on a recurrent basis')
+ * A single occurrence of a task that occurs on a recurrent basis
  *
  **/
 class TaskRepeatSingle
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var TaskRepeat
-     * @ManyToOne(targetEntity="TaskRepeat", inversedBy="repeatTaskInstances")
+     * @ORM\ManyToOne(targetEntity="TaskRepeat", inversedBy="repeatTaskInstances")
      *
-     * @label('Base repeat task to inherit from')
+     * Base repeat task to inherit from
      *
      */
     protected $baseRepeatTask;
 
     /**
      * @var Priority
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
      *     inversedBy="repeatTasks"
      * )
      *
-     * @label('
-     *     If provided, will override the priority defined in the corresponding
-     *      `Task_Repeat` record for this instance
-     *     ')
+     *
+     *  If provided, will override the priority defined in the corresponding
+     *    `Task_Repeat` record for this instance
+     *
      *
      */
     protected $priority_ov;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @label('UNIX timestamp for when the task must be completed by')
+     * UNIX timestamp for when the task must be completed by
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 4)
      *
      */
@@ -64,30 +67,30 @@ class TaskRepeatSingle
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
      *
-     * @label('
-     *        If provided, will override the name defined in the corresponding
-     *        `Task_Repeat` record for this instance
-     *     ')
+     *
+     *    If provided, will override the name defined in the corresponding
+     *     `Task_Repeat` record for this instance
+     *
      *
      */
     protected $name_ov;
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
      *
-     * @label('
+     *
      *     If provided, will override the description defined in the corresponding
      *     `Task_Repeat` record for this instance
-     *     ')
+     *
      *
      */
     protected $description_ov;
@@ -100,7 +103,7 @@ class TaskRepeatSingle
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      *
      */

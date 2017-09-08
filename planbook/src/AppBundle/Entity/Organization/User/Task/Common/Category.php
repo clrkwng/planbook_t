@@ -10,53 +10,56 @@ namespace AppBundle\Entity\Organization\User\Task\Common;
 use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Organization;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
 
 
 /**
- * @Entity(repositoryClass="CategoryRepository") @Table(name="category")
+ * @ORM\Table(name="category")
+ * @ORM\Entity(repositoryClass="CategoryRepository")
  *
- * @label('Container for similar tasks; defined on a per tenant basis')
+ * Container for similar tasks; defined on a per tenant basis
  *
  **/
 class Category
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 2)
      */
     protected $name;
 
     /**
      * @var Image
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     inversedBy="categories"
      * )
      *
-     * @label('Icon rendered when the category is displayed')
+     * Icon rendered when the category is displayed
      *
      */
     protected $image;
 
     /**
      * @var Organization
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="categories"
      * )
      *
-     * @label('Realm that this category exists in')
+     * Realm that this category exists in
      *
      */
     protected $organization = null;

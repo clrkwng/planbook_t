@@ -22,5 +22,5 @@ $dbParams = array(
     'dbname'   => 'planbook_db',
 );
 
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, null, false);
 $entityManager = EntityManager::create($dbParams, $config);

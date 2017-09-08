@@ -10,35 +10,38 @@ namespace AppBundle\Entity\Organization\Config;
 use Doctrine\Common\Collections\ArrayCollection;
 use AppBundle\Entity\Organization\User\User;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
 
 
 /**
- * @Entity(repositoryClass="TypeRepository") @Table(name="type")
+ * @ORM\Table(name="type")
+ * @ORM\Entity(repositoryClass="TypeRepository")
  *
- * @Label('Role that a user has in the Realm')
+ * Role that a user has in the Realm
  *
  **/
 class Type
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 2)
      */
     protected $name;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     mappedBy="type"
      * )
@@ -59,7 +62,7 @@ class Type
     /**
      * @return ArrayCollection|null
      *
-     * @label('All users that are of this type.')
+     * All users that are of this type
      *
      */
     public function getUsers()
@@ -70,7 +73,7 @@ class Type
     /**
      * @param User $user
      *
-     * @label('Set a user to this type.')
+     * Set a user to this type
      *
      */
     public function addUser(User $user)
@@ -94,7 +97,7 @@ class Type
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;

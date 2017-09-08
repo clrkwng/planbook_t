@@ -7,12 +7,15 @@
  */
 
 namespace AppBundle\Entity\System\Config;
+
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @Entity(repositoryClass="SysConfigRepository") @Table(name="sys_config")
+ * @ORM\Table(name="sys_config")
+ * @ORM\Entity(repositoryClass="SysConfigRepository")
  *
  * Global configurations for the deployment environment
  *
@@ -21,33 +24,33 @@ class SysConfig
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      */
     protected $variable;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      */
     protected $value;
 
     /**
      * @var string
-     * @Column(type="date")
+     * @ORM\Column(type="date")
      *
      * Timestamp for when this record was created
      *
@@ -56,7 +59,7 @@ class SysConfig
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      * User that initially created this record
      *
@@ -65,7 +68,7 @@ class SysConfig
 
     /**
      * @var DateTime
-     * @Column(
+     * @ORM\Column(
      *     type="date",
      *     nullable=true
      * )
@@ -77,7 +80,7 @@ class SysConfig
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )

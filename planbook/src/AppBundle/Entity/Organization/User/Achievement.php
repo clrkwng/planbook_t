@@ -7,45 +7,48 @@
  */
 
 namespace AppBundle\Entity\Organization\User;
+
 use AppBundle\Entity\Organization\Config\Trophy;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @Entity @Table(name="achievements")
+ * @ORM\Table(name="achievements")
+ * @ORM\Entity(repositoryClass="AchievementRepository")
  *
- * @label('Mapping of Users to Trophies with Additional Data')
+ * Mapping of Users to Trophies with Additional Data
  *
  **/
 class Achievement
 {
     /**
-     * @Column(type="integer")
-     * @Id
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     inversedBy="achievements"
      * )
-     * @JoinColumn(name="user_id", referencedColumnName="id", nullable=FALSE)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=FALSE)
      */
     protected $user;
 
     /**
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Config\Trophy",
      *     inversedBy="achievements"
      * )
-     * @JoinColumn(name="trophy_id", referencedColumnName="id", nullable=FALSE)
+     * @ORM\JoinColumn(name="trophy_id", referencedColumnName="id", nullable=FALSE)
      */
     protected $trophy;
 
     /**
-     * @Column(type="integer", name="quantity")
+     * @ORM\Column(type="integer", name="quantity")
      *
      * @Assert\GreaterThanOrEqual(0)
      */

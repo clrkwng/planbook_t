@@ -7,34 +7,37 @@
  */
 
 namespace AppBundle\Entity\Organization\User;
+
 use AppBundle\Entity\Organization\Config\Image;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="PrizeRepository") @Table(name="prize")
+ * @ORM\Table(name="prize")
+ * @ORM\Entity(repositoryClass="PrizeRepository")
  **/
 class Prize
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 2)
      */
     protected $name;
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
@@ -43,33 +46,34 @@ class Prize
 
     /**
      * @var int
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      *
      * @Assert\GreaterThan(0)
      *
-     * @label('The amount that it costs a user to purchase the prize')
+     * The amount that it costs a user to purchase the prize
      *
      */
     protected $price;
 
     /**
      * @var User
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     inversedBy="prizes"
      * )
      *
-     * @label('The User that will have this prize appear in their marketplace')
+     * The User that will have this prize appear in their marketplace
+     *
      */
     protected $user;
 
     /**
      * @var Image
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Config\Image",
      *     inversedBy="prizes"
      * )
-     * @label('The image that is displayed when a user views the prize')
+     * The image that is displayed when a user views the prize
      *
      */
     protected $image;
@@ -82,7 +86,7 @@ class Prize
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;

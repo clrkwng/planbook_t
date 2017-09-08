@@ -13,30 +13,31 @@ use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
 use AppBundle\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="TaskRepository") @Table(name="task")
+ * @ORM\Table(name="task")
+ * @ORM\Entity(repositoryClass="TaskRepository")
  *
- * @label('Base definition for a task')
+ * Base definition for a task
  *
  **/
 class Task
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var User
      *
-     * @label('User this task is assigned to')
+     * User this task is assigned to
      *
-     * @ManytoOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     inversedBy="taskTemplates"
      * )
@@ -47,9 +48,9 @@ class Task
     /**
      * @var TaskSingle
      *
-     * @label('Collection of single instance, child tasks')
+     * Collection of single instance, child tasks
      *
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Single\TaskSingle",
      *     mappedBy="task"
      * )
@@ -60,9 +61,9 @@ class Task
     /**
      * @var TaskRepeat
      *
-     * @label('Collection of repeating, child tasks')
+     * Collection of repeating, child tasks
      *
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat",
      *     mappedBy="task"
      * )
@@ -72,16 +73,16 @@ class Task
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 2)
      */
     protected $name;
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
@@ -97,7 +98,7 @@ class Task
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;

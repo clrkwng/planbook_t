@@ -7,12 +7,16 @@
  */
 
 namespace AppBundle\Entity\System\Theme;
+
 use AppBundle\Entity\Organization\User\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
 
 /**
- * @Entity(repositoryClass="ThemeRepository") @Table(name="theme")
+ * @ORM\Table(name="theme")
+ * @ORM\Entity(repositoryClass="ThemeRepository")
  *
  *  Container of related colors
  *
@@ -21,17 +25,17 @@ class Theme
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 2)
      */
     protected $name;
@@ -44,14 +48,14 @@ class Theme
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      *
      */
     protected $state;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\User",
      *     mappedBy="theme"
      * )
@@ -61,24 +65,26 @@ class Theme
     protected $users = null;
 
     /**
-     * @ManyToMany(targetEntity="Color", cascade={"persist"})
-     * @JoinTable(
+     * @ORM\ManyToMany(targetEntity="Color", cascade={"persist"})
+     * @ORM\JoinTable(
      *      name="map_theme_color",
      *      joinColumns={
-     *          @JoinColumn(
+     *          @ORM\JoinColumn(
      *              name="theme_id",
      *              referencedColumnName="id"
      *          )
      *      },
      *      inverseJoinColumns={
-     *          @JoinColumn(
+     *          @ORM\JoinColumn(
      *              name="color_id",
      *              referencedColumnName="id"
      *          )
      *      }
      * )
      * @var Color[] An ArrayCollection of Color objects.
-     * @label('Collection of colors associated with the Theme')
+     *
+     * Collection of colors associated with the Theme
+     *
      */
     protected $colors = null;
 

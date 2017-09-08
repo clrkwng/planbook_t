@@ -12,45 +12,46 @@ use AppBundle\Entity\Organization\User\Prize;
 use AppBundle\Entity\Organization\User\Task\Common\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="ImageRepository") @Table(name="image")
+ * @ORM\Table(name="image")
+ * @ORM\Entity(repositoryClass="ImageRepository")
  *
- * @label('Per tenant container of uploaded images')
+ * Per tenant container of uploaded images
  *
  **/
 class Image
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var Organization
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="images"
      * )
      *
-     * @label('Allows for an organization to build up and manage their own repository of uploaded images')
+     * Allows for an organization to build up and manage their own repository of uploaded images
      *
      */
     protected $organization = null;
 
     /**
-     * @OneToMany(targetEntity="Trophy", mappedBy="image")
+     * @ORM\OneToMany(targetEntity="Trophy", mappedBy="image")
      * @var Trophy[] An ArrayCollection of Trophy objects.
      *
      */
     protected $trophies = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Category",
      *     mappedBy="image"
      * )
@@ -60,7 +61,7 @@ class Image
     protected $categories = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Prize",
      *     mappedBy="image"
      * )
@@ -71,16 +72,16 @@ class Image
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 2)
      */
     protected $name;
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
@@ -89,9 +90,17 @@ class Image
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
+     *
+     * @Assert\NotBlank(message="Please, upload an image file.")
+     * @Assert\File(
+     *     mimeTypes={
+     *          "image/jpeg",
+     *          "image/pjpeg",
+     *          "image/png"
+     *     })
      */
-    protected $link;
+    protected $picture;
 
     /**
      * @var string
@@ -101,7 +110,7 @@ class Image
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;
@@ -223,17 +232,17 @@ class Image
     /**
      * @return string
      */
-    public function getLink()
+    public function getPicture()
     {
-        return $this->link;
+        return $this->picture;
     }
 
     /**
-     * @param string $link
+     * @param string $picture
      */
-    public function setLink($link)
+    public function setPicture($picture)
     {
-        $this->link = $link;
+        $this->picture = $picture;
     }
 
     /**

@@ -7,89 +7,93 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
+
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\Entity\Organization\User\Task\Task;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
 
 
 /**
- * @Entity(repositoryClass="TaskRepeatRepository") @Table(name="task_repeat")
+ * @ORM\Table(name="task_repeat")
+ * @ORM\Entity(repositoryClass="TaskRepeatRepository")
  *
- * @label('Definition for a task that occurs on a recurrent basis')
+ * Definition for a task that occurs on a recurrent basis
  *
  **/
 class TaskRepeat
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var Task
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Task",
      *     inversedBy="repeatTasks"
      * )
      *
-     * @label('Base task to inherit from')
+     * Base task to inherit from
      *
      */
     protected $task;
 
     /**
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
-     * @ManyToOne(targetEntity="TaskRepeat", inversedBy="baseRepeatTask")
+     * @ORM\ManyToOne(targetEntity="TaskRepeat", inversedBy="baseRepeatTask")
      *
-     * @label('Base task to inherit from')
+     * Base task to inherit from
      *
      */
     protected $repeatTaskInstances;
 
     /**
      * @var Priority
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
      *     inversedBy="repeatTasks"
      * )
      *
-     * @label('Task's default priority to be inherited by each single instance')
+     * Task's default priority to be inherited by each single instance
      *
      */
     protected $priority;
 
     /**
      * @var Frequency[] An ArrayCollection of Frequency objects.
-     * @ManyToMany(targetEntity="Frequency", mappedBy="repeatTasks")
-     * @label('Task's repetition frequency; used for creation of `Task_Repeat_Single`')
+     * @ORM\ManyToMany(targetEntity="Frequency", mappedBy="repeatTasks")
+     * Task's repetition frequency; used for creation of `Task_Repeat_Single`
      *
      */
     protected $frequencies;
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
      *
-     * @label('If provided, this will override the name specified in the associated base task')
+     * If provided, this will override the name specified in the associated base task
      *
      */
     protected $name_ov;
 
     /**
      * @var string
-     * @Column(
+     * @ORM\Column(
      *     type="string",
      *     nullable=true
      * )
      *
-     * @label('If provided, this will override the description specified in the associated base task')
+     * If provided, this will override the description specified in the associated base task
      *
      */
     protected $description_ov;
@@ -102,7 +106,7 @@ class TaskRepeat
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      */
     protected $state;

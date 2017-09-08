@@ -13,88 +13,91 @@ use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeatSingle;
 use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+
 
 
 /**
- * @Entity(repositoryClass="PriorityRepository") @Table(name="priority")
+ * @ORM\Table(name="priority")
+ * @ORM\Entity(repositoryClass="PriorityRepository")
  *
- * @label('Per tenant definitions of the priority placed on user tasks')
+ * Per tenant definitions of the priority placed on user tasks
  *
  **/
 class Priority
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      */
     protected $name;
 
     /**
      * @var Organization
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="priorities"
      * )
      *
-     * @label('Allows for the organization to define their own custom priorities with associated values')
+     * Allows for the organization to define their own custom priorities with associated values
      *
      */
     protected $organization = null;
 
     /**
      * @var TaskSingle
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Single\TaskSingle",
      *     mappedBy="priority"
      * )
      *
-     * @label('Collection of Single Tasks of this Priority')
+     * Collection of Single Tasks of this Priority
      *
      */
     protected $singleTasks = null;
 
     /**
      * @var TaskRepeat
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat",
      *     mappedBy="priority"
      * )
      *
-     * @label('Collection of Repeat Tasks of this Priority')
+     * Collection of Repeat Tasks of this Priority
      *
      */
     protected $repeatTasks = null;
 
     /**
      * @var TaskRepeatSingle
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeatSingle",
      *     mappedBy="priority_ov"
      * )
      *
-     * @label('Collection of Repeat Task Instances of this Priority')
+     * Collection of Repeat Task Instances of this Priority
      *
      */
     protected $repeatTaskInstances = null;
 
     /**
      * @var int
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      *
      * @Assert\GreaterThan(0)
      *
-     * @label('How many points are given to the user upon completion of the task')
+     * How many points are given to the user upon completion of the task
      *
      */
     protected $completion_points;
@@ -107,7 +110,7 @@ class Priority
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      *
      */

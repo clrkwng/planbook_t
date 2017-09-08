@@ -6,7 +6,7 @@
  * Time: 8:15 PM
  */
 
-namespace AppBundle\Repository\Organization\User\Task;
+namespace AppBundle\Repository\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Trophy;
 use AppBundle\Entity\Organization\User\User;

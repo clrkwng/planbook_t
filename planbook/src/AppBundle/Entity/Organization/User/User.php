@@ -7,6 +7,10 @@
  */
 
 namespace AppBundle\Entity\Organization\User;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Model\User as BaseUser;
 use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Config\Type;
 use AppBundle\Entity\Organization\Organization;
@@ -16,48 +20,53 @@ use AppBundle\Util\Organization\User\UserUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Uuid;
-use Symfony\Component\Validator\Constraints as Assert;;
 use Symfony\Component\Security\Core\User\UserInterface;
-use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @Entity(repositoryClass="UserRepository") @Table(name="`user`")
  *
- * @label('Account information for users on a per tenant basis')
+ * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Table(name="`user`")
  *
- * @Constraints\UniqueEntity(fields="username", message="Username already taken")
- * @Constraints\UniqueEntity(fields="email", message="Email already taken")
+ * @UniqueEntity(fields="email", message="Email already taken")
+ * @UniqueEntity(fields="username", message="Username already taken")
+ *
+ * Account information for users on a per tenant basis
  *
  **/
 class User extends BaseUser implements UserInterface, \Serializable
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue(strategy="AUTO")
+     * @ORM\Id
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Task",
      *     mappedBy="user"
      * )
      * @var Task[] An ArrayCollection of Task objects.
-     * @label('Base Tasks Associated with the User')
+     *
+     * Base Tasks Associated with the User
+     *
      */
     protected $taskTemplates = null;
 
     /**
-     * @OneToMany(targetEntity="Prize", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Prize", mappedBy="user")
      * @var Prize[] An ArrayCollection of Prize objects.
-     * @label('Collection of prizes associated with the User')
+     *
+     * Collection of prizes associated with the User
+     *
      */
     protected $prizes = null;
 
     /**
-     * @OneToMany(
+     * @ORM\OneToMany(
      *     targetEntity="Achievement",
      *     mappedBy="user",
      *     cascade={
@@ -68,75 +77,42 @@ class User extends BaseUser implements UserInterface, \Serializable
      * )
      *
      * @var Achievement[] An ArrayCollection of Achievement objects.
-     * @label('Collection of Achievement associated with the User')
+     *
+     * Collection of Achievement associated with the User
+     *
      */
     protected $achievements = null;
 
     /**
      * @var Organization
      *
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Organization",
      *     inversedBy="users"
      * )
      *
-     * @label('The realm that the user is associated with')
+     * The realm that the user is associated with
      *
      */
     protected $organization = null;
 
     /**
      * @var string
-     * @Column(
-     *     type="string",
-     *     length=255,
-     *     unique=true
-     * )
-     *
-     * @Assert\NotBlank
-     * @Assert\Length(min = 4)
+     * @Assert\NotBlank(groups={"registration"})
+     * @Assert\Length(max=4096, groups={"registration"})
      */
-    protected $username;
-
-    /**
-     * @var string
-     * @Column(
-     *     type="string",
-     *     length=255,
-     *     unique=true
-     * )
-     *
-     * @Assert\NotBlank
-     * @Assert\Email()
-     */
-    protected $email;
-
-    /**
-     * @var string
-     * @Column(type="string", length=64)
-     *
-     * @Assert\NotBlank
-     * @Assert\Length(min = 4)
-     */
-    protected $password;
-
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
-     */
-    private $plainPassword;
+    protected $plainPassword;
 
     /**
      * @var uuid
-     * @Column(
+     * @ORM\Column(
      *     type="guid",
      *     unique=true
      * )
      *
-     * @label('Generated UUID to uniquely link to this user')
+     * Generated UUID to uniquely link to this user
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank()
      *
      */
     protected $uuid;
@@ -144,12 +120,12 @@ class User extends BaseUser implements UserInterface, \Serializable
     /**
      * @var Theme
      *
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\System\Theme\Theme",
      *     inversedBy="users"
      * )
      *
-     * @label('The Theme the user has selected for use in their profile')
+     * The Theme the user has selected for use in their profile
      *
      */
     protected $theme = null;
@@ -162,7 +138,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      *          "getStates"
      *      }
      * )
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
      *
      */
@@ -171,9 +147,9 @@ class User extends BaseUser implements UserInterface, \Serializable
     /**
      * @var Image
      *
-     * @OneToOne(targetEntity="AppBundle\Entity\Organization\Config\Image")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Organization\Config\Image")
      *
-     * @label('User Profile Picture')
+     * User Profile Picture
      *
      */
     protected $image = null;
@@ -181,45 +157,45 @@ class User extends BaseUser implements UserInterface, \Serializable
     /**
      * @var Type
      *
-     * @ManyToOne(
+     * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\Config\Type",
      *     inversedBy="users"
      * )
      *
-     * @label('The role that a user has in the realm')
+     * The role that a user has in the realm
      *
      */
     protected $type = null;
 
     /**
      * @var int
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      *
      * @Assert\GreaterThanOrEqual(0)
      *
-     * @label('The total points that a user has earned in the history of their account')
+     * The total points that a user has earned in the history of their account
      *
      */
     protected $total_points;
 
     /**
      * @var int
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      *
      * @Assert\GreaterThanOrEqual(0)
      *
-     * @label('The points that a user is in progress towards earning their next trophy')
+     * The points that a user is in progress towards earning their next trophy
      *
      */
     protected $trophy_points;
 
     /**
      * @var int
-     * @Column(type="integer")
+     * @ORM\Column(type="integer")
      *
      * @Assert\GreaterThanOrEqual(0)
      *
-     * @label('The points that a user has available to spend on prizes')
+     * The points that a user has available to spend on prizes
      *
      */
     protected $prize_points;
@@ -277,6 +253,7 @@ class User extends BaseUser implements UserInterface, \Serializable
 
     /**
      * @param string $email
+     * @return $this|\FOS\UserBundle\Model\UserInterface|void
      */
     public function setEmail($email)
     {
@@ -555,7 +532,9 @@ class User extends BaseUser implements UserInterface, \Serializable
         ));
     }
 
-    /** @see \Serializable::unserialize() */
+    /** @see \Serializable::unserialize()
+     * @param string $serialized
+     */
     public function unserialize($serialized)
     {
         list (

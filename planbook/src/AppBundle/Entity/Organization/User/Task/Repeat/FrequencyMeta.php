@@ -7,47 +7,49 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
-use Symfony\Component\Validator\Constraints as Assert;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @Entity(repositoryClass="FrequencyMetaRepository") @Table(name="frequency_meta")
+ * @ORM\Table(name="frequency_meta")
+ * @ORM\Entity(repositoryClass="FrequencyMetaRepository")
  *
- * @label('Interval definition for a recurring task')
+ * Interval definition for a recurring task
  *
  **/
 class FrequencyMeta
 {
     /**
      * @var int
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
      * @var Frequency
      *
-     * @label('Associated base frequency')
+     * Associated base frequency
      *
-     * @ManytoOne(targetEntity="Frequency", inversedBy="metaData")
+     * @ORM\ManyToOne(targetEntity="Frequency", inversedBy="metaData")
      *
      */
     protected $frequency = null;
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @label('
-     *      Interval key:
-     *          Values will either be 'repeat_start' or 'repeat_interval_#", where # is the id of the row it is defining the
-     *          range for
-     *     ')
      *
-     * @Assert\NotBlank
+     *  Interval key:
+     *      Values will either be 'repeat_start' or 'repeat_interval_#", where # is the id of the row it is defining the
+     *      range for
+     *
+     *
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      *
      */
@@ -55,20 +57,20 @@ class FrequencyMeta
 
     /**
      * @var string
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      *
-     * @label('
-     *      Interval value:
-     *          If meta_key ==  "repeat_start"      , then this is a Unix timestamp defining when the first occurrence of the
-     *          series will be
      *
-     *          If meta_key ==  "repeat_interval_#" , then this is the number of seconds before this interval is over
-     *              For every 7 days, this is "604800"
-     *              For every 5 days, this is "432000"
+     *  Interval value:
+     *       If meta_key ==  "repeat_start"      , then this is a Unix timestamp defining when the first occurrence of the
+     *      series will be
      *
-     *     ')
+     *      If meta_key ==  "repeat_interval_#" , then this is the number of seconds before this interval is over
+     *          For every 7 days, this is "604800"
+     *          For every 5 days, this is "432000"
      *
-     * @Assert\NotBlank
+     *
+     *
+     * @Assert\NotBlank()
      * @Assert\Length(min = 1)
      *
      */
