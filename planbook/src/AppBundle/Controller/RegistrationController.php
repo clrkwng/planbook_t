@@ -8,9 +8,9 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Form\UserType;
 use AppBundle\Entity\Organization\User\User;
+use AppBundle\Util\Organization\User\UserUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +38,15 @@ class RegistrationController extends Controller
             $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
             $user->setPassword($password);
 
+            //Generate and Set UUID
+            $uuid = \Ramsey\Uuid\Uuid::uuid4();
+            $user->setUuid($uuid);
+
+            //Default State
+            $user->setState("NOT_ACTIVATED");
+            $user->setTotalPoints(0);
+            $user->setTrophyPoints(0);
+            $user->setPrizePoints(0);
 
             // 4) save the User!
             $em = $this->getDoctrine()->getManager();
