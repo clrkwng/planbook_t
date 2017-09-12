@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  *
@@ -201,6 +202,22 @@ class User extends BaseUser implements UserInterface, \Serializable
      *
      */
     protected $prize_points;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
 
     /**
      * User constructor.
@@ -545,5 +562,21 @@ class User extends BaseUser implements UserInterface, \Serializable
             $this->password,
 
             ) = unserialize($serialized);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

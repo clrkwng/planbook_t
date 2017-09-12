@@ -118,3 +118,10 @@ sonata_block:
         sonata.admin.block.admin_list:
             contexts: [admin]
         # ...
+
+# Gedmo and Sluggable Annotation Config
+stof_doctrine_extensions:
+    orm:
+        default:
+            sluggable: true
+            timestampable: true

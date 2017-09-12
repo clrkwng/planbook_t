@@ -13,6 +13,7 @@ use AppBundle\Repository\System\Config\SysConfigRepository;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 
 /**
@@ -51,46 +52,20 @@ class SysConfig
     protected $value;
 
     /**
-     * @var string
-     * @ORM\Column(type="date")
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
      *
-     * Timestamp for when this record was created
-     *
+     * @Gedmo\Timestampable(on="create")
      */
-    protected $created_time;
+    private $createdAt;
 
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      *
-     * User that initially created this record
-     *
+     * @Gedmo\Timestampable(on="update")
      */
-    protected $created_by;
-
-    /**
-     * @var DateTime
-     * @ORM\Column(
-     *     type="date",
-     *     nullable=true
-     * )
-     *
-     * Timestamp for when this record was last updated
-     *
-     */
-    protected $updated_time;
-
-    /**
-     * @var string
-     * @ORM\Column(
-     *     type="string",
-     *     nullable=true
-     * )
-     *
-     * User that last updated this record
-     *
-     */
-    protected $updated_by;
+    private $updatedAt;
 
     /**
      * @return int
@@ -133,70 +108,19 @@ class SysConfig
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
-    public function getCreatedTime()
+    public function getCreatedAt()
     {
-        return $this->created_time;
+        return $this->createdAt;
     }
 
     /**
-     * @param DateTime $created_time
+     * @return \DateTime
      */
-    public function setCreatedTime(DateTime $created_time)
+    public function getUpdatedAt()
     {
-        $this->created_time = $created_time;
+        return $this->updatedAt;
     }
-
-    /**
-     * @return DateTime
-     */
-    public function getUpdatedTime()
-    {
-        return $this->updated_time;
-    }
-
-    /**
-     * @param DateTime $updated_time
-     */
-    public function setUpdatedTime(DateTime $updated_time)
-    {
-        $this->updated_time = $updated_time;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedBy()
-    {
-        return $this->updated_by;
-    }
-
-    /**
-     * @param string $updated_by
-     */
-    public function setUpdatedBy($updated_by)
-    {
-        $this->updated_by = $updated_by;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedBy()
-    {
-        return $this->created_by;
-    }
-
-    /**
-     * @param string $created_by
-     */
-    public function setCreatedBy($created_by)
-    {
-        $this->created_by = $created_by;
-    }
-
-
-
 
 }

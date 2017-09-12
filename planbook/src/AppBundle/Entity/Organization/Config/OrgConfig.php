@@ -13,8 +13,7 @@ use AppBundle\Repository\Organization\Config\OrgConfigRepository;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
-
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="org_config")
@@ -66,25 +65,20 @@ class OrgConfig
     protected $value;
 
     /**
-     * @var DateTime
-     * @ORM\Column(type="date")
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
      *
-     * Timestamp for when this record was created
-     *
+     * @Gedmo\Timestampable(on="create")
      */
-    protected $created_time;
+    private $createdAt;
 
     /**
-     * @var DateTime
-     * @ORM\Column(
-     *     type="string",
-     *     nullable=true
-     * )
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      *
-     * Timestamp for when this record was last updated
-     *
+     * @Gedmo\Timestampable(on="update")
      */
-    protected $updated_time;
+    private $updatedAt;
 
     /**
      * @var string
@@ -164,38 +158,6 @@ class OrgConfig
     }
 
     /**
-     * @return DateTime
-     */
-    public function getCreatedTime()
-    {
-        return $this->created_time;
-    }
-
-    /**
-     * @param DateTime $created_time
-     */
-    public function setCreatedTime(DateTime $created_time)
-    {
-        $this->created_time = $created_time;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getUpdatedTime()
-    {
-        return $this->updated_time;
-    }
-
-    /**
-     * @param DateTime $updated_time
-     */
-    public function setUpdatedTime(DateTime $updated_time)
-    {
-        $this->updated_time = $updated_time;
-    }
-
-    /**
      * @return string
      */
     public function getUpdatedBy()
@@ -227,6 +189,21 @@ class OrgConfig
         $this->created_by = $created_by;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 
 
 }
