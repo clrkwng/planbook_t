@@ -8,13 +8,15 @@
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
+use AppBundle\Repository\Organization\User\Task\Repeat\FrequencyMetaRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  * @ORM\Table(name="frequency_meta")
- * @ORM\Entity(repositoryClass="FrequencyMetaRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\FrequencyMetaRepository")
  *
  * Interval definition for a recurring task
  *

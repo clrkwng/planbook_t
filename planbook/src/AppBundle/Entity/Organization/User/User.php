@@ -8,15 +8,17 @@
 
 namespace AppBundle\Entity\Organization\User;
 
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use FOS\UserBundle\Model\User as BaseUser;
 use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Config\Type;
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Task\Task;
 use AppBundle\Entity\System\Theme\Theme;
 use AppBundle\Util\Organization\User\UserUtil;
+use AppBundle\Repository\Organization\User\UserRepository;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Uuid;
@@ -25,7 +27,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  *
- * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\UserRepository")
  * @ORM\Table(name="`user`")
  *
  * @UniqueEntity(fields="email", message="Email already taken")
@@ -508,11 +510,11 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getRoles()
     {
-        return UserUtil::getStates();
+        return "ROLE_ADMIN";
     }
 
     /**

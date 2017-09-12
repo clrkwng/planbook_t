@@ -7,8 +7,11 @@
  */
 
 namespace AppBundle\Entity\Organization\Config;
+
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Achievement;
+use AppBundle\Repository\Organization\Config\TrophyRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="trophy")
- * @ORM\Entity(repositoryClass="TrophyRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\Config\TrophyRepository")
  *
  * Per tenant definitions of trophies that are earned by a user completing tasks
  *

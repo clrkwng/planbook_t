@@ -8,13 +8,15 @@
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
+use AppBundle\Repository\Organization\User\Task\Repeat\FrequencyRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="frequency")
- * @ORM\Entity(repositoryClass="FrequencyRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\FrequencyRepository")
  *
  * Base definition for a recurring task
  *

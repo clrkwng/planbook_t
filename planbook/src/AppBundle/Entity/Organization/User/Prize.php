@@ -9,12 +9,14 @@
 namespace AppBundle\Entity\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Repository\Organization\User\PrizeRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="prize")
- * @ORM\Entity(repositoryClass="PrizeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\PrizeRepository")
  **/
 class Prize
 {

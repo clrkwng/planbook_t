@@ -14,6 +14,8 @@ use AppBundle\Entity\Organization\Config\Trophy;
 use AppBundle\Entity\Organization\User\Task\Common\Category;
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\Entity\Organization\User\User;
+use AppBundle\Repository\Organization\OrganizationRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,7 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="organization")
- * @ORM\Entity(repositoryClass="OrganizationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\OrganizationRepository")
  *
  * Collection of users
  *

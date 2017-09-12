@@ -8,6 +8,8 @@
 
 namespace AppBundle\Entity\Organization\Config;
 use AppBundle\Entity\Organization\Organization;
+use AppBundle\Repository\Organization\Config\OrgConfigRepository;
+
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="org_config")
- * @ORM\Entity(repositoryClass="OrgConfigRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\Config\OrgConfigRepository")
  *
  * Configurations for the deployment environment on a per tenant basis
  *

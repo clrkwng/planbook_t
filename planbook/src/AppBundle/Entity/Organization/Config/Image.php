@@ -10,13 +10,16 @@ namespace AppBundle\Entity\Organization\Config;
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Prize;
 use AppBundle\Entity\Organization\User\Task\Common\Category;
+use AppBundle\Repository\Organization\Config\ImageRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Table(name="image")
- * @ORM\Entity(repositoryClass="ImageRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\Config\ImageRepository")
  *
  * Per tenant container of uploaded images
  *

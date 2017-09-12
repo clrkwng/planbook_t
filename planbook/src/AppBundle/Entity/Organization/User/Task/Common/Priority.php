@@ -7,10 +7,13 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Common;
+
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat;
 use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeatSingle;
 use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
+use AppBundle\Repository\Organization\User\Task\Common\PriorityRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="priority")
- * @ORM\Entity(repositoryClass="PriorityRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Common\PriorityRepository")
  *
  * Per tenant definitions of the priority placed on user tasks
  *

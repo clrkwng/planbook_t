@@ -9,13 +9,15 @@
 namespace AppBundle\Entity\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Trophy;
+use AppBundle\Repository\Organization\User\AchievementRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  * @ORM\Table(name="achievements")
- * @ORM\Entity(repositoryClass="AchievementRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\AchievementRepository")
  *
  * Mapping of Users to Trophies with Additional Data
  *

@@ -11,13 +11,15 @@ namespace AppBundle\Entity\Organization\User\Task;
 use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat;
 use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
 use AppBundle\Entity\Organization\User\User;
+use AppBundle\Repository\Organization\User\Task\TaskRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="task")
- * @ORM\Entity(repositoryClass="TaskRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\TaskRepository")
  *
  * Base definition for a task
  *

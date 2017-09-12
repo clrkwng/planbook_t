@@ -7,8 +7,11 @@
  */
 
 namespace AppBundle\Entity\Organization\Config;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use AppBundle\Entity\Organization\User\User;
+use AppBundle\Repository\Organization\Config\TypeRepository;
+
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="type")
- * @ORM\Entity(repositoryClass="TypeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\Config\TypeRepository")
  *
  * Role that a user has in the Realm
  *

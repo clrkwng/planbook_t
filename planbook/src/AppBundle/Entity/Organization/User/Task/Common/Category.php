@@ -7,8 +7,11 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Common;
+
 use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Organization;
+use AppBundle\Repository\Organization\User\Task\Common\CategoryRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="category")
- * @ORM\Entity(repositoryClass="CategoryRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Common\CategoryRepository")
  *
  * Container for similar tasks; defined on a per tenant basis
  *

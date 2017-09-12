@@ -8,13 +8,15 @@
 
 namespace AppBundle\Entity\System\Theme;
 
+use AppBundle\Repository\System\Theme\ColorRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  * @ORM\Table(name="color")
- * @ORM\Entity(repositoryClass="ColorRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\System\Theme\ColorRepository")
  *
  * Basic definitions for colors
  *

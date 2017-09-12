@@ -9,12 +9,14 @@
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
+use AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatSingleRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="task_repeat_single")
- * @ORM\Entity(repositoryClass="TaskRepeatSingleRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatSingleRepository")
  *
  * A single occurrence of a task that occurs on a recurrent basis
  *

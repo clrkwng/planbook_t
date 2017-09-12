@@ -10,12 +10,14 @@ namespace AppBundle\Entity\Organization\User\Task\Single;
 
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\Entity\Organization\User\Task\Task;
+use AppBundle\Repository\Organization\User\Task\Single\TaskSingleRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="task_single")
- * @ORM\Entity(repositoryClass="TaskSingleRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Single\TaskSingleRepository")
  *
  * Definition for a task that occurs only once
  *

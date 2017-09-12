@@ -11,8 +11,7 @@ namespace AppBundle\Util\Organization\User;
 class UserUtil
 {
     /**
-     *  "NOT_ACTIVATED"      = Account has been created, but user has not triggered a verification email
-     *  "VERIFICATION_SENT"  = User has a verification email awaiting their confirmation
+     *  "NOT_ACTIVATED"      = Account has been created, awaiting activation
      *  "VERIFIED"           = User can login under normal conditions
      *  "DISABLED"           = User's account has been disabled by an admin; Login is blocked; Admin can re-enable
      *  "DELETED"            = Admin has deleted this user;

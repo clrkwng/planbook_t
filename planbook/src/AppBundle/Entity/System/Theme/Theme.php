@@ -9,6 +9,8 @@
 namespace AppBundle\Entity\System\Theme;
 
 use AppBundle\Entity\Organization\User\User;
+use AppBundle\Repository\System\Theme\ThemeRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="theme")
- * @ORM\Entity(repositoryClass="ThemeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\System\Theme\ThemeRepository")
  *
  *  Container of related colors
  *

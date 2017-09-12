@@ -8,6 +8,8 @@
 
 namespace AppBundle\Entity\System\Config;
 
+use AppBundle\Repository\System\Config\SysConfigRepository;
+
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="sys_config")
- * @ORM\Entity(repositoryClass="SysConfigRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\System\Config\SysConfigRepository")
  *
  * Global configurations for the deployment environment
  *

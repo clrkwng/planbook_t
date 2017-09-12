@@ -10,6 +10,8 @@ namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\Entity\Organization\User\Task\Task;
+use AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="task_repeat")
- * @ORM\Entity(repositoryClass="TaskRepeatRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatRepository")
  *
  * Definition for a task that occurs on a recurrent basis
  *
