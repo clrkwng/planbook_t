@@ -111,10 +111,14 @@ class Frequency
 
     /**
      * @param TaskRepeat $repeatTask
+     * @return $this
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        $this->repeatTasks[] = $repeatTask;
+        if (!in_array($repeatTask, $this->repeatTasks, true)) {
+            $this->repeatTasks[] = $repeatTask;
+        }
+        return $this;
     }
 
     /**
@@ -127,9 +131,13 @@ class Frequency
 
     /**
      * @param FrequencyMeta $frequencyMeta
+     * @return $this
      */
     public function addMetaData(FrequencyMeta $frequencyMeta){
-        $this->metaData[] = $frequencyMeta;
+        if (!in_array($frequencyMeta, $this->metaData, true)) {
+            $this->metaData[] = $frequencyMeta;
+        }
+        return $this;
     }
 
     /**

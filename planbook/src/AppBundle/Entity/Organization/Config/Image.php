@@ -135,6 +135,16 @@ class Image
     private $updatedAt;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the image to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
      * Image constructor.
      */
     public function __construct()
@@ -146,10 +156,14 @@ class Image
 
     /**
      * @param Trophy $trophy
+     * @return $this
      */
     public function addTrophy(Trophy $trophy)
     {
-        $this->trophies[] = $trophy;
+        if (!in_array($trophy, $this->trophies, true)) {
+            $this->trophies[] = $trophy;
+        }
+        return $this;
     }
 
     /**
@@ -161,10 +175,14 @@ class Image
 
     /**
      * @param Category $category
+     * @return $this
      */
     public function addCategory(Category $category)
     {
-        $this->categories[] = $category;
+        if (!in_array($category, $this->categories, true)) {
+            $this->categories[] = $category;
+        }
+        return $this;
     }
 
     /**
@@ -177,10 +195,14 @@ class Image
 
     /**
      * @param Prize $prize
+     * @return $this
      */
     public function addPrize(Prize $prize)
     {
-        $this->prizes[] = $prize;
+        if (!in_array($prize, $this->prizes, true)) {
+            $this->prizes[] = $prize;
+        }
+        return $this;
     }
 
     /**
@@ -294,6 +316,22 @@ class Image
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
 

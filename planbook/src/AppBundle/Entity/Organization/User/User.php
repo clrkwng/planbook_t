@@ -9,7 +9,6 @@
 namespace AppBundle\Entity\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Image;
-use AppBundle\Entity\Organization\Config\Type;
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Task\Task;
 use AppBundle\Entity\System\Theme\Theme;
@@ -158,19 +157,6 @@ class User extends BaseUser implements UserInterface, \Serializable
     protected $image = null;
 
     /**
-     * @var Type
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="AppBundle\Entity\Organization\Config\Type",
-     *     inversedBy="users"
-     * )
-     *
-     * The role that a user has in the realm
-     *
-     */
-    protected $type = null;
-
-    /**
      * @var int
      * @ORM\Column(type="integer")
      *
@@ -204,6 +190,16 @@ class User extends BaseUser implements UserInterface, \Serializable
     protected $prize_points;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"username"}, updatable=false)
+     *
+     * Allows for the user to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      *
@@ -220,6 +216,11 @@ class User extends BaseUser implements UserInterface, \Serializable
     private $updatedAt;
 
     /**
+     * @var array
+     */
+    protected $roles;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -229,15 +230,38 @@ class User extends BaseUser implements UserInterface, \Serializable
         $this->taskTemplates = new ArrayCollection();
         $this->prizes = new ArrayCollection();
         $this->achievements = new ArrayCollection();
+        $this->roles = array();
 
     }
 
     /**
+     * @param string $role
+     * @return $this
+     */
+    public function addRole($role)
+    {
+        $role = strtoupper($role);
+        if ($role === static::ROLE_DEFAULT) {
+            return $this;
+        }
+
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param Achievement $achievement
+     * @return $this
      */
     public function addAchievement(Achievement $achievement)
     {
-        $this->achievements[] = $achievement;
+        if (!in_array($achievement, $this->achievements, true)) {
+            $this->achievements[] = $achievement;
+        }
+        return $this;
     }
 
     /**
@@ -280,13 +304,16 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
 
-
     /**
      * @param Task $task
+     * @return $this
      */
     public function addTaskTemplate(Task $task)
     {
-        $this->taskTemplates[] = $task;
+        if (!in_array($task, $this->taskTemplates, true)) {
+            $this->taskTemplates[] = $task;
+        }
+        return $this;
     }
 
     /**
@@ -299,10 +326,14 @@ class User extends BaseUser implements UserInterface, \Serializable
 
     /**
      * @param Prize $prize
+     * @return $this
      */
     public function addPrize(Prize $prize)
     {
-        $this->prizes[] = $prize;
+        if (!in_array($prize, $this->prizes, true)) {
+            $this->prizes[] = $prize;
+        }
+        return $this;
     }
 
     /**
@@ -436,22 +467,6 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
     /**
-     * @return Type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param Type $type
-     */
-    public function setType(Type $type)
-    {
-        $this->type = $type;
-    }
-
-    /**
      * @return int
      */
     public function getTotalPoints()
@@ -578,5 +593,21 @@ class User extends BaseUser implements UserInterface, \Serializable
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 }

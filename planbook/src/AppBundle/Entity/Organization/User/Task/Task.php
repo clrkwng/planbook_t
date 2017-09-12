@@ -49,7 +49,7 @@ class Task
     protected $user = null;
 
     /**
-     * @var TaskSingle
+     * @var TaskSingle[]|ArrayCollection
      *
      * Collection of single instance, child tasks
      *
@@ -62,7 +62,7 @@ class Task
     protected $singleTasks = null;
 
     /**
-     * @var TaskRepeat
+     * @var TaskRepeat[]|ArrayCollection
      *
      * Collection of repeating, child tasks
      *
@@ -134,14 +134,18 @@ class Task
 
     /**
      * @param TaskSingle $singleTask
+     * @return $this
      */
     public function addSingleTask(TaskSingle $singleTask)
     {
-        $this->singleTasks[] = $singleTask;
+        if (!in_array($singleTask, $this->singleTasks, true)) {
+            $this->singleTasks[] = $singleTask;
+        }
+        return $this;
     }
 
     /**
-     * @return TaskSingle|ArrayCollection
+     * @return TaskSingle[]|ArrayCollection
      */
     public function getSingleTasks()
     {
@@ -150,14 +154,18 @@ class Task
 
     /**
      * @param TaskRepeat $repeatTask
+     * @return $this
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        $this->repeatTasks[] = $repeatTask;
+        if (!in_array($repeatTask, $this->repeatTasks, true)) {
+            $this->repeatTasks[] = $repeatTask;
+        }
+        return $this;
     }
 
     /**
-     * @return TaskRepeat|ArrayCollection
+     * @return TaskRepeat[]|ArrayCollection
      */
     public function getRepeatTasks()
     {

@@ -9,7 +9,6 @@
 namespace AppBundle\Repository\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Image;
-use AppBundle\Entity\Organization\Config\Type;
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\System\Theme\Theme;
 use Doctrine\ORM\EntityRepository;
@@ -38,30 +37,6 @@ class UserRepository extends EntityRepository
             ->orderBy('u.username', 'ASC')
             ->setParameter('org_identifier', $org->getId())
             ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
-    public function findAllByOrganizationWithType(Organization $org, Type $type)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('u')
-            ->from('User', 'u')
-            ->where('u.organization_id = :org_identifier')
-            ->where('u.type_id = :type_identifier')
-            ->orderBy('u.username', 'ASC')
-            ->setParameter('org_identifier', $org->getId())
-            ->setParameter('type_identifier', $type->getId());
-        return $qb->getQuery()->getResult();
-    }
-
-    public function findAllByType(Type $type)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('u')
-            ->from('User', 'u')
-            ->where('u.type_id = :identifier')
-            ->orderBy('u.username', 'ASC')
-            ->setParameter('identifier', $type->getId());
         return $qb->getQuery()->getResult();
     }
 

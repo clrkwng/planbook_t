@@ -92,6 +92,16 @@ class Theme
     protected $colors = null;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the theme to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      *
@@ -118,10 +128,14 @@ class Theme
 
     /**
      * @param Color $color
+     * @return $this
      */
     public function addColor(Color $color)
     {
-        $this->colors[] = $color;
+        if (!in_array($color, $this->colors, true)) {
+            $this->colors[] = $color;
+        }
+        return $this;
     }
 
     /**
@@ -134,10 +148,14 @@ class Theme
 
     /**
      * @param User $user
+     * @return $this
      */
     public function addUser(User $user)
     {
-        $this->users[] = $user;
+        if (!in_array($user, $this->users, true)) {
+            $this->users[] = $user;
+        }
+        return $this;
     }
 
     /**
@@ -202,6 +220,22 @@ class Theme
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
 

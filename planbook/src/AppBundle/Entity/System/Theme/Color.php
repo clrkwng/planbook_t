@@ -71,6 +71,16 @@ class Color
     protected $state;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the color to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      *
@@ -157,6 +167,22 @@ class Color
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
 

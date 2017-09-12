@@ -137,6 +137,16 @@ class Priority
     private $updatedAt;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the category to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
      * Priority constructor.
      */
     public function __construct()
@@ -157,10 +167,14 @@ class Priority
 
     /**
      * @param TaskRepeatSingle $repeatTaskInstance
+     * @return $this
      */
     public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
     {
-        $this->repeatTaskInstances[] = $repeatTaskInstance;
+        if (!in_array($repeatTaskInstance, $this->repeatTaskInstances, true)) {
+            $this->repeatTaskInstances[] = $repeatTaskInstance;
+        }
+        return $this;
     }
 
     /**
@@ -168,15 +182,20 @@ class Priority
      */
     public function getSingleTasks()
     {
+
         return $this->singleTasks;
     }
 
     /**
      * @param TaskSingle $singleTask
+     * @return $this
      */
     public function addSingleTask(TaskSingle $singleTask)
     {
-        $this->singleTasks[] = $singleTask;
+        if (!in_array($singleTask, $this->singleTasks, true)) {
+            $this->singleTasks[] = $singleTask;
+        }
+        return $this;
     }
 
     /**
@@ -189,10 +208,14 @@ class Priority
 
     /**
      * @param TaskRepeat $repeatTask
+     * @return $this
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        $this->repeatTasks[] = $repeatTask;
+        if (!in_array($repeatTask, $this->repeatTasks, true)) {
+            $this->repeatTasks[] = $repeatTask;
+        }
+        return $this;
     }
 
     /**
@@ -281,6 +304,22 @@ class Priority
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
 

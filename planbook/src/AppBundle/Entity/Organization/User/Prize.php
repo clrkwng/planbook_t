@@ -111,6 +111,16 @@ class Prize
     private $updatedAt;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the prize to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
      * @return int
      */
     public function getId()
@@ -228,6 +238,22 @@ class Prize
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
 

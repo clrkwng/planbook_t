@@ -125,6 +125,16 @@ class Organization
     protected $uuid;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the organization to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      *
@@ -155,10 +165,14 @@ class Organization
 
     /**
      * @param Image $image
+     * @return $this
      */
     public function addImage(Image $image)
     {
-        $this->images[] = $image;
+        if (!in_array($image, $this->images, true)) {
+            $this->images[] = $image;
+        }
+        return $this;
     }
 
     /**
@@ -171,10 +185,14 @@ class Organization
 
     /**
      * @param User $user
+     * @return $this
      */
     public function addUser(User $user)
     {
-        $this->users[] = $user;
+        if (!in_array($user, $this->users, true)) {
+            $this->users[] = $user;
+        }
+        return $this;
     }
 
     /**
@@ -187,10 +205,14 @@ class Organization
 
     /**
      * @param Priority $priority
+     * @return $this
      */
     public function addPriority(Priority $priority)
     {
-        $this->priorities[] = $priority;
+        if (!in_array($priority, $this->priorities, true)) {
+            $this->priorities[] = $priority;
+        }
+        return $this;
     }
 
     /**
@@ -203,10 +225,14 @@ class Organization
 
     /**
      * @param Category $category
+     * @return $this
      */
     public function addCategory(Category $category)
     {
-        $this->categories[] = $category;
+        if (!in_array($category, $this->categories, true)) {
+            $this->categories[] = $category;
+        }
+        return $this;
     }
 
     /**
@@ -219,10 +245,14 @@ class Organization
 
     /**
      * @param Trophy $trophy
+     * @return $this
      */
     public function addTrophy(Trophy $trophy)
     {
-        $this->trophies[] = $trophy;
+        if (!in_array($trophy, $this->trophies, true)) {
+            $this->trophies[] = $trophy;
+        }
+        return $this;
     }
 
     /**
@@ -235,10 +265,14 @@ class Organization
 
     /**
      * @param OrgConfig $orgConfig
+     * @return $this
      */
     public function addOrgConfiguration(OrgConfig $orgConfig)
     {
-        $this->orgConfigurations[] = $orgConfig;
+        if (!in_array($orgConfig, $this->orgConfigurations, true)) {
+            $this->orgConfigurations[] = $orgConfig;
+        }
+        return $this;
     }
 
     /**
@@ -303,6 +337,22 @@ class Organization
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
 

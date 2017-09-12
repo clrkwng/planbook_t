@@ -150,10 +150,14 @@ class TaskRepeat
 
     /**
      * @param TaskRepeatSingle $repeatTaskInstance
+     * @return $this
      */
     public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
     {
-        $this->repeatTaskInstances[] = $repeatTaskInstance;
+        if (!in_array($repeatTaskInstance, $this->repeatTaskInstances, true)) {
+            $this->repeatTaskInstances[] = $repeatTaskInstance;
+        }
+        return $this;
     }
 
     /**
@@ -166,10 +170,14 @@ class TaskRepeat
 
     /**
      * @param Frequency $frequency
+     * @return $this
      */
     public function addFrequency(Frequency $frequency)
     {
-        $this->frequencies[] = $frequency;
+        if (!in_array($frequency, $this->frequencies, true)) {
+            $this->frequencies[] = $frequency;
+        }
+        return $this;
     }
 
     /**
