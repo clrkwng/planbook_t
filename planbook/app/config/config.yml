@@ -84,6 +84,8 @@ fos_user:
                 address: registration@planbook.com
                 sender_name: "%mailer_user%"
             template:   '@FOSUser/Registration/email.txt.twig'
+        form:
+            type: AppBundle\Form\RegistrationType
     resetting:
         email:
             from_email:

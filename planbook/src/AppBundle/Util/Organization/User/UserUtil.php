@@ -12,7 +12,7 @@ class UserUtil
 {
     /**
      *  "NOT_ACTIVATED"      = Account has been created, awaiting activation
-     *  "VERIFIED"           = User can login under normal conditions
+     *  "ENABLED"           = User can login under normal conditions
      *  "DISABLED"           = User's account has been disabled by an admin; Login is blocked; Admin can re-enable
      *  "DELETED"            = Admin has deleted this user;
      *
@@ -20,7 +20,7 @@ class UserUtil
      */
     public static function getStates()
     {
-        return array('NOT_ACTIVATED', 'VERIFICATION_SENT', 'VERIFIED', 'DISABLED', 'DELETED');
+        return array('NOT_ACTIVATED', 'VERIFICATION_SENT', 'ENABLED', 'DISABLED', 'DELETED');
     }
 
 }

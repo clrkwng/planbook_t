@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class UserType extends AbstractType
+class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -28,8 +28,18 @@ class UserType extends AbstractType
                 'type' => PasswordType::class,
                 'first_options'  => array('label' => 'Password'),
                 'second_options' => array('label' => 'Repeat Password'),
-            ))
-        ;
+            )
+        );
+    }
+
+    public function getParent()
+    {
+        return 'FOS\UserBundle\Form\Type\RegistrationFormType';
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'app_user_registration';
     }
 
     public function configureOptions(OptionsResolver $resolver)

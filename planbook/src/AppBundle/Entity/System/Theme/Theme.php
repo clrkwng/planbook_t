@@ -132,7 +132,7 @@ class Theme
      */
     public function addColor(Color $color)
     {
-        if (!in_array($color, $this->colors, true)) {
+        if (!$this->colors->contains($color)) {
             $this->colors[] = $color;
         }
         return $this;
@@ -152,7 +152,7 @@ class Theme
      */
     public function addUser(User $user)
     {
-        if (!in_array($user, $this->users, true)) {
+        if (!$this->users->contains($user)) {
             $this->users[] = $user;
         }
         return $this;

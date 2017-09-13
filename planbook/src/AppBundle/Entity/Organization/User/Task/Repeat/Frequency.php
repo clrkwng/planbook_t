@@ -115,7 +115,7 @@ class Frequency
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        if (!in_array($repeatTask, $this->repeatTasks, true)) {
+        if (!$this->repeatTasks->contains($repeatTask)) {
             $this->repeatTasks[] = $repeatTask;
         }
         return $this;
@@ -134,7 +134,7 @@ class Frequency
      * @return $this
      */
     public function addMetaData(FrequencyMeta $frequencyMeta){
-        if (!in_array($frequencyMeta, $this->metaData, true)) {
+        if (!$this->metaData->contains($frequencyMeta)) {
             $this->metaData[] = $frequencyMeta;
         }
         return $this;

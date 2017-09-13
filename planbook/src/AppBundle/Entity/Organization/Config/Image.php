@@ -160,7 +160,7 @@ class Image
      */
     public function addTrophy(Trophy $trophy)
     {
-        if (!in_array($trophy, $this->trophies, true)) {
+        if (!$this->trophies->contains($trophy)) {
             $this->trophies[] = $trophy;
         }
         return $this;
@@ -179,7 +179,7 @@ class Image
      */
     public function addCategory(Category $category)
     {
-        if (!in_array($category, $this->categories, true)) {
+        if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
         }
         return $this;
@@ -199,7 +199,7 @@ class Image
      */
     public function addPrize(Prize $prize)
     {
-        if (!in_array($prize, $this->prizes, true)) {
+        if (!$this->prizes->contains($prize)) {
             $this->prizes[] = $prize;
         }
         return $this;

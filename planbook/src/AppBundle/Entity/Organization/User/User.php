@@ -230,7 +230,7 @@ class User extends BaseUser implements UserInterface, \Serializable
         $this->taskTemplates = new ArrayCollection();
         $this->prizes = new ArrayCollection();
         $this->achievements = new ArrayCollection();
-        $this->roles = array();
+        $this->roles = new ArrayCollection();
 
     }
 
@@ -245,7 +245,7 @@ class User extends BaseUser implements UserInterface, \Serializable
             return $this;
         }
 
-        if (!in_array($role, $this->roles, true)) {
+        if (!$this->roles->contains($role)) {
             $this->roles[] = $role;
         }
 
@@ -258,7 +258,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      */
     public function addAchievement(Achievement $achievement)
     {
-        if (!in_array($achievement, $this->achievements, true)) {
+        if (!$this->achievements->contains($achievement)) {
             $this->achievements[] = $achievement;
         }
         return $this;
@@ -310,7 +310,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      */
     public function addTaskTemplate(Task $task)
     {
-        if (!in_array($task, $this->taskTemplates, true)) {
+        if (!$this->taskTemplates->contains($task)) {
             $this->taskTemplates[] = $task;
         }
         return $this;
@@ -330,7 +330,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      */
     public function addPrize(Prize $prize)
     {
-        if (!in_array($prize, $this->prizes, true)) {
+        if (!$this->prizes->contains($prize)) {
             $this->prizes[] = $prize;
         }
         return $this;
@@ -542,11 +542,11 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getRoles()
     {
-        return "ROLE_ADMIN";
+        return $this->roles->toArray();
     }
 
     /**

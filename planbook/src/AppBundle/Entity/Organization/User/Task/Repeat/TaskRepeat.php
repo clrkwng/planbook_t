@@ -154,7 +154,7 @@ class TaskRepeat
      */
     public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
     {
-        if (!in_array($repeatTaskInstance, $this->repeatTaskInstances, true)) {
+        if (!$this->repeatTaskInstances->contains($repeatTaskInstance)) {
             $this->repeatTaskInstances[] = $repeatTaskInstance;
         }
         return $this;
@@ -174,7 +174,7 @@ class TaskRepeat
      */
     public function addFrequency(Frequency $frequency)
     {
-        if (!in_array($frequency, $this->frequencies, true)) {
+        if (!$this->frequencies->contains($frequency)) {
             $this->frequencies[] = $frequency;
         }
         return $this;

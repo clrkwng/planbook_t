@@ -229,7 +229,7 @@ class Trophy
      */
     public function addAchievement(Achievement $achievement)
     {
-        if (!in_array($achievement, $this->achievements, true)) {
+        if (!$this->achievements->contains($achievement)) {
             $this->achievements[] = $achievement;
         }
         return $this;

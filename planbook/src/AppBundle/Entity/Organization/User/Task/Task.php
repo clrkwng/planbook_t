@@ -138,7 +138,7 @@ class Task
      */
     public function addSingleTask(TaskSingle $singleTask)
     {
-        if (!in_array($singleTask, $this->singleTasks, true)) {
+        if (!$this->singleTasks->contains($singleTask)) {
             $this->singleTasks[] = $singleTask;
         }
         return $this;
@@ -158,7 +158,7 @@ class Task
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        if (!in_array($repeatTask, $this->repeatTasks, true)) {
+        if (!$this->repeatTasks->contains($repeatTask)) {
             $this->repeatTasks[] = $repeatTask;
         }
         return $this;

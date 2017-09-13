@@ -169,7 +169,7 @@ class Organization
      */
     public function addImage(Image $image)
     {
-        if (!in_array($image, $this->images, true)) {
+        if (!$this->images->contains($image)) {
             $this->images[] = $image;
         }
         return $this;
@@ -189,7 +189,7 @@ class Organization
      */
     public function addUser(User $user)
     {
-        if (!in_array($user, $this->users, true)) {
+        if (!$this->users->contains($user)) {
             $this->users[] = $user;
         }
         return $this;
@@ -209,7 +209,7 @@ class Organization
      */
     public function addPriority(Priority $priority)
     {
-        if (!in_array($priority, $this->priorities, true)) {
+        if (!$this->priorities->contains($priority)) {
             $this->priorities[] = $priority;
         }
         return $this;
@@ -229,7 +229,7 @@ class Organization
      */
     public function addCategory(Category $category)
     {
-        if (!in_array($category, $this->categories, true)) {
+        if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
         }
         return $this;
@@ -249,7 +249,7 @@ class Organization
      */
     public function addTrophy(Trophy $trophy)
     {
-        if (!in_array($trophy, $this->trophies, true)) {
+        if (!$this->trophies->contains($trophy)) {
             $this->trophies[] = $trophy;
         }
         return $this;
@@ -269,7 +269,7 @@ class Organization
      */
     public function addOrgConfiguration(OrgConfig $orgConfig)
     {
-        if (!in_array($orgConfig, $this->orgConfigurations, true)) {
+        if (!$this->orgConfigurations->contains($orgConfig)) {
             $this->orgConfigurations[] = $orgConfig;
         }
         return $this;

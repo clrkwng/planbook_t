@@ -171,7 +171,7 @@ class Priority
      */
     public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
     {
-        if (!in_array($repeatTaskInstance, $this->repeatTaskInstances, true)) {
+        if (!$this->repeatTaskInstances->contains($repeatTaskInstance)) {
             $this->repeatTaskInstances[] = $repeatTaskInstance;
         }
         return $this;
@@ -192,7 +192,7 @@ class Priority
      */
     public function addSingleTask(TaskSingle $singleTask)
     {
-        if (!in_array($singleTask, $this->singleTasks, true)) {
+        if (!$this->singleTasks->contains($singleTask)) {
             $this->singleTasks[] = $singleTask;
         }
         return $this;
@@ -212,7 +212,7 @@ class Priority
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        if (!in_array($repeatTask, $this->repeatTasks, true)) {
+        if (!$this->repeatTasks->contains($repeatTask)) {
             $this->repeatTasks[] = $repeatTask;
         }
         return $this;
