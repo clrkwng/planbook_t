@@ -59,16 +59,10 @@ class Color
     }
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\System\Theme\ColorUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    protected $state;
+    protected $enabled;
 
     /**
      * @ORM\Column(length=255, unique=true)
@@ -138,22 +132,6 @@ class Color
     }
 
     /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -185,5 +163,24 @@ class Color
         $this->slug = $slug;
     }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
+    }
 
 }

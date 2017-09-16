@@ -94,17 +94,10 @@ class Trophy
     protected $next_trophy = null;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\Config\TrophyUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
-     *
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    protected $state;
+    protected $enabled;
 
     /**
      * @ORM\OneToMany(
@@ -281,23 +274,6 @@ class Trophy
         $this->next_trophy = $next_trophy;
     }
 
-
-    /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
     /**
      * @return \DateTime
      */
@@ -328,6 +304,26 @@ class Trophy
     public function setSlug($slug)
     {
         $this->slug = $slug;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
     }
 
 

@@ -133,20 +133,6 @@ class User extends BaseUser implements UserInterface, \Serializable
     protected $theme = null;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\UserUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
-     *
-     *
-     */
-    protected $state;
-
-    /**
      * @var Image
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Organization\Config\Image")
@@ -435,22 +421,6 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
     /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
-    /**
      * @return Image
      */
     public function getImage()
@@ -609,5 +579,9 @@ class User extends BaseUser implements UserInterface, \Serializable
     public function setSlug($slug)
     {
         $this->slug = $slug;
+    }
+
+    public function __toString(){
+        return $this->getUsername();
     }
 }

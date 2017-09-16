@@ -102,6 +102,12 @@ class OrgConfig
     protected $created_by;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
      * @return int
      */
     public function getId()
@@ -203,6 +209,26 @@ class OrgConfig
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getVariable();
     }
 
 

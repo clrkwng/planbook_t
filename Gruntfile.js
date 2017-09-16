@@ -4,8 +4,11 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        resourcesPath: 'planbook/src/Planbook/AppBundle/Resources',
-        adminResourcesPath: 'planbook/src/Planbook/AdminBundle/Resources',
+        resourcesPath: 'planbook/src/AppBundle/Resources',
+        adminResourcesPath: 'planbook/src/AdminBundle/Resources',
+        appBundlePath: 'planbook/src/AppBundle',
+        appConfigPath: 'planbook/app/confg',
+        appResourcesPath: 'planbook/app/Resources',
 
         uglify: {
             options: {
@@ -43,7 +46,44 @@ module.exports = function (grunt) {
             css_admin: ['planbook/web/css/admin/*'],
             xampp: [
                 xamppDir + '/htdocs/planbook/*'
+            ],
+            deploy_appBundle_admin: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Admin/*'
+            ],
+            deploy_app_config: [
+                xamppDir + '/htdocs/planbook/app/config/*'
+            ],
+            deploy_app_resources: [
+                xamppDir + '/htdocs/planbook/app/Resources/*'
+            ],
+            deploy_appBundle_controller: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Controller/*'
+            ],
+            deploy_appBundle_dependencyInjection: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/DependencyInjection/*'
+            ],
+            deploy_appBundle_entity: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Entity/*'
+            ],
+            deploy_appBundle_eventListener: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/EventListener/*'
+            ],
+            deploy_appBundle_form: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Form/*'
+            ],
+            deploy_appBundle_menu: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Menu/*'
+            ],
+            deploy_appBundle_repository: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Repository/*'
+            ],
+            deploy_appBundle_service: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Service/*'
+            ],
+            deploy_appBundle_util: [
+                xamppDir + '/htdocs/planbook/src/AppBundle/Util/*'
             ]
+
         },
         less: {
             app: {
@@ -95,6 +135,78 @@ module.exports = function (grunt) {
                 cwd: '<%= resourcesPath %>/public/img/',
                 src: '**',
                 dest: 'planbook/web/img'
+            },
+            app_resources: {
+                expand: true,
+                cwd: '<%= appResourcesPath %>/public/img/',
+                src: '**',
+                dest: 'planbook/web/img'
+            },
+            appBundle_controller: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Controller/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Controller'
+            },
+            appBundle_admin: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Admin/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Admin'
+            },
+            app_config: {
+                expand: true,
+                cwd: '<%= appConfigPath %>/config/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/app/config'
+            },
+            appBundle_dependencyInjection: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/DependencyInjection/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/DependencyInjection'
+            },
+            appBundle_entity: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Entity/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Entity'
+            },
+            appBundle_eventListener: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/EventListener/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/EventListener'
+            },
+            appBundle_form: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Form/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Form'
+            },
+            appBundle_menu: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Menu/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Menu'
+            },
+            appBundle_repository: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Repository/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Repository'
+            },
+            appBundle_service: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Service/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Service'
+            },
+            appBundle_util: {
+                expand: true,
+                cwd: '<%= appBundlePath %>/Util/',
+                src: '**',
+                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Util'
             },
             xampp: {
                 files: [
@@ -180,6 +292,90 @@ module.exports = function (grunt) {
             img_app: {
                 files: '<%= resourcesPath %>/public/img/*',
                 tasks: ['clean:img_app', 'copy:img_app'],
+                options: {
+                    livereload: true
+                }
+            },
+            app_config: {
+                files: '<%= appConfigPath %>/*',
+                tasks: ['clean:deploy_app_config', 'copy:app_config'],
+                options: {
+                    livereload: true
+                }
+            },
+            app_resources: {
+                files: '<%= appResourcesPath %>/*',
+                tasks: ['clean:deploy_app_resources', 'copy:app_resources'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_admin: {
+                files: '<%= appBundlePath %>/Admin/*',
+                tasks: ['clean:deploy_appBundle_admin', 'copy:appBundle_admin'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_controller: {
+                files: '<%= appBundlePath %>/Controller/*',
+                tasks: ['clean:deploy_appBundle_controller', 'copy:appBundle_controller'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_dependencyInjection: {
+                files: '<%= appBundlePath %>/DependencyInjection/*',
+                tasks: ['clean:deploy_appBundle_dependencyInjection', 'copy:appBundle_dependencyInjection'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_entity: {
+                files: '<%= appBundlePath %>/Entity/*',
+                tasks: ['clean:deploy_appBundle_entity', 'copy:appBundle_entity'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_eventListener: {
+                files: '<%= appBundlePath %>/EventListener/*',
+                tasks: ['clean:deploy_appBundle_eventListener', 'copy:appBundle_eventListener'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_form: {
+                files: '<%= appBundlePath %>/Form/*',
+                tasks: ['clean:deploy_appBundle_form', 'copy:appBundle_form'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_menu: {
+                files: '<%= appBundlePath %>/Menu/*',
+                tasks: ['clean:deploy_appBundle_menu', 'copy:appBundle_menu'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_repository: {
+                files: '<%= appBundlePath %>/Repository/*',
+                tasks: ['clean:deploy_appBundle_repository', 'copy:appBundle_repository'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_service: {
+                files: '<%= appBundlePath %>/Service/*',
+                tasks: ['clean:deploy_appBundle_service', 'copy:appBundle_service'],
+                options: {
+                    livereload: true
+                }
+            },
+            appBundle_util: {
+                files: '<%= appBundlePath %>/Util/*',
+                tasks: ['clean:deploy_appBundle_util', 'copy:appBundle_util'],
                 options: {
                     livereload: true
                 }

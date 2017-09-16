@@ -56,19 +56,6 @@ class TaskRepeatRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByTaskWithState(Task $task, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('t')
-            ->from('task_repeat', 't')
-            ->where('t.task_id = :task_identifier')
-            ->where('t.state = :state_identifier')
-            ->orderBy('t.id', 'ASC')
-            ->setParameter('task_identifier', $task->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findAllByTaskWithPriority(Task $task, Priority $priority)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()

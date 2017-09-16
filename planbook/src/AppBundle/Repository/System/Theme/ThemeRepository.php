@@ -32,14 +32,4 @@ class ThemeRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByState($state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('t')
-            ->from('Theme', 't')
-            ->where('t.state = :identifier')
-            ->orderBy('t.state', 'ASC')
-            ->setParameter('identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
 }

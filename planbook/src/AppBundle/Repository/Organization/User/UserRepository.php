@@ -27,19 +27,6 @@ class UserRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByOrganizationWithState(Organization $org, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('u')
-            ->from('User', 'u')
-            ->where('u.organization_id = :org_identifier')
-            ->where('u.state = :state_identifier')
-            ->orderBy('u.username', 'ASC')
-            ->setParameter('org_identifier', $org->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findAllByTheme(Theme $theme)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()

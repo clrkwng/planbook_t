@@ -41,6 +41,7 @@ class ImageController extends Controller
             // Update the 'picture' property to store the image file name
             // instead of its contents
             $image->setPicture($fileName);
+            $image->setEnabled(true);
 
             //..other setters from the submitted form
 
@@ -68,7 +69,6 @@ class ImageController extends Controller
                 new File($this->getParameter('pictures_directory') . '/' . $image->getPicture())
             );
             //..other setters from the submitted form
-
             // ... persist the $image variable or any other work
             $em = $this->getDoctrine()->getManager();
             $em->persist($image);

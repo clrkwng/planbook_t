@@ -52,7 +52,6 @@ class RegistrationController extends Controller
 
 
             //Set intial values for an admin account in an organization
-            $user->setState("ENABLED");
             $user->setTotalPoints(0);
             $user->setTrophyPoints(0);
             $user->setPrizePoints(0);
@@ -60,7 +59,7 @@ class RegistrationController extends Controller
             $user->setEnabled(true);
 
             $org->addUser($user);
-
+            $org->setEnabled(true);
             // 4) save the User!
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
@@ -70,7 +69,7 @@ class RegistrationController extends Controller
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
 
-            return $this->redirectToRoute('/login');
+            return $this->redirectToRoute('fos_user_registration_check_email');
         }
 
         return $this->render(

@@ -45,7 +45,7 @@ class TaskRepeatSingle
      * @var Priority
      * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
-     *     inversedBy="repeatTasks"
+     *     inversedBy="repeatTaskInstances"
      * )
      *
      *
@@ -99,18 +99,10 @@ class TaskRepeatSingle
     protected $description_ov;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\Repeat\TaskRepeatSingleUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
-     *
-     *
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    protected $state;
+    protected $enabled;
 
     /**
      * @var \DateTime
@@ -217,22 +209,6 @@ class TaskRepeatSingle
     }
 
     /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -248,5 +224,24 @@ class TaskRepeatSingle
         return $this->updatedAt;
     }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getNameOv();
+    }
 
 }

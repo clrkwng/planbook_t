@@ -135,6 +135,12 @@ class Organization
     protected $slug;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      *
@@ -355,5 +361,24 @@ class Organization
         $this->slug = $slug;
     }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
+    }
 
 }

@@ -33,16 +33,4 @@ class TaskRepeatSingleRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByTaskRepeatWithState(TaskRepeat $baseRepeatTask, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('t')
-            ->from('task_repeat_single', 't')
-            ->where('t.baseRepeatTask_id = :task_repeat_identifier')
-            ->where('t.baseRepeatTask_id = :state_identifier')
-            ->orderBy('t.id', 'ASC')
-            ->setParameter('task_repeat_identifier', $baseRepeatTask->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
 }

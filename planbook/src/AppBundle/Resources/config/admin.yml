@@ -1,0 +1,125 @@
+services:
+    app.admin.user:
+        class: AppBundle\Admin\UserAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "User" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\User
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+        public: true
+
+    app.admin.organization:
+        class: AppBundle\Admin\OrganizationAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Organization" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\Organization
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+
+    app.admin.category:
+        class: AppBundle\Admin\CategoryAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Category" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\Task\Common\Category
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+
+    app.admin.color:
+        class: AppBundle\Admin\ColorAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Color" }
+        arguments:
+            - ~
+            - AppBundle\Entity\System\Theme\Color
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+
+    app.admin.image:
+        class: AppBundle\Admin\ImageAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Image" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\Config\Image
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+
+    app.admin.priority:
+        class: AppBundle\Admin\PriorityAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Priority" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\Task\Common\Priority
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+
+    app.admin.prize:
+        class: AppBundle\Admin\PrizeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Prize" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\Prize
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+
+    app.admin.theme:
+        class: AppBundle\Admin\ThemeAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Theme" }
+        arguments:
+            - ~
+            - AppBundle\Entity\System\Theme\Theme
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+
+    app.admin.trophy:
+        class: AppBundle\Admin\TrophyAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Trophy" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\Config\Trophy
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true

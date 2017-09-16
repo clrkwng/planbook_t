@@ -50,7 +50,7 @@ class TaskRepeat
 
     /**
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
-     * @ORM\ManyToOne(targetEntity="TaskRepeat", inversedBy="baseRepeatTask")
+     * @ORM\ManyToOne(targetEntity="TaskRepeatSingle", inversedBy="baseRepeatTask")
      *
      * Base task to inherit from
      *
@@ -102,17 +102,10 @@ class TaskRepeat
     protected $description_ov;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\Repeat\TaskRepeatUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
-     *
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    protected $state;
+    protected $enabled;
 
     /**
      * @var \DateTime
@@ -253,22 +246,6 @@ class TaskRepeat
     }
 
     /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -282,6 +259,26 @@ class TaskRepeat
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getNameOv();
     }
 
 

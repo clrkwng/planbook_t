@@ -94,17 +94,10 @@ class Task
     protected $description;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\TaskUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
-     *
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    protected $state;
+    protected $enabled;
 
     /**
      * @var \DateTime
@@ -229,22 +222,6 @@ class Task
     }
 
     /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -258,6 +235,26 @@ class Task
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
     }
 
 

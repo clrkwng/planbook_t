@@ -74,6 +74,12 @@ class Achievement
     private $updatedAt;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -143,6 +149,26 @@ class Achievement
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getUser()->getUsername() .':' . $this->getTrophy()->getName() . ':' . $this->getQuantity();
     }
 
 
