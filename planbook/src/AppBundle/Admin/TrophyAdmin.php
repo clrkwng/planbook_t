@@ -8,6 +8,7 @@
 
 namespace AppBundle\Admin;
 
+use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Config\Trophy;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Show\ShowMapper;
@@ -33,17 +34,17 @@ class TrophyAdmin extends AbstractAdmin
                 ->add('enabled', 'checkbox', array(
                     'label' => 'Active'
                 ))
-                ->add('image', 'entity', array(
-                    'class' => 'AppBundle\Entity\Organization\Config\Image',
-                    'label' => 'Picture'
+                ->add('image', 'sonata_type_admin', array(
+                    'label' => 'Picture',
+                    'delete' => false
                 ))
             ->end()
 
             ->with('Next Trophy')
-                ->add('next_trophy', 'entity', array(
-                    'class' => 'AppBundle\Entity\Organization\Config\Trophy',
+                ->add('next_trophy', 'sonata_type_admin', array(
                     'label' => 'Next Trophy',
-                    'help' => 'The next trophy to be received'
+                    'help' => 'The next trophy to be received',
+                    'delete' => false
                 ))
                 ->add('amount_needed_next', 'integer', array(
                     'label' => 'Increment Amount',
@@ -62,8 +63,13 @@ class TrophyAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('enabled')
+            ->add('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -76,10 +82,16 @@ class TrophyAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('slug')
-            ->add('name')
-            ->add('image.name')
-            ->add('enabled')
+            ->addIdentifier('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('image.fileName', null, array(
+                'label' => 'Image'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -92,13 +104,61 @@ class TrophyAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-            ->add('slug')
-            ->add('name')
-            ->add('enabled')
-            ->add('image.name')
-            ->add('next_trophy.name')
-            ->add('amount_needed_next')
+            ->add('name', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('image.fileName', 'text', array(
+                'label' => 'Image'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
+            ->add('next_trophy.name', 'text', array(
+                'label' => 'Next Trophy'
+            ))
+            ->add('amount_needed_next', 'integer', array(
+                'label' => 'Amount Needed'
+            ))
         ;
+    }
+
+    public function prePersist($page)
+    {
+        $this->manageEmbeddedImageAdmins($page);
+    }
+
+    public function preUpdate($page)
+    {
+        $this->manageEmbeddedImageAdmins($page);
+    }
+
+    private function manageEmbeddedImageAdmins($page)
+    {
+        // Cycle through each field
+        foreach ($this->getFormFieldDescriptions() as $fieldName => $fieldDescription) {
+            // detect embedded Admins that manage Images
+            if ($fieldDescription->getType() === 'sonata_type_admin' &&
+                ($associationMapping = $fieldDescription->getAssociationMapping()) &&
+                $associationMapping['targetEntity'] === 'AppBundle\Entity\Image'
+            ) {
+                $getter = 'get'.$fieldName;
+                $setter = 'set'.$fieldName;
+
+                /** @var Image $image */
+                $image = $page->$getter();
+
+                if ($image) {
+                    if ($image->getFile()) {
+                        // update the Image to trigger file management
+                        $image->refreshUpdated();
+                    } elseif (!$image->getFile() && !$image->getFilename()) {
+                        // prevent Sf/Sonata trying to create and persist an empty Image
+                        $page->$setter(null);
+                    }
+                }
+            }
+        }
     }
 
     public function toString($object)

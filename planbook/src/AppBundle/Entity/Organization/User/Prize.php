@@ -250,7 +250,11 @@ class Prize
     }
 
     public function __toString(){
-        return $this->getName();
+        $retStr = 'Prize';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
     }
 
 }

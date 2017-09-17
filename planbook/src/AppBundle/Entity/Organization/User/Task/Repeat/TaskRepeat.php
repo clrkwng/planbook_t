@@ -50,7 +50,7 @@ class TaskRepeat
 
     /**
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
-     * @ORM\ManyToOne(targetEntity="TaskRepeatSingle", inversedBy="baseRepeatTask")
+     * @ORM\OneToMany(targetEntity="TaskRepeatSingle", mappedBy="baseRepeatTask")
      *
      * Base task to inherit from
      *

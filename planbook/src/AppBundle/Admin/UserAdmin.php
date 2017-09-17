@@ -8,6 +8,7 @@
 
 namespace AppBundle\Admin;
 
+use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\User\User;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Show\ShowMapper;
@@ -27,15 +28,14 @@ class UserAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-
             ->add('username', 'text', array(
                 'label' => 'Username'
             ))
             ->add('email', 'text', array(
                 'label' => 'Email Address'
             ))
-            ->add('enabled', 'checkbox', array(
-                'label' => 'Active'
+            ->add('enabled', null, array(
+                'label' => 'Enabled'
             ))
             ->add('total_points', 'integer', array(
                 'label' => 'Total Points'
@@ -67,12 +67,24 @@ class UserAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('username')
-            ->add('email')
-            ->add('enabled')
-            ->add('total_points')
-            ->add('trophy_points')
-            ->add('prize_points')
+            ->add('username', null, array(
+                'label' => 'Username'
+            ))
+            ->add('email', null, array(
+                'label' => 'Email Address'
+            ))
+            ->add('total_points', null, array(
+                'label' => 'Total Points'
+            ))
+            ->add('trophy_points', null, array(
+                'label' => 'Trophy Points'
+            ))
+            ->add('prize_points', null, array(
+                'label' => 'Prize Points'
+            ))
+            ->add('enabled', null, array(
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -85,13 +97,25 @@ class UserAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('slug')
-            ->add('username')
-            ->add('email')
-            ->add('enabled')
-            ->add('total_points')
-            ->add('trophy_points')
-            ->add('prize_points')
+            ->addIdentifier('username', 'text', array(
+                'label' => 'Username'
+            ))
+            ->add('email', 'text', array(
+                'label' => 'Email Address'
+            ))
+            ->add('total_points', 'integer', array(
+                'label' => 'Total Points'
+            ))
+            ->add('trophy_points', 'integer', array(
+                'label' => 'Trophy Points'
+            ))
+            ->add('prize_points', 'integer', array(
+                'label' => 'Prize Points'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -104,14 +128,63 @@ class UserAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-            ->add('slug')
-            ->add('username')
-            ->add('email')
-            ->add('enabled')
-            ->add('total_points')
-            ->add('trophy_points')
-            ->add('prize_points')
+            ->add('username', 'text', array(
+                'label' => 'Username'
+            ))
+            ->add('email', 'text', array(
+                'label' => 'Email Address'
+            ))
+            ->add('total_points', 'integer', array(
+                'label' => 'Total Points'
+            ))
+            ->add('trophy_points', 'integer', array(
+                'label' => 'Trophy Points'
+            ))
+            ->add('prize_points', 'integer', array(
+                'label' => 'Prize Points'
+            ))
+            ->add('enabled', null, array(
+                'label' => 'Enabled'
+            ))
         ;
+    }
+
+    public function prePersist($page)
+    {
+        $this->manageEmbeddedImageAdmins($page);
+    }
+
+    public function preUpdate($page)
+    {
+        $this->manageEmbeddedImageAdmins($page);
+    }
+
+    private function manageEmbeddedImageAdmins($page)
+    {
+        // Cycle through each field
+        foreach ($this->getFormFieldDescriptions() as $fieldName => $fieldDescription) {
+            // detect embedded Admins that manage Images
+            if ($fieldDescription->getType() === 'sonata_type_admin' &&
+                ($associationMapping = $fieldDescription->getAssociationMapping()) &&
+                $associationMapping['targetEntity'] === 'AppBundle\Entity\Image'
+            ) {
+                $getter = 'get'.$fieldName;
+                $setter = 'set'.$fieldName;
+
+                /** @var Image $image */
+                $image = $page->$getter();
+
+                if ($image) {
+                    if ($image->getFile()) {
+                        // update the Image to trigger file management
+                        $image->refreshUpdated();
+                    } elseif (!$image->getFile() && !$image->getFilename()) {
+                        // prevent Sf/Sonata trying to create and persist an empty Image
+                        $page->$setter(null);
+                    }
+                }
+            }
+        }
     }
 
     public function toString($object)

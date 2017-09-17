@@ -56,7 +56,7 @@ class Frequency
     protected $metaData = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="TaskRepeat", mappedBy="frequency")
+     * @ORM\ManyToMany(targetEntity="TaskRepeat", inversedBy="$frequencies")
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
      *
      */

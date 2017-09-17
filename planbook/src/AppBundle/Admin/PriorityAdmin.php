@@ -36,7 +36,7 @@ class PriorityAdmin extends AbstractAdmin
                 'help' => 'How many will be received for completing a task of this priority'
             ))
             ->add('enabled', 'checkbox', array(
-                'label' => 'Active'
+                'label' => 'Enabled'
             ))
         ;
     }
@@ -50,9 +50,17 @@ class PriorityAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('completion_points')
-            ->add('enabled')
+            ->add('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('completion_points', null, array(
+                'label' => 'Completion Points',
+                'help' => 'How many will be received for completing a task of this priority'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -65,10 +73,17 @@ class PriorityAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('slug')
-            ->add('name')
-            ->add('completion_points')
-            ->add('enabled')
+            ->addIdentifier('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('completion_points', null, array(
+                'label' => 'Completion Points',
+                'help' => 'How many will be received for completing a task of this priority'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -81,10 +96,17 @@ class PriorityAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-            ->add('slug')
-            ->add('name')
-            ->add('completion_points')
-            ->add('enabled')
+            ->add('name', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('completion_points', 'integer', array(
+                'label' => 'Completion Points',
+                'help' => 'How many will be received for completing a task of this priority'
+            ))
+            ->add('enabled', 'checkbox', array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 

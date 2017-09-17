@@ -26,12 +26,11 @@ class ThemeAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-
             ->add('name', 'text', array(
                 'label' => 'Name'
             ))
-            ->add('enabled', 'checkbox', array(
-                'label' => 'Active'
+            ->add('enabled', null, array(
+                'label' => 'Enabled'
             ))
 
         ;
@@ -46,8 +45,13 @@ class ThemeAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('enabled')
+            ->add('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
 
         ;
     }
@@ -61,9 +65,14 @@ class ThemeAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('slug')
-            ->add('name')
-            ->add('enabled')
+            ->addIdentifier('id')
+            ->add('name', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
 
         ;
     }
@@ -77,9 +86,13 @@ class ThemeAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-            ->add('slug')
-            ->add('name')
-            ->add('enabled')
+            ->add('name', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
 
         ;
     }

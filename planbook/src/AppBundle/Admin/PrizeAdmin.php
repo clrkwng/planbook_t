@@ -8,6 +8,7 @@
 
 namespace AppBundle\Admin;
 
+use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\User\Prize;
 use AppBundle\Entity\Organization\User\User;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -27,27 +28,31 @@ class PrizeAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
+            ->with("Prize Info")
+                ->add('name', 'text', array(
+                    'label' => 'Name'
+                ))
+                ->add('description', 'text', array(
+                    'label' => 'Description'
+                ))
+                ->add('price', 'integer', array(
+                    'label' => 'Price'
+                ))
+                ->add('user', 'entity', array(
+                    'class' => 'AppBundle\Entity\Organization\User\User',
+                    'label' => 'User'
+                ))
+                ->add('enabled', 'checkbox', array(
+                    'label' => 'Enabled'
+                ))
+            ->end()
+            ->with("Image")
+                ->add('image', 'sonata_type_admin', array(
+                    'label' => 'Picture',
+                    'delete' => false
+                ))
+            ->end()
 
-            ->add('name', 'text', array(
-                'label' => 'Name'
-            ))
-            ->add('description', 'text', array(
-                'label' => 'Description'
-            ))
-            ->add('enabled', 'checkbox', array(
-                'label' => 'Active'
-            ))
-            ->add('price', 'integer', array(
-                'label' => 'Price'
-            ))
-            ->add('user', 'entity', array(
-                'class' => 'AppBundle\Entity\Organization\User\User',
-                'label' => 'User'
-            ))
-            ->add('image', 'entity', array(
-                'class' => 'AppBundle\Entity\Organization\Config\Image',
-                'label' => 'Picture'
-            ))
         ;
     }
 
@@ -60,12 +65,24 @@ class PrizeAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('description')
-            ->add('enabled')
-            ->add('price')
-            ->add('user')
-            ->add('image.name')
+            ->add('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('description', null, array(
+                'label' => 'Description'
+            ))
+            ->add('price', null, array(
+                'label' => 'Price'
+            ))
+            ->add('user.username', null, array(
+                'label' => 'User'
+            ))
+            ->add('image.fileName', null, array(
+                'label' => 'Image'
+            ))
+            ->add('enabled', null, array(
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -78,13 +95,25 @@ class PrizeAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('slug')
-            ->add('name')
-            ->add('description')
-            ->add('enabled')
-            ->add('price')
-            ->add('user')
-            ->add('image.name')
+            ->addIdentifier('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('description', null, array(
+                'label' => 'Description'
+            ))
+            ->add('price', null, array(
+                'label' => 'Price'
+            ))
+            ->add('user.username', null, array(
+                'label' => 'User'
+            ))
+            ->add('image.fileName', null, array(
+                'label' => 'Image'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -97,14 +126,63 @@ class PrizeAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-            ->add('slug')
-            ->add('name')
-            ->add('description')
-            ->add('enabled')
-            ->add('price')
-            ->add('user')
-            ->add('image.name')
+            ->add('name', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('description', 'text', array(
+                'label' => 'Description'
+            ))
+            ->add('price', 'integer', array(
+                'label' => 'Price'
+            ))
+            ->add('user.username', 'text', array(
+                'label' => 'User'
+            ))
+            ->add('image.fileName', 'text', array(
+                'label' => 'Image'
+            ))
+            ->add('enabled', 'checkbox', array(
+                'label' => 'Enabled'
+            ))
         ;
+    }
+
+    public function prePersist($page)
+    {
+        $this->manageEmbeddedImageAdmins($page);
+    }
+
+    public function preUpdate($page)
+    {
+        $this->manageEmbeddedImageAdmins($page);
+    }
+
+    private function manageEmbeddedImageAdmins($page)
+    {
+        // Cycle through each field
+        foreach ($this->getFormFieldDescriptions() as $fieldName => $fieldDescription) {
+            // detect embedded Admins that manage Images
+            if ($fieldDescription->getType() === 'sonata_type_admin' &&
+                ($associationMapping = $fieldDescription->getAssociationMapping()) &&
+                $associationMapping['targetEntity'] === 'AppBundle\Entity\Image'
+            ) {
+                $getter = 'get'.$fieldName;
+                $setter = 'set'.$fieldName;
+
+                /** @var Image $image */
+                $image = $page->$getter();
+
+                if ($image) {
+                    if ($image->getFile()) {
+                        // update the Image to trigger file management
+                        $image->refreshUpdated();
+                    } elseif (!$image->getFile() && !$image->getFilename()) {
+                        // prevent Sf/Sonata trying to create and persist an empty Image
+                        $page->$setter(null);
+                    }
+                }
+            }
+        }
     }
 
     public function toString($object)

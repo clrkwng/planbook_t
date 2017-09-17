@@ -26,15 +26,15 @@ class ColorAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-
             ->add('name', 'text', array(
                 'label' => 'Name'
             ))
             ->add('hex_value', 'text', array(
-                'label' => 'Hex Value'
+                'label' => 'Name'
             ))
-            ->add('enabled', 'checkbox', array(
-                'label' => 'Active'
+            ->add('enabled', null, array(
+                'label' => 'Enabled'
+
             ))
 
         ;
@@ -49,9 +49,16 @@ class ColorAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
-            ->add('hex_value')
-            ->add('enabled')
+            ->add('name', null, array(
+                'label' => 'Name'
+            ))
+            ->add('hex_value', null, array(
+                'label' => 'Hex Code'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
 
         ;
     }
@@ -65,11 +72,16 @@ class ColorAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('slug')
-            ->add('name')
-            ->add('hex_value')
-            ->add('enabled')
-
+            ->addIdentifier('name', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('hex_value', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
         ;
     }
 
@@ -82,10 +94,16 @@ class ColorAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-            ->add('slug')
-            ->add('name')
-            ->add('hex_value')
-            ->add('enabled')
+            ->add('name', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('hex_value', 'text', array(
+                'label' => 'Name'
+            ))
+            ->add('enabled', null, array(
+                'editable' => true,
+                'label' => 'Enabled'
+            ))
 
         ;
     }

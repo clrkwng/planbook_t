@@ -32,7 +32,15 @@ class OrganizationAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('name')
+            ->add('id', null, array(
+                'label' => 'Id'
+            ))
+            ->add('name', null, array(
+                'label' => 'Organization Name'
+            ))
+            ->add('uuid', null, array(
+                'label' => 'UUID'
+            ))
         ;
     }
 
@@ -44,9 +52,12 @@ class OrganizationAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->addIdentifier('name')
-            ->add('slug')
-            ->add('uuid')
+            ->addIdentifier('name', 'text', array(
+                'label' => 'Organization Name'
+            ))
+            ->add('uuid', 'text', array(
+                'label' => 'UUID'
+            ))
         ;
     }
 
@@ -54,10 +65,15 @@ class OrganizationAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper
-            ->add('id')
-            ->add('name')
-            ->add('slug')
-            ->add('uuid')
+            ->add('id', 'integer', array(
+                'label' => 'Id'
+            ))
+            ->add('name', 'text', array(
+                'label' => 'Organization Name'
+            ))
+            ->add('uuid', 'text', array(
+                'label' => 'UUID'
+            ))
         ;
     }
 

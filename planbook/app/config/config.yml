@@ -195,6 +195,8 @@ sonata_admin:
         knp_menu_template:    'SonataAdminBundle:Menu:sonata_menu.html.twig'
     assets:
         stylesheets:
+            #Custom
+            - css/admin/style.min.css
 
             # Defaults:
             - bundles/sonatacore/vendor/bootstrap/dist/css/bootstrap.min.css

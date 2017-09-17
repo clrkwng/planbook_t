@@ -13,6 +13,8 @@ use AppBundle\Entity\Organization\User\Task\Common\Category;
 use AppBundle\Repository\Organization\Config\ImageRepository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\EventManager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -20,12 +22,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * @ORM\Table(name="image")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\Config\ImageRepository")
- *
+ * @ORM\HasLifecycleCallbacks()
  * Per tenant container of uploaded images
  *
  **/
 class Image
 {
+
+    const SERVER_PATH_TO_IMAGE_FOLDER = 'C:/Temp/Planbook/ImageUpload';
+
     /**
      * @var int
      * @ORM\Id
@@ -93,17 +98,15 @@ class Image
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=100)
      *
-     * @Assert\NotBlank(message="Please, upload an image file.")
-     * @Assert\File(
-     *     mimeTypes={
-     *          "image/jpeg",
-     *          "image/pjpeg",
-     *          "image/png"
-     *     })
      */
-    protected $picture;
+    protected $fileName;
+
+    /**
+     * Unmapped property to handle file uploads
+     */
+    private $file;
 
     /**
      * @var bool
@@ -113,7 +116,7 @@ class Image
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
      */
@@ -142,10 +145,68 @@ class Image
      */
     public function __construct()
     {
+
         $this->trophies = new ArrayCollection();
         $this->prizes = new ArrayCollection();
         $this->categories = new ArrayCollection();
     }
+
+    /**
+     * Manages the copying of the file to the relevant place on the server
+     */
+    public function upload()
+    {
+        // the file property can be empty if the field is not required
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        // we use the original file name here but you should
+        // sanitize it at least to avoid any security issues
+
+        // move takes the target directory and target filename as params
+        $this->getFile()->move(
+            self::SERVER_PATH_TO_IMAGE_FOLDER,
+            $this->getFile()->getClientOriginalName()
+        );
+
+        // set the path property to the filename where you've saved the file
+        $this->fileName = $this->getFile()->getClientOriginalName();
+
+        // clean up the file property as you won't need it anymore
+        $this->setFile(null);
+    }
+
+    /**
+     *
+     * Returns the Web path where this image is saved on (used for displaying an image preview)
+     *
+     * @return string
+     */
+    public function getWebPath(){
+        return self::SERVER_PATH_TO_IMAGE_FOLDER . '/' .$this->fileName;
+    }
+
+    /**
+     *
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     *
+     * Lifecycle callback to upload the file to the server
+     */
+    public function lifecycleFileUpload()
+    {
+        $this->upload();
+    }
+
+    /**
+     * Updates the hash value to force the preUpdate and postUpdate events to fire
+     */
+    public function refreshUpdated()
+    {
+        $this->setUpdatedAt(new \DateTime());
+    }
+
 
     /**
      * @param Trophy $trophy
@@ -266,17 +327,17 @@ class Image
     /**
      * @return string
      */
-    public function getPicture()
+    public function getFileName()
     {
-        return $this->picture;
+        return $this->fileName;
     }
 
     /**
-     * @param string $picture
+     * @param string $fileName
      */
-    public function setPicture($picture)
+    public function setFileName($fileName)
     {
-        $this->picture = $picture;
+        $this->fileName = $fileName;
     }
 
     /**
@@ -327,8 +388,41 @@ class Image
         $this->enabled = $enabled;
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     public function __toString(){
-        return $this->getName();
+        $retStr = 'Image';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
+    }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
     }
 
 
