@@ -123,3 +123,55 @@ services:
             - [ setTranslationDomain, [AppBundle]]
 
         public: true
+    app.admin.task:
+        class: AppBundle\Admin\TaskAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Task" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\Task\Task
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+    app.admin.taskrepeat:
+        class: AppBundle\Admin\TaskRepeatAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Task Repeat" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+    app.admin.taskrepeatsingle:
+        class: AppBundle\Admin\TaskRepeatSingleAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Task Repeat Instance" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeatSingle
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true
+    app.admin.tasksingle:
+        class: AppBundle\Admin\TaskSingleAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, label: "Task Instance" }
+        arguments:
+            - ~
+            - AppBundle\Entity\Organization\User\Task\Single\TaskSingle
+            - ~
+        calls:
+            - [ setLabelTranslatorStrategy, ["@sonata.admin.label.strategy.underscore"]]
+            - [ setTranslationDomain, [AppBundle]]
+
+        public: true

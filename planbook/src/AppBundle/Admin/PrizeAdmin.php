@@ -69,7 +69,8 @@ class PrizeAdmin extends AbstractAdmin
                 'label' => 'Name'
             ))
             ->add('description', null, array(
-                'label' => 'Description'
+                'label' => 'Description',
+                'required' => false
             ))
             ->add('price', null, array(
                 'label' => 'Price'
@@ -78,7 +79,8 @@ class PrizeAdmin extends AbstractAdmin
                 'label' => 'User'
             ))
             ->add('image.fileName', null, array(
-                'label' => 'Image'
+                'label' => 'Image',
+                'required' => false
             ))
             ->add('enabled', null, array(
                 'label' => 'Enabled'

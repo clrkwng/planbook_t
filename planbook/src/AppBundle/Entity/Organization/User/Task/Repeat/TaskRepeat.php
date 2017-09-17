@@ -71,7 +71,10 @@ class TaskRepeat
 
     /**
      * @var Frequency[] An ArrayCollection of Frequency objects.
-     * @ORM\ManyToMany(targetEntity="Frequency", mappedBy="repeatTasks")
+     * @ORM\ManyToMany(
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\Frequency",
+     *     mappedBy="repeatTasks"
+     * )
      * Task's repetition frequency; used for creation of `Task_Repeat_Single`
      *
      */
@@ -277,9 +280,17 @@ class TaskRepeat
         $this->enabled = $enabled;
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     public function __toString(){
-        return $this->getNameOv();
+        $retStr = 'TaskRepeat';
+        if(!is_null($this->getNameOv()) && $this->getNameOv() != ""){
+            $retStr = $this->getNameOv();
+        }
+        return (string) $retStr;
     }
-
 
 }

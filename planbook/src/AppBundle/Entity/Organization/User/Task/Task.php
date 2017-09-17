@@ -253,8 +253,17 @@ class Task
         $this->enabled = $enabled;
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     public function __toString(){
-        return $this->getName();
+        $retStr = 'Task';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
     }
 
 

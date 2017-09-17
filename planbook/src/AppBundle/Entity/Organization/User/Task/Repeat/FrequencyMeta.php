@@ -189,8 +189,17 @@ class FrequencyMeta
         $this->enabled = $enabled;
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     public function __toString(){
-        return $this->getMetaKey();
+        $retStr = 'FrequencyMeta';
+        if(!is_null($this->getMetaKey()) && $this->getMetaKey() != ""){
+            $retStr = $this->getMetaKey();
+        }
+        return (string) $retStr;
     }
 
 }

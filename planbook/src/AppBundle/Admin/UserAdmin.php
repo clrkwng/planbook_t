@@ -71,7 +71,8 @@ class UserAdmin extends AbstractAdmin
                 'label' => 'Username'
             ))
             ->add('email', null, array(
-                'label' => 'Email Address'
+                'label' => 'Email Address',
+                'required' => false
             ))
             ->add('total_points', null, array(
                 'label' => 'Total Points'

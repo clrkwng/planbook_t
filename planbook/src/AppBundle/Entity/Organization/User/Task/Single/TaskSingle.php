@@ -56,13 +56,12 @@ class TaskSingle
     protected $priority = null;
 
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @var \datetime
+     * @ORM\Column(type="datetime")
      *
-     * UNIX timestamp for when the task must be completed by
+     * Timestamp for when the task must be completed by
      *
      * @Assert\NotBlank()
-     * @Assert\Length(min = 4)
      *
      */
     protected $deadline;
@@ -155,7 +154,7 @@ class TaskSingle
     }
 
     /**
-     * @return string
+     * @return \datetime
      */
     public function getDeadline()
     {
@@ -163,7 +162,7 @@ class TaskSingle
     }
 
     /**
-     * @param string $deadline
+     * @param \datetime $deadline
      */
     public function setDeadline($deadline)
     {
@@ -234,8 +233,17 @@ class TaskSingle
         $this->enabled = $enabled;
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     public function __toString(){
-        return $this->getNameOv();
+        $retStr = 'TaskSingle';
+        if(!is_null($this->getNameOv()) && $this->getNameOv() != ""){
+            $retStr = $this->getNameOv();
+        }
+        return (string) $retStr;
     }
 
 

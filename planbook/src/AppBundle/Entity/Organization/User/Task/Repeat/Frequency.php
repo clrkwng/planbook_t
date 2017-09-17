@@ -49,14 +49,20 @@ class Frequency
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="FrequencyMeta", mappedBy="frequency")
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\FrequencyMeta",
+     *     mappedBy="frequency"
+     * )
      * @var FrequencyMeta[] An ArrayCollection of FrequencyMeta objects.
      *
      */
     protected $metaData = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="TaskRepeat", inversedBy="$frequencies")
+     * @ORM\ManyToMany(
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat",
+     *     inversedBy="frequencies"
+     * )
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
      *
      */
@@ -189,8 +195,17 @@ class Frequency
         $this->enabled = $enabled;
     }
 
+    /**
+     *
+     *
+     * @return string
+     */
     public function __toString(){
-        return $this->getName();
+        $retStr = 'Frequency';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
     }
 
 }

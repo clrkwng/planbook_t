@@ -36,7 +36,8 @@ class CategoryAdmin extends AbstractAdmin
             ->add('image', 'sonata_type_admin', array(
                 'class' => 'AppBundle\Entity\Organization\Config\Image',
                 'label' => 'Picture',
-                'delete' => false
+                'delete' => false,
+                'required' => false
             ))
         ;
     }
