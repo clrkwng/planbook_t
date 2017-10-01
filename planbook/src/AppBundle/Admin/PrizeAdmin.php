@@ -28,29 +28,37 @@ class PrizeAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->with("Prize Info")
-                ->add('name', 'text', array(
-                    'label' => 'Name'
-                ))
-                ->add('description', 'text', array(
-                    'label' => 'Description'
-                ))
-                ->add('price', 'integer', array(
-                    'label' => 'Price'
-                ))
-                ->add('user', 'entity', array(
-                    'class' => 'AppBundle\Entity\Organization\User\User',
-                    'label' => 'User'
-                ))
-                ->add('enabled', 'checkbox', array(
-                    'label' => 'Enabled'
-                ))
+            ->tab("General")
+                ->with("Prize Info")
+                    ->add('name', 'text', array(
+                        'label' => 'Name'
+                    ))
+                    ->add('description', 'text', array(
+                        'label' => 'Description',
+                        'required' => false
+                    ))
+
+                ->end()
+                ->with("Market Info")
+                    ->add('user', 'entity', array(
+                        'class' => 'AppBundle\Entity\Organization\User\User',
+                        'label' => 'User'
+                    ))
+                    ->add('price', 'integer', array(
+                        'label' => 'Price'
+                    ))
+                    ->add('enabled', 'checkbox', array(
+                        'label' => 'Enabled'
+                    ))
+                ->end()
             ->end()
-            ->with("Image")
-                ->add('image', 'sonata_type_admin', array(
-                    'label' => 'Picture',
-                    'delete' => false
-                ))
+            ->tab("Picture")
+                ->with("Upload Image")
+                    ->add('image', 'sonata_type_admin', array(
+                        'label' => 'Picture',
+                        'delete' => false
+                    ))
+                ->end()
             ->end()
 
         ;

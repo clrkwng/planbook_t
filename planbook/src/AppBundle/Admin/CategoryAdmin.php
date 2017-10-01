@@ -29,16 +29,17 @@ class CategoryAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-
-            ->add('name', 'text', array(
-                'label' => 'Name'
-            ))
-            ->add('image', 'sonata_type_admin', array(
-                'class' => 'AppBundle\Entity\Organization\Config\Image',
-                'label' => 'Picture',
-                'delete' => false,
-                'required' => false
-            ))
+            ->with("General")
+                ->add('name', 'text', array(
+                    'label' => 'Name'
+                ))
+            ->end()
+            ->with("Picture")
+                ->add('image', 'sonata_type_admin', array(
+                    'delete' => false,
+                    'required' => false
+                ))
+            ->end()
         ;
     }
 

@@ -20,6 +20,7 @@
         "friendsofsymfony/rest-bundle": "^2.2",
         "friendsofsymfony/user-bundle": "~2.0",
         "incenteev/composer-parameter-handler": "^2.0",
+        "jms/serializer-bundle": "^2.1",
         "knplabs/knp-menu-bundle": "^2.0",
         "nelmio/api-doc-bundle": "^2.13",
         "ramsey/uuid": "^3.7",

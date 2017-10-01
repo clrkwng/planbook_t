@@ -30,7 +30,7 @@ class ColorAdmin extends AbstractAdmin
                 'label' => 'Name'
             ))
             ->add('hex_value', 'text', array(
-                'label' => 'Name'
+                'label' => 'Hex Value'
             ))
             ->add('enabled', null, array(
                 'label' => 'Enabled'

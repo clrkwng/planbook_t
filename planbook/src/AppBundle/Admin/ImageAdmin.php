@@ -52,19 +52,21 @@ class ImageAdmin extends AbstractAdmin
         }
 
         $formMapper
-            ->add('name', 'text', array(
-                'label' => 'Name'
-            ))
-            ->add('description', 'text', array(
-                'label' => 'Description',
-                'required' => false
-            ))
-            ->add('file', 'file', $fileFieldOptions)
-
-            ->add('enabled', 'checkbox', array(
-                'label' => 'Enabled'
-            ))
-
+            ->with("General")
+                ->add('name', 'text', array(
+                    'label' => 'Name'
+                ))
+                ->add('description', 'text', array(
+                    'label' => 'Description',
+                    'required' => false
+                ))
+                ->add('enabled', 'checkbox', array(
+                    'label' => 'Enabled'
+                ))
+            ->end()
+            ->with("Upload a New Image")
+                ->add('file', 'file', $fileFieldOptions)
+            ->end()
         ;
     }
 

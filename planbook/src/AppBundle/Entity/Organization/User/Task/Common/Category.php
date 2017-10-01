@@ -205,6 +205,9 @@ class Category
     }
 
     public function __toString(){
+        if($this->getName() == null){
+            return "Category";
+        }
         return $this->getName();
     }
 

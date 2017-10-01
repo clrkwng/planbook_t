@@ -28,32 +28,44 @@ class UserAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('username', 'text', array(
-                'label' => 'Username'
-            ))
-            ->add('email', 'text', array(
-                'label' => 'Email Address'
-            ))
-            ->add('enabled', null, array(
-                'label' => 'Enabled'
-            ))
-            ->add('total_points', 'integer', array(
-                'label' => 'Total Points'
-            ))
-            ->add('trophy_points', 'integer', array(
-                'label' => 'Trophy Points'
-            ))
-            ->add('prize_points', 'integer', array(
-                'label' => 'Prize Points'
-            ))
-            ->add('image', 'entity', array(
-                'class' => 'AppBundle\Entity\Organization\Config\Image',
-                'label' => 'Profile Picture'
-            ))
-            ->add('theme', 'entity', array(
-                'class' => 'AppBundle\Entity\System\Theme\Theme',
-                'label' => 'Theme'
-            ))
+            ->tab("General")
+                ->with("Login Info")
+                    ->add('username', 'text', array(
+                        'label' => 'Username'
+                    ))
+                    ->add('email', 'text', array(
+                        'label' => 'Email Address'
+                    ))
+                ->end()
+                ->with("")
+                    ->add('enabled', null, array(
+                        'label' => 'Enabled'
+                    ))
+                ->end()
+            ->end()
+            ->tab("Profile")
+                ->with("Settings")
+                    ->add('image', 'entity', array(
+                        'class' => 'AppBundle\Entity\Organization\Config\Image',
+                        'label' => 'Profile Picture'
+                    ))
+                    ->add('theme', 'entity', array(
+                        'class' => 'AppBundle\Entity\System\Theme\Theme',
+                        'label' => 'Theme'
+                    ))
+                ->end()
+                ->with("Points")
+                    ->add('total_points', 'integer', array(
+                        'label' => 'Total Points'
+                    ))
+                    ->add('trophy_points', 'integer', array(
+                        'label' => 'Trophy Points'
+                    ))
+                    ->add('prize_points', 'integer', array(
+                        'label' => 'Prize Points'
+                    ))
+                ->end()
+            ->end()
 
         ;
     }
