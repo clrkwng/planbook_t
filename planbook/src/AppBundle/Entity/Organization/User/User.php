@@ -582,6 +582,10 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
     public function __toString(){
-        return $this->getUsername();
+        $retStr = 'User';
+        if(!is_null($this->getUsername()) && $this->getUsername() != ""){
+            $retStr = $this->getUsername();
+        }
+        return (string) $retStr;
     }
 }

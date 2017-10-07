@@ -30,10 +30,10 @@ class TaskRepeatAdmin extends AbstractAdmin
         $formMapper
             ->tab("Base Task")
                 ->with('')
-                    ->add('task', 'entity', array(
+                    ->add('task', 'sonata_type_model', array(
                         'class' => 'AppBundle\Entity\Organization\User\Task\Task',
                         'label' => 'Task',
-                        'mapped' => false
+                        'property' => 'name'
                     ))
                 ->end()
                 ->with("Override Inherited Properties")

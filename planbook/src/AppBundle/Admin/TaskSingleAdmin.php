@@ -29,10 +29,10 @@ class TaskSingleAdmin extends AbstractAdmin
         $formMapper
             ->tab("Configure Single Task Instance")
                 ->with("Parent Task")
-                    ->add('task', 'entity', array(
+                    ->add('task', 'sonata_type_model', array(
                         'class' => 'AppBundle\Entity\Organization\User\Task\Task',
                         'label' => 'Task',
-                        'mapped' => false
+                        'property' => 'name'
                     ))
                 ->end()
                 ->with("Override Inherited Properties")

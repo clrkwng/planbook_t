@@ -1,0 +1,50 @@
+organization:
+    type:     rest
+    host:     hostname.example.com
+    resource: src\AppBundle\Controller\OrganizationController
+
+image:
+    type:     rest
+    host:     hostname.example.com
+    parent:   organization
+    resource: src\AppBundle\Controller\ImageController
+category:
+    type:     rest
+    host:     hostname.example.com
+    parent:   organization
+    resource: src\AppBundle\Controller\CategoryController
+trophy:
+    type:     rest
+    host:     hostname.example.com
+    parent:   organization
+    resource: src\AppBundle\Controller\TrophyController
+priority:
+    type:     rest
+    host:     hostname.example.com
+    parent:   organization
+    resource: src\AppBundle\Controller\PriorityController
+user:
+    type:     rest
+    host:     hostname.example.com
+    parent:   organization
+    resource: src\AppBundle\Controller\UserController
+achievement:
+    type:     rest
+    host:     hostname.example.com
+    parent:   user
+    resource: src\AppBundle\Controller\AchievementController
+prize:
+    type:     rest
+    host:     hostname.example.com
+    parent:   user
+    resource: src\AppBundle\Controller\PrizeController
+theme:
+    type:     rest
+    host:     hostname.example.com
+    parent:   user
+    resource: src\AppBundle\Controller\ThemeController
+task:
+    type:     rest
+    host:     hostname.example.com
+    parent:   user
+    resource: src\AppBundle\Controller\TaskController

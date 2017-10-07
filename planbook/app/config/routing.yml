@@ -36,3 +36,8 @@ _sonata_admin:
     resource: .
     type: sonata_admin
     prefix: /admin
+
+#app_rest_api:
+#    type: rest
+#    host:   hostname.example.com
+#    resource: "@AppBundle/Resources/config/users_routes.yml"

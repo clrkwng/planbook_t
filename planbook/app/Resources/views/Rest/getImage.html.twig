@@ -1,0 +1,20 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block content %}
+
+    <div>
+        Hello {{ data }}!
+        <a href="{{ path('edit_image', {'image': data}) }}">edit this image</a>
+        <a href="{{ path('get_image', {'image': data, '_format': 'json'}) }}">show this image in json</a>
+        <a href="{{ path('get_image', {'image': data, '_format': 'xml'}) }}">show this image in xml</a>
+    </div>
+
+    <div><a href="{{ path('get_images') }}">list images in html</a></div>
+    <div><a href="{{ path('get_images', {'_format': 'json'}) }}">list images in json</a></div>
+    <div><a href="{{ path('get_images', {'_format': 'xml'}) }}">list images in xml</a></div>
+
+    <div><a href="{{ path('new_image', {'_format': 'html'}) }}">form to create a new image in html</a></div>
+
+    Rendered with twig.
+
+{% endblock content %}

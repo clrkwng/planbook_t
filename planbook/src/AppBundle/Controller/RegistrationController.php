@@ -50,7 +50,6 @@ class RegistrationController extends Controller
             $user_uuid = \Ramsey\Uuid\Uuid::uuid4();
             $user->setUuid($user_uuid);
 
-
             //Set intial values for an admin account in an organization
             $user->setTotalPoints(0);
             $user->setTrophyPoints(0);

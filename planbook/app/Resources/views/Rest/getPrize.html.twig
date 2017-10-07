@@ -1,0 +1,20 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block content %}
+
+    <div>
+        Hello {{ data }}!
+        <a href="{{ path('edit_prize', {'prize': data}) }}">edit this prize</a>
+        <a href="{{ path('get_prize', {'prize': data, '_format': 'json'}) }}">show this prize in json</a>
+        <a href="{{ path('get_prize', {'prize': data, '_format': 'xml'}) }}">show this prize in xml</a>
+    </div>
+
+    <div><a href="{{ path('get_prizes') }}">list prizes in html</a></div>
+    <div><a href="{{ path('get_prizes', {'_format': 'json'}) }}">list prizes in json</a></div>
+    <div><a href="{{ path('get_prizes', {'_format': 'xml'}) }}">list prizes in xml</a></div>
+
+    <div><a href="{{ path('new_prize', {'_format': 'html'}) }}">form to create a new prize in html</a></div>
+
+    Rendered with twig.
+
+{% endblock content %}

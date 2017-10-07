@@ -16,6 +16,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\CoreBundle\Validator\ErrorElement;
 
 class CategoryAdmin extends AbstractAdmin
 {
@@ -39,6 +40,19 @@ class CategoryAdmin extends AbstractAdmin
                     'delete' => false,
                     'required' => false
                 ))
+            ->end()
+        ;
+    }
+
+    /**
+     * @param ErrorElement $errorElement
+     * @param mixed $object
+     */
+    public function validate(ErrorElement $errorElement, $object)
+    {
+        $errorElement
+            ->with('name')
+                ->assertLength(array('max' => 32))
             ->end()
         ;
     }

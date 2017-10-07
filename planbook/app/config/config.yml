@@ -93,6 +93,16 @@ fos_user:
                 address: resetting@planbook.com
                 sender_name: "%mailer_user%"
 
+##FriendsOfSymfony RestBundle Configuration
+#fos_rest:
+#    param_fetcher_listener: true
+#    body_listener:          true
+#    format_listener:        true
+#    view:
+#        view_response_listener: force
+#    body_converter:
+#        enabled: true
+#        validate: true
 
 # Sensio Configuration
 sensio_framework_extra:
@@ -131,6 +141,10 @@ stof_doctrine_extensions:
         default:
             sluggable: true
             timestampable: true
+
+#Twig Page Template Configuration
+twig:
+    exception_controller: 'FOS\RestBundle\Controller\ExceptionController::showAction'
 
 #Sonata Admin Bundle Config
 sonata_admin:

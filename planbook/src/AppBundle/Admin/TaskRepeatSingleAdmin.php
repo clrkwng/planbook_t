@@ -29,10 +29,11 @@ class TaskRepeatSingleAdmin extends AbstractAdmin
         $formMapper
             ->tab("Configure Repeating Task Instance")
                 ->with("Parent Repeating Task")
-                    ->add('base_repeat_task', 'entity', array(
+                    ->add('base_repeat_task', 'sonata_type_model', array(
                         'class' => 'AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat',
                         'label' => 'Task',
-                        'mapped' => false
+                        'property' => 'name'
+
                     ))
                 ->with("Override Inherited Properties")
                     ->add('name_ov', 'text', array(

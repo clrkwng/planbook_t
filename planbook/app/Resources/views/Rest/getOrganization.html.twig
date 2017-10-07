@@ -1,0 +1,20 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block content %}
+
+    <div>
+        Hello {{ data }}!
+        <a href="{{ path('edit_organization', {'organization': data}) }}">edit this organization</a>
+        <a href="{{ path('get_organization', {'organization': data, '_format': 'json'}) }}">show this organization in json</a>
+        <a href="{{ path('get_organization', {'organization': data, '_format': 'xml'}) }}">show this organization in xml</a>
+    </div>
+
+    <div><a href="{{ path('get_organizations') }}">list organizations in html</a></div>
+    <div><a href="{{ path('get_organizations', {'_format': 'json'}) }}">list organizations in json</a></div>
+    <div><a href="{{ path('get_organizations', {'_format': 'xml'}) }}">list organizations in xml</a></div>
+
+    <div><a href="{{ path('new_organization', {'_format': 'html'}) }}">form to create a new organization in html</a></div>
+
+    Rendered with twig.
+
+{% endblock content %}

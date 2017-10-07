@@ -1,0 +1,20 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block content %}
+
+    <div>
+        Hello {{ data }}!
+        <a href="{{ path('edit_user', {'user': data}) }}">edit this user</a>
+        <a href="{{ path('get_user', {'user': data, '_format': 'json'}) }}">show this user in json</a>
+        <a href="{{ path('get_user', {'user': data, '_format': 'xml'}) }}">show this user in xml</a>
+    </div>
+
+    <div><a href="{{ path('get_users') }}">list users in html</a></div>
+    <div><a href="{{ path('get_users', {'_format': 'json'}) }}">list users in json</a></div>
+    <div><a href="{{ path('get_users', {'_format': 'xml'}) }}">list users in xml</a></div>
+
+    <div><a href="{{ path('new_user', {'_format': 'html'}) }}">form to create a new user in html</a></div>
+
+    Rendered with twig.
+
+{% endblock content %}
