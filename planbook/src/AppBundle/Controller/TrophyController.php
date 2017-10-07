@@ -8,24 +8,81 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Organization\Config\Trophy;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
+use Doctrine\Common\Collections\ArrayCollection;
+use FOS\RestBundle\View\ViewHandlerInterface;
 
-class TrophyController extends Controller
+class TrophyController extends FOSRestController
 {
 
-    public function getTrophiesAction($slug)
-    {} // "get_organization_trophies"   [GET] /organization/{slug}/trophy
+    public function getTrophiesAction($orgSlug)
+    {
+        $trophyManager = $this->get('trophy_manager');
+        $orgManager = $this->get('organization_manager');
 
-    public function getTrophyAction($slug, $id)
-    {} // "get_organization_trophy"    [GET] /organization/{slug}/trophy/{id}
+        $org = $orgManager->findBySlug($orgSlug);
+        $trophies = $trophyManager->findAllByOrganization($org);
 
-    public function deleteTrophyAction($slug, $id)
-    {} // "delete_organization_trophy" [DELETE] /organization/{slug}/trophy/{id}
+        $view = $this->view($trophies, 200)
+            ->setTemplate("AppBundle:Trophy:getTrophies.html.twig")
+            ->setTemplateVar('trophies')
+        ;
 
-    public function newTrophyAction($slug)
-    {} // "new_organization_trophy"   [GET] /organization/{slug}/trophy/new
+        return $this->handleView($view);
+    } // "get_organization_trophies"   [GET] /organization/{orgSlug}/trophy
 
-    public function editTrophyAction($slug, $id)
-    {} // "edit_organization_trophy"   [GET] /organization/{slug}/trophy/{id}/edit
+    public function getTrophyAction($orgSlug, $id)
+    {
+        $trophyManager = $this->get('trophy_manager');
+
+        $trophy = $trophyManager->findById($id);
+
+        $view = $this->view($trophy, 200)
+            ->setTemplate("AppBundle:Trophy:getTrophy.html.twig")
+            ->setTemplateVar('trophy')
+        ;
+
+        return $this->handleView($view);
+    } // "get_organization_trophy"    [GET] /organization/{orgSlug}/trophy/{id}
+
+    public function deleteTrophyAction($orgSlug, $id)
+    {} // "delete_organization_trophy" [DELETE] /organization/{orgSlug}/trophy/{id}
+
+    public function newTrophyAction($orgSlug)
+    {
+        $organizationManager = $this->get('organization_manager');
+        $org = $organizationManager->findBySlug($orgSlug);
+
+        $newTrophy = new Trophy();
+        $newTrophy->setOrganization($org);
+        $newTrophy->setEnabled(true);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newTrophy);
+        $em->flush();
+
+        $view = $this->view($newTrophy, 200)
+            ->setTemplate("AppBundle:Trophy:newTrophy.html.twig")
+            ->setTemplateVar('trophy')
+        ;
+
+        return $this->handleView($view);
+    } // "new_organization_trophy"   [GET] /organization/{orgSlug}/trophy/new
+
+    public function editTrophyAction($orgSlug, $id)
+    {
+        $trophyManager = $this->get('trophy_manager');
+
+        $trophy = $trophyManager->findById($id);
+
+        $view = $this->view($trophy, 200)
+            ->setTemplate("AppBundle:Trophy:postTrophy.html.twig")
+            ->setTemplateVar('trophy')
+        ;
+
+        return $this->handleView($view);
+    } // "edit_organization_trophy"   [GET] /organization/{orgSlug}/trophy/{id}/edit
 
 }

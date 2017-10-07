@@ -8,23 +8,81 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Organization\User\Task\Common\Priority;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
+use Doctrine\Common\Collections\ArrayCollection;
+use FOS\RestBundle\View\ViewHandlerInterface;
 
-class PriorityController extends Controller
+class PriorityController extends FOSRestController
 {
-    public function getPrioritiesAction($slug)
-    {} // "get_organization_priorities"   [GET] /organization/{slug}/priority
+    public function getPrioritiesAction($orgSlug)
+    {
+        $priorityManager = $this->get('priority_manager');
+        $organizationManager = $this->get('organization_manager');
 
-    public function getPriorityAction($slug, $id)
-    {} // "get_organization_priority"    [GET] /organization/{slug}/priority/{id}
+        $org = $organizationManager->findBySlug($orgSlug);
+        $priorities = $priorityManager->findAllByOrganization($org);
 
-    public function deletePriorityAction($slug, $id)
-    {} // "delete_organization_priority" [DELETE] /organization/{slug}/priority/{id}
+        $view = $this->view($priorities, 200)
+            ->setTemplate("AppBundle:Priority:getPriorities.html.twig")
+            ->setTemplateVar('priorities')
+        ;
 
-    public function newPriorityAction($slug)
-    {} // "new_organization_priority"   [GET] /organization/{slug}/priority/new
+        return $this->handleView($view);
+    } // "get_organization_priorities"   [GET] /organization/{orgSlug}/priority
 
-    public function editPriorityAction($slug, $id)
-    {} // "edit_organization_priority"   [GET] /organization/{slug}/priority/{id}/edit
+    public function getPriorityAction($orgSlug, $id)
+    {
+        $priorityManager = $this->get('priority_manager');
+
+        $priority = $priorityManager->findById($id);
+
+        $view = $this->view($priority, 200)
+            ->setTemplate("AppBundle:Priority:getPriority.html.twig")
+            ->setTemplateVar('priority')
+        ;
+
+        return $this->handleView($view);
+    } // "get_organization_priority"    [GET] /organization/{orgSlug}/priority/{id}
+
+    public function deletePriorityAction($orgSlug, $id)
+    {} // "delete_organization_priority" [DELETE] /organization/{orgSlug}/priority/{id}
+
+    public function newPriorityAction($orgSlug)
+    {
+        $organizationManager = $this->get('organization_manager');
+        $org = $organizationManager->findBySlug($orgSlug);
+
+        $newPriority = new Priority();
+        $newPriority->setOrganization($org);
+        $newPriority->setEnabled(true);
+        $newPriority->setCompletionPoints(0);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newPriority);
+        $em->flush();
+
+        $view = $this->view($newPriority, 200)
+            ->setTemplate("AppBundle:Prize:newPriority.html.twig")
+            ->setTemplateVar('priority')
+        ;
+
+        return $this->handleView($view);
+    } // "new_organization_priority"   [GET] /organization/{orgSlug}/priority/new
+
+    public function editPriorityAction($orgSlug, $id)
+    {
+        $priorityManager = $this->get('priority_manager');
+
+        $priority = $priorityManager->findById($id);
+
+        $view = $this->view($priority, 200)
+            ->setTemplate("AppBundle:Priority:postPriority.html.twig")
+            ->setTemplateVar('priority')
+        ;
+
+        return $this->handleView($view);
+    } // "edit_organization_priority"   [GET] /organization/{orgSlug}/priority/{id}/edit
 
 }

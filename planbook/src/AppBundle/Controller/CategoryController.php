@@ -8,22 +8,81 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Organization\User\Task\Common\Category;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
+use Doctrine\Common\Collections\ArrayCollection;
+use FOS\RestBundle\View\ViewHandlerInterface;
 
-class CategoryController extends Controller
+class CategoryController extends FOSRestController
 {
-    public function getCategoriesAction($slug)
-    {} // "get_organization_categories"   [GET] /organization/{slug}/category
+    public function getCategoriesAction($orgSlug)
+    {
+        $categoryManager = $this->get('category_manager');
+        $organizationManager = $this->get('organization_manager');
 
-    public function getCategoryAction($slug, $id)
-    {} // "get_organization_category"    [GET] /organization/{slug}/category/{id}
+        $org = $organizationManager->findBySlug($orgSlug);
+        $categories = $categoryManager->findAllByOrganization($org);
 
-    public function deleteCategoryAction($slug, $id)
-    {} // "delete_organization_category" [DELETE] /organization/{slug}/category/{id}
+        $view = $this->view($categories, 200)
+            ->setTemplate("AppBundle:Category:getCategories.html.twig")
+            ->setTemplateVar('categories')
+        ;
 
-    public function newCategoryAction($slug)
-    {} // "new_organization_category"   [GET] /organization/{slug}/category/new
+        return $this->handleView($view);
+    } // "get_organization_categories"   [GET] /organization/{orgSlug}/category
 
-    public function editCategoryAction($slug, $id)
-    {} // "edit_organization_category"   [GET] /organization/{slug}/category/{id}/edit
+    public function getCategoryAction($orgSlug, $id)
+    {
+        $categoryManager = $this->get('category_manager');
+
+        $category = $categoryManager->findById($id);
+
+        $view = $this->view($category, 200)
+            ->setTemplate("AppBundle:Category:getCategory.html.twig")
+            ->setTemplateVar('category')
+        ;
+
+        return $this->handleView($view);
+    } // "get_organization_category"    [GET] /organization/{orgSlug}/category/{id}
+
+    public function deleteCategoryAction($orgSlug, $id)
+    {
+
+    } // "delete_organization_category" [DELETE] /organization/{orgSlug}/category/{id}
+
+    public function newCategoryAction($orgSlug)
+    {
+        $organizationManager = $this->get('organization_manager');
+        $org = $organizationManager->findBySlug($orgSlug);
+
+        $newCategory = new Category();
+        $newCategory->setOrganization($org);
+        $newCategory->setEnabled(true);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newCategory);
+        $em->flush();
+
+        $view = $this->view($newCategory, 200)
+            ->setTemplate("AppBundle:Category:newCategory.html.twig")
+            ->setTemplateVar('category')
+        ;
+
+        return $this->handleView($view);
+    } // "new_organization_category"   [GET] /organization/{orgSlug}/category/new
+
+    public function editCategoryAction($orgSlug, $id)
+    {
+        $categoryManager = $this->get('category_manager');
+
+        $category = $categoryManager->findById($id);
+
+        $view = $this->view($category, 200)
+            ->setTemplate("AppBundle:Category:postCategory.html.twig")
+            ->setTemplateVar('category')
+        ;
+
+        return $this->handleView($view);
+    } // "edit_organization_category"   [GET] /organization/{orgSlug}/category/{id}/edit
 }
