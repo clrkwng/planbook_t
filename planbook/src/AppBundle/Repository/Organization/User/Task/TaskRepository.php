@@ -54,4 +54,15 @@ class TaskRepository extends EntityRepository
             ->setParameter('identifier', $id);
         return $qb->getQuery()->getResult();
     }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('task', 't')
+            ->where('t.slug = :identifier')
+            ->orderBy('t.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
 }

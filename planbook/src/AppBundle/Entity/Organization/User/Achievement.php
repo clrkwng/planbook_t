@@ -80,6 +80,17 @@ class Achievement
     protected $enabled;
 
     /**
+     * @ORM\Column(length=510, unique=true)
+     *
+     * @Gedmo\Slug(fields={"id"}, updatable=false)
+     *
+     * Allows for the image to be accessed via a url
+     * (Note: Since this slug is a composite of user and trophy, it's length needs to be double)
+     *
+     */
+    protected $slug;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -165,6 +176,22 @@ class Achievement
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     public function __toString(){

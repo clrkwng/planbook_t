@@ -127,6 +127,17 @@ class TaskRepeat
     private $updatedAt;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"id"}, updatable=false)
+     *
+     * Allows for the task repeat to be accessed via a url
+     *
+     */
+    protected $slug;
+
+
+    /**
      * TaskRepeat constructor.
      */
     public function __construct()
@@ -154,6 +165,23 @@ class TaskRepeat
             $this->repeatTaskInstances[] = $repeatTaskInstance;
         }
         return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     /**

@@ -116,6 +116,18 @@ class Task
     private $updatedAt;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name", "id"}, updatable=false)
+     *
+     * Allows for the task to be accessed via a url
+     *
+     */
+    protected $slug;
+
+
+
+    /**
      * Task constructor.
      */
     public function __construct()
@@ -219,6 +231,22 @@ class Task
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     /**

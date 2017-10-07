@@ -114,6 +114,32 @@ class TaskSingle
     private $updatedAt;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"id", "deadline"}, updatable=false)
+     *
+     * Allows for the task to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -132,7 +158,7 @@ class TaskSingle
     /**
      * @param Task $task
      */
-    public function setTaskId($task)
+    public function setTask(Task $task)
     {
         $this->task = $task;
     }

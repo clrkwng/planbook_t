@@ -58,6 +58,17 @@ class CategoryRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('c')
+            ->from('category', 'c')
+            ->where('c.slug = :identifier')
+            ->orderBy('c.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
+
     public function findByName($name)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()

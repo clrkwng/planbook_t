@@ -119,6 +119,33 @@ class TaskRepeatSingle
      */
     private $updatedAt;
 
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"id", "deadline"}, updatable=false)
+     *
+     * Allows for the task repeat to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
     /**
      * @return int
      */

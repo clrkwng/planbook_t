@@ -102,6 +102,32 @@ class FrequencyMeta
     protected $enabled;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"meta_key", "id"}, updatable=false)
+     *
+     * Allows for the image to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
      * @return int
      */
     public function getId()

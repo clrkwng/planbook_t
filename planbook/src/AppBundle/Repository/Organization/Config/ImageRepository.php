@@ -24,6 +24,17 @@ class ImageRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('i')
+            ->from('Image', 'i')
+            ->where('i.slug= :identifier')
+            ->orderBy('i.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
+
     public function findAllByName($name)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
@@ -45,5 +56,7 @@ class ImageRepository extends EntityRepository
             ->setParameter('identifier', $org->getId());
         return $qb->getQuery()->getResult();
     }
+
+
 
 }

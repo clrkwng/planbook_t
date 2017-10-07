@@ -43,6 +43,17 @@ class OrganizationRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findOrganizationBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('o')
+            ->from('Organization', 'o')
+            ->where('o.slug = :identifier')
+            ->orderBy('o.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
+
     public function findOrganizationByUUID($uuid)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()

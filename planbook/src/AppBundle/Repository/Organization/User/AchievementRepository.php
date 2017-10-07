@@ -46,4 +46,14 @@ class AchievementRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('a')
+            ->from('Achievements', 'a')
+            ->where('a.slug = :identifier')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
+
 }

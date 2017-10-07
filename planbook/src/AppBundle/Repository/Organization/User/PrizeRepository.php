@@ -46,4 +46,15 @@ class PrizeRepository extends EntityRepository
             ->setParameter('identifier', $name);
         return $qb->getQuery()->getResult();
     }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('p')
+            ->from('Prize', 'p')
+            ->where('p.slug = :identifier')
+            ->orderBy('p.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
 }

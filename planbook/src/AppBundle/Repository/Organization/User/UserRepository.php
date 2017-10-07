@@ -71,6 +71,17 @@ class UserRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('u')
+            ->from('User', 'u')
+            ->where('u.slug= :identifier')
+            ->orderBy('u.username', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
+
     public function findByUUID($uuid)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()

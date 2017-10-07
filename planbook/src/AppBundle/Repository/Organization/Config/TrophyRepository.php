@@ -79,4 +79,15 @@ class TrophyRepository extends EntityRepository
             ->setParameter('identifier', $name);
         return $qb->getQuery()->getResult();
     }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('Trophy', 't')
+            ->where('t.slug= :identifier')
+            ->orderBy('t.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
 }

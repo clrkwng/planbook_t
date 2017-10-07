@@ -45,4 +45,25 @@ class TaskSingleRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findById($id)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('task_single', 't')
+            ->where('t.id = :identifier')
+            ->orderBy('t.id', 'ASC')
+            ->setParameter('identifier', $id);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('task_single', 't')
+            ->where('t.slug = :identifier')
+            ->orderBy('t.id', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
 }

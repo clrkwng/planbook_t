@@ -56,6 +56,17 @@ class TaskRepeatRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('task_repeat', 't')
+            ->where('t.slug = :identifier')
+            ->orderBy('t.id', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
+
     public function findAllByTaskWithPriority(Task $task, Priority $priority)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()

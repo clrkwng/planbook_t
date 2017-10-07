@@ -54,4 +54,15 @@ class PriorityRepository extends EntityRepository
             ->setParameter('identifier', $id);
         return $qb->getQuery()->getResult();
     }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('p')
+            ->from('priority', 'p')
+            ->where('p.slug = :identifier')
+            ->orderBy('p.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
 }
