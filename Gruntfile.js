@@ -1,6 +1,6 @@
 module.exports = function (grunt) {
 
-    var xamppDir = "C:/Users/andrew.parise/Projects/3rdParty/xampp";
+    //var xamppDir = "C:/Users/andrew.parise/Projects/3rdParty/xampp";
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -44,45 +44,45 @@ module.exports = function (grunt) {
             js_admin_build: ['planbook/web/js-admin-build'],
             css_app: ['planbook/web/css/app/*'],
             css_admin: ['planbook/web/css/admin/*'],
-            xampp: [
-                xamppDir + '/htdocs/planbook/*'
-            ],
-            deploy_appBundle_admin: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Admin/*'
-            ],
-            deploy_app_config: [
-                xamppDir + '/htdocs/planbook/app/config/*'
-            ],
-            deploy_app_resources: [
-                xamppDir + '/htdocs/planbook/app/Resources/*'
-            ],
-            deploy_appBundle_controller: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Controller/*'
-            ],
-            deploy_appBundle_dependencyInjection: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/DependencyInjection/*'
-            ],
-            deploy_appBundle_entity: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Entity/*'
-            ],
-            deploy_appBundle_eventListener: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/EventListener/*'
-            ],
-            deploy_appBundle_form: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Form/*'
-            ],
-            deploy_appBundle_menu: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Menu/*'
-            ],
-            deploy_appBundle_repository: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Repository/*'
-            ],
-            deploy_appBundle_service: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Service/*'
-            ],
-            deploy_appBundle_util: [
-                xamppDir + '/htdocs/planbook/src/AppBundle/Util/*'
-            ]
+            // xampp: [
+            //     xamppDir + '/htdocs/planbook/*'
+            // ],
+            // deploy_appBundle_admin: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Admin/*'
+            // ],
+            // deploy_app_config: [
+            //     xamppDir + '/htdocs/planbook/app/config/*'
+            // ],
+            // deploy_app_resources: [
+            //     xamppDir + '/htdocs/planbook/app/Resources/*'
+            // ],
+            // deploy_appBundle_controller: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Controller/*'
+            // ],
+            // deploy_appBundle_dependencyInjection: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/DependencyInjection/*'
+            // ],
+            // deploy_appBundle_entity: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Entity/*'
+            // ],
+            // deploy_appBundle_eventListener: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/EventListener/*'
+            // ],
+            // deploy_appBundle_form: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Form/*'
+            // ],
+            // deploy_appBundle_menu: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Menu/*'
+            // ],
+            // deploy_appBundle_repository: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Repository/*'
+            // ],
+            // deploy_appBundle_service: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Service/*'
+            // ],
+            // deploy_appBundle_util: [
+            //     xamppDir + '/htdocs/planbook/src/AppBundle/Util/*'
+            // ]
 
         },
         less: {
@@ -141,83 +141,84 @@ module.exports = function (grunt) {
                 cwd: '<%= appResourcesPath %>/public/img/',
                 src: '**',
                 dest: 'planbook/web/img'
-            },
-            appBundle_controller: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Controller/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Controller'
-            },
-            appBundle_admin: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Admin/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Admin'
-            },
-            app_config: {
-                expand: true,
-                cwd: '<%= appConfigPath %>/config/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/app/config'
-            },
-            appBundle_dependencyInjection: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/DependencyInjection/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/DependencyInjection'
-            },
-            appBundle_entity: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Entity/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Entity'
-            },
-            appBundle_eventListener: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/EventListener/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/EventListener'
-            },
-            appBundle_form: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Form/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Form'
-            },
-            appBundle_menu: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Menu/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Menu'
-            },
-            appBundle_repository: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Repository/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Repository'
-            },
-            appBundle_service: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Service/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Service'
-            },
-            appBundle_util: {
-                expand: true,
-                cwd: '<%= appBundlePath %>/Util/',
-                src: '**',
-                dest: xamppDir + '/htdocs/planbook/src/AppBundle/Util'
-            },
-            xampp: {
-                files: [
-                   {
-                       expand: true,
-                       cwd: 'planbook/',
-                       src: ['**'],
-                       dest: xamppDir + '/htdocs/planbook/'
-                   }
-               ]
             }
+            //,
+            // appBundle_controller: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Controller/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Controller'
+            // },
+            // appBundle_admin: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Admin/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Admin'
+            // },
+            // app_config: {
+            //     expand: true,
+            //     cwd: '<%= appConfigPath %>/config/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/app/config'
+            // },
+            // appBundle_dependencyInjection: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/DependencyInjection/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/DependencyInjection'
+            // },
+            // appBundle_entity: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Entity/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Entity'
+            // },
+            // appBundle_eventListener: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/EventListener/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/EventListener'
+            // },
+            // appBundle_form: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Form/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Form'
+            // },
+            // appBundle_menu: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Menu/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Menu'
+            // },
+            // appBundle_repository: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Repository/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Repository'
+            // },
+            // appBundle_service: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Service/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Service'
+            // },
+            // appBundle_util: {
+            //     expand: true,
+            //     cwd: '<%= appBundlePath %>/Util/',
+            //     src: '**',
+            //     dest: xamppDir + '/htdocs/planbook/src/AppBundle/Util'
+            // },
+            // xampp: {
+            //     files: [
+            //        {
+            //            expand: true,
+            //            cwd: 'planbook/',
+            //            src: ['**'],
+            //            dest: xamppDir + '/htdocs/planbook/'
+            //        }
+            //    ]
+            // }
         },
 
         requirejs: {
@@ -414,14 +415,7 @@ module.exports = function (grunt) {
         grunt.task.run("copy:js_admin");
     });
 
-    grunt.registerTask('xampp-deploy',
-        [
-            'clean:xampp',
-            'copy:xampp'
-        ]
-    );
-
-    grunt.registerTask('dev', ['default', 'xampp-deploy']);
+    grunt.registerTask('dev', ['default']);//, 'xampp-deploy']);
 
     grunt.registerTask('optimizejs', function() {
         grunt.task.run("clean:js_app");
