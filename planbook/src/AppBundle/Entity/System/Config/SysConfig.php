@@ -14,13 +14,15 @@ use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="sys_config")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\System\Config\SysConfigRepository")
  *
  * Global configurations for the deployment environment
+ *
+ * @Serializer\XmlRoot("sys_config")
  *
  **/
 class SysConfig

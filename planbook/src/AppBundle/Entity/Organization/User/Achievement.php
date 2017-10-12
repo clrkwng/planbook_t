@@ -14,13 +14,15 @@ use AppBundle\Repository\Organization\User\AchievementRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="achievements")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\AchievementRepository")
  *
  * Mapping of Users to Trophies with Additional Data
+ *
+ * @Serializer\XmlRoot("achievement")
  *
  **/
 class Achievement

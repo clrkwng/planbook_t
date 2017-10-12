@@ -12,9 +12,8 @@ use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class OrganizationResponse
+class OrgUsersResponse
 {
-    //OrgId, OrgSlug, OrgName, List(of User)
 
     /**
      * @var int
@@ -27,6 +26,7 @@ class OrganizationResponse
      * @Serializer\XmlAttribute()
      */
     protected $orgSlug;
+
     /**
      * @var int
      * @Serializer\XmlAttribute()

@@ -37,7 +37,18 @@ _sonata_admin:
     type: sonata_admin
     prefix: /admin
 
-#app_rest_api:
-#    type: rest
-#    host:   hostname.example.com
-#    resource: "@AppBundle/Resources/config/users_routes.yml"
+trophy:
+    resource: "AppBundle\\Controller\\Rest\\OrgTrophyController"
+    type: rest
+users:
+    resource: "AppBundle\\Controller\\Rest\\OrgUsersController"
+    type: rest
+achievements:
+    resource: "AppBundle\\Controller\\Rest\\UserAchievementsController"
+    type: rest
+market:
+    resource: "AppBundle\\Controller\\Rest\\UserMarketController"
+    type: rest
+tasks:
+    resource: "AppBundle\\Controller\\Rest\\UserTasksController"
+    type: rest

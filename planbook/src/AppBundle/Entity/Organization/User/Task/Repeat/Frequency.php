@@ -14,12 +14,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="frequency")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\FrequencyRepository")
  *
  * Base definition for a recurring task
+ *
+ * @Serializer\XmlRoot("frequency")
  *
  **/
 class Frequency

@@ -17,12 +17,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="task")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\TaskRepository")
  *
  * Base definition for a task
+ *
+ * @Serializer\XmlRoot("task")
  *
  **/
 class Task

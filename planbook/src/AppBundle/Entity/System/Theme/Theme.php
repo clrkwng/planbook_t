@@ -15,13 +15,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="theme")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\System\Theme\ThemeRepository")
  *
  *  Container of related colors
+ *
+ * @Serializer\XmlRoot("theme")
  *
  **/
 class Theme

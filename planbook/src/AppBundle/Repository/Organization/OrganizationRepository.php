@@ -21,7 +21,7 @@ class OrganizationRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findOrganizationByName($name)
+    public function findByName($name)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('o')
@@ -32,7 +32,7 @@ class OrganizationRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findOrganizationById($id)
+    public function findById($id)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('o')
@@ -40,10 +40,10 @@ class OrganizationRepository extends EntityRepository
             ->where('o.id = :identifier')
             ->orderBy('o.name', 'ASC')
             ->setParameter('identifier', $id);
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function findOrganizationBySlug($slug)
+    public function findBySlug($slug)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('o')
@@ -54,7 +54,7 @@ class OrganizationRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findOrganizationByUUID($uuid)
+    public function findByUUID($uuid)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('o')

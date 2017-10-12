@@ -13,7 +13,16 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 
+/*
+ * @Prefix("planbook/rest/user")
+ * @NamePrefix("planbook_rest_user_")
+ *
+ * @RouteResource("User")
+ */
 class UserController extends FOSRestController
 {
 

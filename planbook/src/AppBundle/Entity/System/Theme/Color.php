@@ -13,13 +13,15 @@ use AppBundle\Repository\System\Theme\ColorRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="color")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\System\Theme\ColorRepository")
  *
  * Basic definitions for colors
+ *
+ * @Serializer\XmlRoot("color")
  *
  **/
 class Color

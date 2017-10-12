@@ -13,7 +13,16 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\View\ViewHandlerInterface;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 
+/*
+ * @Prefix("planbook/rest/trophy")
+ * @NamePrefix("planbook_rest_trophy_")
+ *
+ * @RouteResource("Trophy")
+ */
 class TrophyController extends FOSRestController
 {
 

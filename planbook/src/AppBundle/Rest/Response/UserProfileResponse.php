@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Andrew.Parise
  * Date: 10/7/2017
- * Time: 4:22 PM
+ * Time: 4:16 PM
  */
 
 namespace AppBundle\Rest\Response;
@@ -12,89 +12,90 @@ use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class TrophyResponse
+class UserProfileResponse
 {
 
     /**
      * @var int
      * @Serializer\XmlAttribute()
      */
-    protected $orgSlug;
+    protected $username;
 
     /**
      * @var int
      * @Serializer\XmlAttribute()
      */
-    protected $orgId;
+    protected $userId;
 
     /**
      * @var int
      * @Serializer\XmlAttribute()
      */
-    protected $trophyId;
+    protected $userImage;
 
     /**
      * @var int
      * @Serializer\XmlAttribute()
      */
-    protected $trophyName;
+    protected $totalPoints;
 
     /**
      * @var int
      * @Serializer\XmlAttribute()
      */
-    protected $trophyImage;
+    protected $prizePoints;
 
 
-    public function __construct($orgSlug, $orgId, $trophyId, $trophyName, $trophyImage)
+    public function __construct($username, $userId, $userImage, $totalPoints, $prizePoints)
     {
 
-        $this->trophyImage = $trophyImage;
-        $this->orgId = $orgId;
-        $this->trophyId = $trophyId;
-        $this->trophyName = $trophyName;
-        $this->orgSlug = $orgSlug;
+        $this->username = $username;
+        $this->userId = $userId;
+        $this->userImage = $userImage;
+        $this->totalPoints = $totalPoints;
+        $this->prizePoints = $prizePoints;
     }
 
     /**
      * @return int
      */
-    public function getOrgSlug()
+    public function getUsername()
     {
-        return $this->orgSlug;
+        return $this->username;
     }
 
     /**
      * @return int
      */
-    public function getOrgId()
+    public function getUserId()
     {
-        return $this->orgId;
+        return $this->userId;
     }
 
     /**
      * @return int
      */
-    public function getTrophyId()
+    public function getUserImage()
     {
-        return $this->trophyId;
+        return $this->userImage;
     }
 
     /**
      * @return int
      */
-    public function getTrophyName()
+    public function getTotalPoints()
     {
-        return $this->trophyName;
+        return $this->totalPoints;
     }
 
     /**
      * @return int
      */
-    public function getTrophyImage()
+    public function getPrizePoints()
     {
-        return $this->trophyImage;
+        return $this->prizePoints;
     }
+
 
 
 }

@@ -15,7 +15,7 @@ use AppBundle\Repository\Organization\User\Task\Common\CategoryRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use JMS\Serializer\Annotation as Serializer;
 
 
 /**
@@ -23,6 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Common\CategoryRepository")
  *
  * Container for similar tasks; defined on a per tenant basis
+ *
+ * @Serializer\XmlRoot("category")
  *
  **/
 class Category

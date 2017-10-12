@@ -24,6 +24,7 @@ use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  *
@@ -34,6 +35,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @UniqueEntity(fields="username", message="Username already taken")
  *
  * Account information for users on a per tenant basis
+ *
+ * @Serializer\XmlRoot("user")
  *
  **/
 class User extends BaseUser implements UserInterface, \Serializable

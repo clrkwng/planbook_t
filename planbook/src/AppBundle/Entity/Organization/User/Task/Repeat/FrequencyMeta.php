@@ -13,13 +13,15 @@ use AppBundle\Repository\Organization\User\Task\Repeat\FrequencyMetaRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="frequency_meta")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\FrequencyMetaRepository")
  *
  * Interval definition for a recurring task
+ *
+ * @Serializer\XmlRoot("frequency_meta")
  *
  **/
 class FrequencyMeta

@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+use JMS\Serializer\Annotation as Serializer;
 
 
 /**
@@ -30,9 +31,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * Collection of users
  *
+ * @Serializer\XmlRoot("organization")
+ *
  **/
 class Organization
 {
+
     /**
      * @var int
      * @ORM\Id

@@ -14,12 +14,15 @@ use AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatSingleRepositor
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="task_repeat_single")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatSingleRepository")
  *
  * A single occurrence of a task that occurs on a recurrent basis
+ *
+ * @Serializer\XmlRoot("task_repeat_single")
  *
  **/
 class TaskRepeatSingle
