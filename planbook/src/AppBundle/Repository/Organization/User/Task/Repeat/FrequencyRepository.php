@@ -32,17 +32,6 @@ class FrequencyRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByState($state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('f')
-            ->from('frequency', 'f')
-            ->where('f.state = :identifier')
-            ->orderBy('f.id', 'ASC')
-            ->setParameter('identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findById($id)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
@@ -51,6 +40,17 @@ class FrequencyRepository extends EntityRepository
             ->where('f.id = :identifier')
             ->orderBy('f.id', 'ASC')
             ->setParameter('identifier', $id);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('f')
+            ->from('frequency', 'f')
+            ->where('f.slug = :identifier')
+            ->orderBy('f.id', 'ASC')
+            ->setParameter('identifier', $slug);
         return $qb->getQuery()->getResult();
     }
 }

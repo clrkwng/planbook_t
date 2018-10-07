@@ -43,14 +43,4 @@ class ColorRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllColorsByState($state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('c')
-            ->from('Color', 'c')
-            ->where('c.state = :identifier')
-            ->orderBy('c.name', 'ASC')
-            ->setParameter('identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
 }

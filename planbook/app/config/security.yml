@@ -16,7 +16,7 @@ security:
                 id: fos_user.user_provider.username
             our_db_provider:
                 entity:
-                    class: AppBundle:Entity:Organization:User:User
+                    class: AppBundle\Entity\Organization\User\User
                     property: username
 
     firewalls:

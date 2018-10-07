@@ -10,19 +10,27 @@ namespace AppBundle\Entity\Organization\Config;
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Prize;
 use AppBundle\Entity\Organization\User\Task\Common\Category;
+use AppBundle\Repository\Organization\Config\ImageRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\EventManager;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="image")
- * @ORM\Entity(repositoryClass="ImageRepository")
- *
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\Config\ImageRepository")
+ * @ORM\HasLifecycleCallbacks()
  * Per tenant container of uploaded images
  *
  **/
 class Image
 {
+
+    const SERVER_PATH_TO_IMAGE_FOLDER = 'C:/Temp/Planbook/ImageUpload';
+
     /**
      * @var int
      * @ORM\Id
@@ -90,47 +98,126 @@ class Image
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", length=100)
      *
-     * @Assert\NotBlank(message="Please, upload an image file.")
-     * @Assert\File(
-     *     mimeTypes={
-     *          "image/jpeg",
-     *          "image/pjpeg",
-     *          "image/png"
-     *     })
      */
-    protected $picture;
+    protected $fileName;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\Config\ImageUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * Unmapped property to handle file uploads
+     */
+    private $file;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the image to be accessed via a url
      *
      */
-    protected $state;
+    protected $slug;
 
     /**
      * Image constructor.
      */
     public function __construct()
     {
+
         $this->trophies = new ArrayCollection();
         $this->prizes = new ArrayCollection();
         $this->categories = new ArrayCollection();
     }
 
     /**
+     * Manages the copying of the file to the relevant place on the server
+     */
+    public function upload()
+    {
+        // the file property can be empty if the field is not required
+        if (null === $this->getFile()) {
+            return;
+        }
+
+        // we use the original file name here but you should
+        // sanitize it at least to avoid any security issues
+
+        // move takes the target directory and target filename as params
+        $this->getFile()->move(
+            self::SERVER_PATH_TO_IMAGE_FOLDER,
+            $this->getFile()->getClientOriginalName()
+        );
+
+        // set the path property to the filename where you've saved the file
+        $this->fileName = $this->getFile()->getClientOriginalName();
+
+        // clean up the file property as you won't need it anymore
+        $this->setFile(null);
+    }
+
+    /**
+     *
+     * Returns the Web path where this image is saved on (used for displaying an image preview)
+     *
+     * @return string
+     */
+    public function getWebPath(){
+        return self::SERVER_PATH_TO_IMAGE_FOLDER . '/' .$this->fileName;
+    }
+
+    /**
+     *
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     *
+     * Lifecycle callback to upload the file to the server
+     */
+    public function lifecycleFileUpload()
+    {
+        $this->upload();
+    }
+
+    /**
+     * Updates the hash value to force the preUpdate and postUpdate events to fire
+     */
+    public function refreshUpdated()
+    {
+        $this->setUpdatedAt(new \DateTime());
+    }
+
+
+    /**
      * @param Trophy $trophy
+     * @return $this
      */
     public function addTrophy(Trophy $trophy)
     {
-        $this->trophies[] = $trophy;
+        if (!$this->trophies->contains($trophy)) {
+            $this->trophies[] = $trophy;
+        }
+        return $this;
     }
 
     /**
@@ -142,10 +229,14 @@ class Image
 
     /**
      * @param Category $category
+     * @return $this
      */
     public function addCategory(Category $category)
     {
-        $this->categories[] = $category;
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+        return $this;
     }
 
     /**
@@ -158,10 +249,14 @@ class Image
 
     /**
      * @param Prize $prize
+     * @return $this
      */
     public function addPrize(Prize $prize)
     {
-        $this->prizes[] = $prize;
+        if (!$this->prizes->contains($prize)) {
+            $this->prizes[] = $prize;
+        }
+        return $this;
     }
 
     /**
@@ -232,36 +327,103 @@ class Image
     /**
      * @return string
      */
-    public function getPicture()
+    public function getFileName()
     {
-        return $this->picture;
+        return $this->fileName;
     }
 
     /**
-     * @param string $picture
+     * @param string $fileName
      */
-    public function setPicture($picture)
+    public function setFileName($fileName)
     {
-        $this->picture = $picture;
+        $this->fileName = $fileName;
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     *
+     *
      * @return string
      */
-    public function getState()
-    {
-        return $this->state;
+    public function __toString(){
+        $retStr = 'Image';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
     }
 
     /**
-     * @param string $state
+     * @return UploadedFile
      */
-    public function setState($state)
+    public function getFile()
     {
-        $this->state = $state;
+        return $this->file;
     }
 
+    /**
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
+    }
 
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
 
 
 }

@@ -10,6 +10,8 @@ namespace AppBundle\Repository\Organization\User\Task\Common;
 
 use AppBundle\Entity\Organization\Config\Image;
 use AppBundle\Entity\Organization\Organization;
+
+
 use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository
@@ -53,6 +55,17 @@ class CategoryRepository extends EntityRepository
             ->where('c.id = :identifier')
             ->orderBy('c.name', 'ASC')
             ->setParameter('identifier', $id);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('c')
+            ->from('category', 'c')
+            ->where('c.slug = :identifier')
+            ->orderBy('c.name', 'ASC')
+            ->setParameter('identifier', $slug);
         return $qb->getQuery()->getResult();
     }
 

@@ -14,21 +14,29 @@ use AppBundle\Entity\Organization\Config\Trophy;
 use AppBundle\Entity\Organization\User\Task\Common\Category;
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\Entity\Organization\User\User;
+use AppBundle\Repository\Organization\OrganizationRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
+use JMS\Serializer\Annotation as Serializer;
 
 
 /**
  * @ORM\Table(name="organization")
- * @ORM\Entity(repositoryClass="OrganizationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\OrganizationRepository")
  *
  * Collection of users
+ *
+ * @Serializer\XmlRoot("organization")
  *
  **/
 class Organization
 {
+
     /**
      * @var int
      * @ORM\Id
@@ -121,6 +129,38 @@ class Organization
     protected $uuid;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the organization to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
      * Organization constructor.
      */
     public function __construct()
@@ -135,10 +175,14 @@ class Organization
 
     /**
      * @param Image $image
+     * @return $this
      */
     public function addImage(Image $image)
     {
-        $this->images[] = $image;
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+        }
+        return $this;
     }
 
     /**
@@ -151,10 +195,14 @@ class Organization
 
     /**
      * @param User $user
+     * @return $this
      */
     public function addUser(User $user)
     {
-        $this->users[] = $user;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+        return $this;
     }
 
     /**
@@ -167,10 +215,14 @@ class Organization
 
     /**
      * @param Priority $priority
+     * @return $this
      */
     public function addPriority(Priority $priority)
     {
-        $this->priorities[] = $priority;
+        if (!$this->priorities->contains($priority)) {
+            $this->priorities[] = $priority;
+        }
+        return $this;
     }
 
     /**
@@ -183,10 +235,14 @@ class Organization
 
     /**
      * @param Category $category
+     * @return $this
      */
     public function addCategory(Category $category)
     {
-        $this->categories[] = $category;
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+        return $this;
     }
 
     /**
@@ -199,10 +255,14 @@ class Organization
 
     /**
      * @param Trophy $trophy
+     * @return $this
      */
     public function addTrophy(Trophy $trophy)
     {
-        $this->trophies[] = $trophy;
+        if (!$this->trophies->contains($trophy)) {
+            $this->trophies[] = $trophy;
+        }
+        return $this;
     }
 
     /**
@@ -215,10 +275,14 @@ class Organization
 
     /**
      * @param OrgConfig $orgConfig
+     * @return $this
      */
     public function addOrgConfiguration(OrgConfig $orgConfig)
     {
-        $this->orgConfigurations[] = $orgConfig;
+        if (!$this->orgConfigurations->contains($orgConfig)) {
+            $this->orgConfigurations[] = $orgConfig;
+        }
+        return $this;
     }
 
     /**
@@ -269,8 +333,56 @@ class Organization
         $this->uuid = $uuid;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
+    }
 
 }

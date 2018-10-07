@@ -23,3 +23,32 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+
+admin_area:
+    resource: "@SonataAdminBundle/Resources/config/routing/sonata_admin.xml"
+    prefix: /admin
+
+admin:
+    resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
+    prefix: /admin
+
+_sonata_admin:
+    resource: .
+    type: sonata_admin
+    prefix: /admin
+
+trophy:
+    resource: "AppBundle\\Controller\\Rest\\OrgTrophyController"
+    type: rest
+users:
+    resource: "AppBundle\\Controller\\Rest\\OrgUsersController"
+    type: rest
+achievements:
+    resource: "AppBundle\\Controller\\Rest\\UserAchievementsController"
+    type: rest
+market:
+    resource: "AppBundle\\Controller\\Rest\\UserMarketController"
+    type: rest
+tasks:
+    resource: "AppBundle\\Controller\\Rest\\UserTasksController"
+    type: rest

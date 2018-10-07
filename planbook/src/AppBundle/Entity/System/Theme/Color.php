@@ -8,15 +8,20 @@
 
 namespace AppBundle\Entity\System\Theme;
 
+use AppBundle\Repository\System\Theme\ColorRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="color")
- * @ORM\Entity(repositoryClass="ColorRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\System\Theme\ColorRepository")
  *
  * Basic definitions for colors
+ *
+ * @Serializer\XmlRoot("color")
  *
  **/
 class Color
@@ -56,16 +61,36 @@ class Color
     }
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\System\Theme\ColorUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    protected $state;
+    protected $enabled;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the color to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
 
 
     /**
@@ -109,21 +134,55 @@ class Color
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getState()
+    public function getCreatedAt()
     {
-        return $this->state;
+        return $this->createdAt;
     }
 
     /**
-     * @param string $state
+     * @return \DateTime
      */
-    public function setState($state)
+    public function getUpdatedAt()
     {
-        $this->state = $state;
+        return $this->updatedAt;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
+    }
 
 }

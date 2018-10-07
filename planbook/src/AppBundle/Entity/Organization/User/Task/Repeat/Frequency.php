@@ -8,15 +8,21 @@
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
+use AppBundle\Repository\Organization\User\Task\Repeat\FrequencyRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="frequency")
- * @ORM\Entity(repositoryClass="FrequencyRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\FrequencyRepository")
  *
  * Base definition for a recurring task
+ *
+ * @Serializer\XmlRoot("frequency")
  *
  **/
 class Frequency
@@ -46,31 +52,57 @@ class Frequency
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="FrequencyMeta", mappedBy="frequency")
+     * @ORM\OneToMany(
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\FrequencyMeta",
+     *     mappedBy="frequency"
+     * )
      * @var FrequencyMeta[] An ArrayCollection of FrequencyMeta objects.
      *
      */
     protected $metaData = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="TaskRepeat", mappedBy="frequency")
+     * @ORM\ManyToMany(
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat",
+     *     inversedBy="frequencies"
+     * )
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
      *
      */
     protected $repeatTasks = null;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\Repeat\FrequencyUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the frequency to be accessed via a url
      *
      */
-    protected $state;
+    protected $slug;
+
 
     /**
      * Frequency constructor.
@@ -92,10 +124,14 @@ class Frequency
 
     /**
      * @param TaskRepeat $repeatTask
+     * @return $this
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        $this->repeatTasks[] = $repeatTask;
+        if (!$this->repeatTasks->contains($repeatTask)) {
+            $this->repeatTasks[] = $repeatTask;
+        }
+        return $this;
     }
 
     /**
@@ -108,9 +144,13 @@ class Frequency
 
     /**
      * @param FrequencyMeta $frequencyMeta
+     * @return $this
      */
     public function addMetaData(FrequencyMeta $frequencyMeta){
-        $this->metaData[] = $frequencyMeta;
+        if (!$this->metaData->contains($frequencyMeta)) {
+            $this->metaData[] = $frequencyMeta;
+        }
+        return $this;
     }
 
     /**
@@ -138,21 +178,65 @@ class Frequency
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getState()
+    public function getCreatedAt()
     {
-        return $this->state;
+        return $this->createdAt;
     }
 
     /**
-     * @param string $state
+     * @return \DateTime
      */
-    public function setState($state)
+    public function getUpdatedAt()
     {
-        $this->state = $state;
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
 
+    /**
+     *
+     *
+     * @return string
+     */
+    public function __toString(){
+        $retStr = 'Frequency';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
+    }
 
 }

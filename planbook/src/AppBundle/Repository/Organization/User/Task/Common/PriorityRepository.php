@@ -33,19 +33,6 @@ class PriorityRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByOrganizationWithState(Organization $org, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('p')
-            ->from('priority', 'p')
-            ->where('p.organization_id = :org_identifier')
-            ->where('p.state= :state_identifier')
-            ->orderBy('p.name', 'ASC')
-            ->setParameter('org_identifier', $org->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findByName($name)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
@@ -65,6 +52,17 @@ class PriorityRepository extends EntityRepository
             ->where('p.id = :identifier')
             ->orderBy('p.name', 'ASC')
             ->setParameter('identifier', $id);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('p')
+            ->from('priority', 'p')
+            ->where('p.slug = :identifier')
+            ->orderBy('p.name', 'ASC')
+            ->setParameter('identifier', $slug);
         return $qb->getQuery()->getResult();
     }
 }

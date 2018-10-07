@@ -9,12 +9,19 @@
 namespace AppBundle\Entity\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Image;
+use AppBundle\Repository\Organization\User\PrizeRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="prize")
- * @ORM\Entity(repositoryClass="PrizeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\PrizeRepository")
+ *
+ * @Serializer\XmlRoot("prize")
+ *
  **/
 class Prize
 {
@@ -79,17 +86,36 @@ class Prize
     protected $image;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\PrizeUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the prize to be accessed via a url
      *
      */
-    protected $state;
+    protected $slug;
 
     /**
      * @return int
@@ -180,21 +206,59 @@ class Prize
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getState()
+    public function getCreatedAt()
     {
-        return $this->state;
+        return $this->createdAt;
     }
 
     /**
-     * @param string $state
+     * @return \DateTime
      */
-    public function setState($state)
+    public function getUpdatedAt()
     {
-        $this->state = $state;
+        return $this->updatedAt;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        $retStr = 'Prize';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
+    }
 
 }

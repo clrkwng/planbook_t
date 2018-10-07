@@ -8,15 +8,20 @@
 
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
+use AppBundle\Repository\Organization\User\Task\Repeat\FrequencyMetaRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="frequency_meta")
- * @ORM\Entity(repositoryClass="FrequencyMetaRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\FrequencyMetaRepository")
  *
  * Interval definition for a recurring task
+ *
+ * @Serializer\XmlRoot("frequency_meta")
  *
  **/
 class FrequencyMeta
@@ -77,6 +82,54 @@ class FrequencyMeta
     protected $meta_value;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"meta_key", "id"}, updatable=false)
+     *
+     * Allows for the image to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -132,6 +185,49 @@ class FrequencyMeta
         $this->meta_value = $meta_value;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     *
+     *
+     * @return string
+     */
+    public function __toString(){
+        $retStr = 'FrequencyMeta';
+        if(!is_null($this->getMetaKey()) && $this->getMetaKey() != ""){
+            $retStr = $this->getMetaKey();
+        }
+        return (string) $retStr;
+    }
 
 }

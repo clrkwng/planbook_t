@@ -9,15 +9,20 @@
 namespace AppBundle\Entity\Organization\User;
 
 use AppBundle\Entity\Organization\Config\Trophy;
+use AppBundle\Repository\Organization\User\AchievementRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="achievements")
- * @ORM\Entity(repositoryClass="AchievementRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\AchievementRepository")
  *
  * Mapping of Users to Trophies with Additional Data
+ *
+ * @Serializer\XmlRoot("achievement")
  *
  **/
 class Achievement
@@ -53,6 +58,39 @@ class Achievement
      * @Assert\GreaterThanOrEqual(0)
      */
     protected $quantity;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @ORM\Column(length=510, unique=true)
+     *
+     * @Gedmo\Slug(fields={"id"}, updatable=false)
+     *
+     * Allows for the image to be accessed via a url
+     * (Note: Since this slug is a composite of user and trophy, it's length needs to be double)
+     *
+     */
+    protected $slug;
 
     /**
      * @return integer
@@ -110,8 +148,57 @@ class Achievement
         $this->quantity = $quantity;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    public function __toString(){
+        return $this->getUser()->getUsername() .':' . $this->getTrophy()->getName() . ':' . $this->getQuantity();
+    }
 
 
 }

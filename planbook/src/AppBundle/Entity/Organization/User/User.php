@@ -8,30 +8,35 @@
 
 namespace AppBundle\Entity\Organization\User;
 
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use FOS\UserBundle\Model\User as BaseUser;
 use AppBundle\Entity\Organization\Config\Image;
-use AppBundle\Entity\Organization\Config\Type;
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Task\Task;
 use AppBundle\Entity\System\Theme\Theme;
 use AppBundle\Util\Organization\User\UserUtil;
+use AppBundle\Repository\Organization\User\UserRepository;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  *
- * @ORM\Entity(repositoryClass="UserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\UserRepository")
  * @ORM\Table(name="`user`")
  *
  * @UniqueEntity(fields="email", message="Email already taken")
  * @UniqueEntity(fields="username", message="Username already taken")
  *
  * Account information for users on a per tenant basis
+ *
+ * @Serializer\XmlRoot("user")
  *
  **/
 class User extends BaseUser implements UserInterface, \Serializable
@@ -131,20 +136,6 @@ class User extends BaseUser implements UserInterface, \Serializable
     protected $theme = null;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\UserUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
-     *
-     *
-     */
-    protected $state;
-
-    /**
      * @var Image
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Organization\Config\Image")
@@ -153,19 +144,6 @@ class User extends BaseUser implements UserInterface, \Serializable
      *
      */
     protected $image = null;
-
-    /**
-     * @var Type
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="AppBundle\Entity\Organization\Config\Type",
-     *     inversedBy="users"
-     * )
-     *
-     * The role that a user has in the realm
-     *
-     */
-    protected $type = null;
 
     /**
      * @var int
@@ -201,6 +179,37 @@ class User extends BaseUser implements UserInterface, \Serializable
     protected $prize_points;
 
     /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"username"}, updatable=false)
+     *
+     * Allows for the user to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @var array
+     */
+    protected $roles;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -210,15 +219,38 @@ class User extends BaseUser implements UserInterface, \Serializable
         $this->taskTemplates = new ArrayCollection();
         $this->prizes = new ArrayCollection();
         $this->achievements = new ArrayCollection();
+        $this->roles = new ArrayCollection();
 
     }
 
     /**
+     * @param string $role
+     * @return $this
+     */
+    public function addRole($role)
+    {
+        $role = strtoupper($role);
+        if ($role === static::ROLE_DEFAULT) {
+            return $this;
+        }
+
+        if (!$this->roles->contains($role)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param Achievement $achievement
+     * @return $this
      */
     public function addAchievement(Achievement $achievement)
     {
-        $this->achievements[] = $achievement;
+        if (!$this->achievements->contains($achievement)) {
+            $this->achievements[] = $achievement;
+        }
+        return $this;
     }
 
     /**
@@ -261,13 +293,16 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
 
-
     /**
      * @param Task $task
+     * @return $this
      */
     public function addTaskTemplate(Task $task)
     {
-        $this->taskTemplates[] = $task;
+        if (!$this->taskTemplates->contains($task)) {
+            $this->taskTemplates[] = $task;
+        }
+        return $this;
     }
 
     /**
@@ -280,10 +315,14 @@ class User extends BaseUser implements UserInterface, \Serializable
 
     /**
      * @param Prize $prize
+     * @return $this
      */
     public function addPrize(Prize $prize)
     {
-        $this->prizes[] = $prize;
+        if (!$this->prizes->contains($prize)) {
+            $this->prizes[] = $prize;
+        }
+        return $this;
     }
 
     /**
@@ -385,22 +424,6 @@ class User extends BaseUser implements UserInterface, \Serializable
     }
 
     /**
-     * @return string
-     */
-    public function getState()
-    {
-        return $this->state;
-    }
-
-    /**
-     * @param string $state
-     */
-    public function setState($state)
-    {
-        $this->state = $state;
-    }
-
-    /**
      * @return Image
      */
     public function getImage()
@@ -414,22 +437,6 @@ class User extends BaseUser implements UserInterface, \Serializable
     public function setImage($image)
     {
         $this->image = $image;
-    }
-
-    /**
-     * @return Type
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param Type $type
-     */
-    public function setType(Type $type)
-    {
-        $this->type = $type;
     }
 
     /**
@@ -512,7 +519,7 @@ class User extends BaseUser implements UserInterface, \Serializable
      */
     public function getRoles()
     {
-        return UserUtil::getStates();
+        return $this->roles->toArray();
     }
 
     /**
@@ -543,5 +550,45 @@ class User extends BaseUser implements UserInterface, \Serializable
             $this->password,
 
             ) = unserialize($serialized);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    public function __toString(){
+        $retStr = 'User';
+        if(!is_null($this->getUsername()) && $this->getUsername() != ""){
+            $retStr = $this->getUsername();
+        }
+        return (string) $retStr;
     }
 }

@@ -10,17 +10,22 @@ namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
 use AppBundle\Entity\Organization\User\Task\Task;
+use AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 
 /**
  * @ORM\Table(name="task_repeat")
- * @ORM\Entity(repositoryClass="TaskRepeatRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatRepository")
  *
  * Definition for a task that occurs on a recurrent basis
+ *
+ * @Serializer\XmlRoot("task_repeat")
  *
  **/
 class TaskRepeat
@@ -47,7 +52,7 @@ class TaskRepeat
 
     /**
      * @var TaskRepeat[] An ArrayCollection of TaskRepeat objects.
-     * @ORM\ManyToOne(targetEntity="TaskRepeat", inversedBy="baseRepeatTask")
+     * @ORM\OneToMany(targetEntity="TaskRepeatSingle", mappedBy="baseRepeatTask")
      *
      * Base task to inherit from
      *
@@ -68,7 +73,10 @@ class TaskRepeat
 
     /**
      * @var Frequency[] An ArrayCollection of Frequency objects.
-     * @ORM\ManyToMany(targetEntity="Frequency", mappedBy="repeatTasks")
+     * @ORM\ManyToMany(
+     *     targetEntity="AppBundle\Entity\Organization\User\Task\Repeat\Frequency",
+     *     mappedBy="repeatTasks"
+     * )
      * Task's repetition frequency; used for creation of `Task_Repeat_Single`
      *
      */
@@ -99,17 +107,37 @@ class TaskRepeat
     protected $description_ov;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\Repeat\TaskRepeatUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"id"}, updatable=false)
+     *
+     * Allows for the task repeat to be accessed via a url
      *
      */
-    protected $state;
+    protected $slug;
+
 
     /**
      * TaskRepeat constructor.
@@ -131,10 +159,31 @@ class TaskRepeat
 
     /**
      * @param TaskRepeatSingle $repeatTaskInstance
+     * @return $this
      */
     public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
     {
-        $this->repeatTaskInstances[] = $repeatTaskInstance;
+        if (!$this->repeatTaskInstances->contains($repeatTaskInstance)) {
+            $this->repeatTaskInstances[] = $repeatTaskInstance;
+        }
+        return $this;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     /**
@@ -147,10 +196,14 @@ class TaskRepeat
 
     /**
      * @param Frequency $frequency
+     * @return $this
      */
     public function addFrequency(Frequency $frequency)
     {
-        $this->frequencies[] = $frequency;
+        if (!$this->frequencies->contains($frequency)) {
+            $this->frequencies[] = $frequency;
+        }
+        return $this;
     }
 
     /**
@@ -226,20 +279,48 @@ class TaskRepeat
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getState()
+    public function getCreatedAt()
     {
-        return $this->state;
+        return $this->createdAt;
     }
 
     /**
-     * @param string $state
+     * @return \DateTime
      */
-    public function setState($state)
+    public function getUpdatedAt()
     {
-        $this->state = $state;
+        return $this->updatedAt;
     }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     *
+     *
+     * @return string
+     */
+    public function __toString(){
+        $retStr = 'TaskRepeat';
+        if(!is_null($this->getNameOv()) && $this->getNameOv() != ""){
+            $retStr = $this->getNameOv();
+        }
+        return (string) $retStr;
+    }
 
 }

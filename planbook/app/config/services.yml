@@ -34,13 +34,7 @@ services:
     #     arguments:
     #         $someArgument: 'some_value'
 
-    AppBundle\Service\FileUploader:
-            arguments:
-                $targetDir: '%pictures_directory%'
-
-
-    AppBundle\EventListener\ImageUploadListener:
+    app.form.registration:
+            class: AppBundle\Form\RegistrationType
             tags:
-                - { name: doctrine.event_listener, event: prePersist }
-                - { name: doctrine.event_listener, event: preUpdate }
-                - { name: doctrine.event_listener, event: postLoad }
+                - { name: form.type, alias: app_user_registration }

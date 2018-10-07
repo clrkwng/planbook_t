@@ -34,19 +34,6 @@ class TaskSingleRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByTaskWithState(Task $task, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('t')
-            ->from('task_single', 't')
-            ->where('t.task_id = :task_identifier')
-            ->where('t.state = :state_identifier')
-            ->orderBy('t.id', 'ASC')
-            ->setParameter('task_identifier', $task->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findAllByPriority(Priority $priority)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
@@ -58,16 +45,25 @@ class TaskSingleRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByPriorityWithState(Priority $priority, $state)
+    public function findById($id)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('t')
             ->from('task_single', 't')
-            ->where('t.priority_id = :priority_identifier')
-            ->where('t.state = :state_identifier')
+            ->where('t.id = :identifier')
             ->orderBy('t.id', 'ASC')
-            ->setParameter('priority_identifier', $priority->getId())
-            ->setParameter('state_identifier', $state);
+            ->setParameter('identifier', $id);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('task_single', 't')
+            ->where('t.slug = :identifier')
+            ->orderBy('t.id', 'ASC')
+            ->setParameter('identifier', $slug);
         return $qb->getQuery()->getResult();
     }
 }

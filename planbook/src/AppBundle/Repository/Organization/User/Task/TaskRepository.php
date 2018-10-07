@@ -33,19 +33,6 @@ class TaskRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByUserWithState(User $user, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('t')
-            ->from('task', 't')
-            ->where('t.user_id = :user_identifier')
-            ->where('t.state = :state_identifier')
-            ->orderBy('t.name', 'ASC')
-            ->setParameter('user_identifier', $user->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findByName($name)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
@@ -65,6 +52,17 @@ class TaskRepository extends EntityRepository
             ->where('t.id = :identifier')
             ->orderBy('t.name', 'ASC')
             ->setParameter('identifier', $id);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('task', 't')
+            ->where('t.slug = :identifier')
+            ->orderBy('t.name', 'ASC')
+            ->setParameter('identifier', $slug);
         return $qb->getQuery()->getResult();
     }
 }

@@ -11,15 +11,21 @@ namespace AppBundle\Entity\Organization\User\Task;
 use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat;
 use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
 use AppBundle\Entity\Organization\User\User;
+use AppBundle\Repository\Organization\User\Task\TaskRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="task")
- * @ORM\Entity(repositoryClass="TaskRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\TaskRepository")
  *
  * Base definition for a task
+ *
+ * @Serializer\XmlRoot("task")
  *
  **/
 class Task
@@ -46,7 +52,7 @@ class Task
     protected $user = null;
 
     /**
-     * @var TaskSingle
+     * @var TaskSingle[]|ArrayCollection
      *
      * Collection of single instance, child tasks
      *
@@ -59,7 +65,7 @@ class Task
     protected $singleTasks = null;
 
     /**
-     * @var TaskRepeat
+     * @var TaskRepeat[]|ArrayCollection
      *
      * Collection of repeating, child tasks
      *
@@ -91,17 +97,38 @@ class Task
     protected $description;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\TaskUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name", "id"}, updatable=false)
+     *
+     * Allows for the task to be accessed via a url
      *
      */
-    protected $state;
+    protected $slug;
+
+
 
     /**
      * Task constructor.
@@ -115,14 +142,18 @@ class Task
 
     /**
      * @param TaskSingle $singleTask
+     * @return $this
      */
     public function addSingleTask(TaskSingle $singleTask)
     {
-        $this->singleTasks[] = $singleTask;
+        if (!$this->singleTasks->contains($singleTask)) {
+            $this->singleTasks[] = $singleTask;
+        }
+        return $this;
     }
 
     /**
-     * @return TaskSingle|ArrayCollection
+     * @return TaskSingle[]|ArrayCollection
      */
     public function getSingleTasks()
     {
@@ -131,14 +162,18 @@ class Task
 
     /**
      * @param TaskRepeat $repeatTask
+     * @return $this
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        $this->repeatTasks[] = $repeatTask;
+        if (!$this->repeatTasks->contains($repeatTask)) {
+            $this->repeatTasks[] = $repeatTask;
+        }
+        return $this;
     }
 
     /**
-     * @return TaskRepeat|ArrayCollection
+     * @return TaskRepeat[]|ArrayCollection
      */
     public function getRepeatTasks()
     {
@@ -202,19 +237,64 @@ class Task
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getState()
+    public function getSlug()
     {
-        return $this->state;
+        return $this->slug;
     }
 
     /**
-     * @param string $state
+     * @param mixed $slug
      */
-    public function setState($state)
+    public function setSlug($slug)
     {
-        $this->state = $state;
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     *
+     *
+     * @return string
+     */
+    public function __toString(){
+        $retStr = 'Task';
+        if(!is_null($this->getName()) && $this->getName() != ""){
+            $retStr = $this->getName();
+        }
+        return (string) $retStr;
     }
 
 

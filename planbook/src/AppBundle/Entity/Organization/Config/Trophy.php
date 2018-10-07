@@ -7,17 +7,21 @@
  */
 
 namespace AppBundle\Entity\Organization\Config;
+
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Achievement;
+use AppBundle\Repository\Organization\Config\TrophyRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 
 
 /**
  * @ORM\Table(name="trophy")
- * @ORM\Entity(repositoryClass="TrophyRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\Config\TrophyRepository")
  *
  * Per tenant definitions of trophies that are earned by a user completing tasks
  *
@@ -90,17 +94,10 @@ class Trophy
     protected $next_trophy = null;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\Config\TrophyUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
-     *
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    protected $state;
+    protected $enabled;
 
     /**
      * @ORM\OneToMany(
@@ -119,6 +116,32 @@ class Trophy
      *
      */
     protected $achievements = null;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the trophy to be accessed via a url
+     *
+     */
+    protected $slug;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
 
 
     /**
@@ -195,10 +218,14 @@ class Trophy
 
     /**
      * @param Achievement $achievement
+     * @return $this
      */
     public function addAchievement(Achievement $achievement)
     {
-        $this->achievements[] = $achievement;
+        if (!$this->achievements->contains($achievement)) {
+            $this->achievements[] = $achievement;
+        }
+        return $this;
     }
 
     /**
@@ -247,24 +274,57 @@ class Trophy
         $this->next_trophy = $next_trophy;
     }
 
-
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getState()
+    public function getCreatedAt()
     {
-        return $this->state;
+        return $this->createdAt;
     }
 
     /**
-     * @param string $state
+     * @return \DateTime
      */
-    public function setState($state)
+    public function getUpdatedAt()
     {
-        $this->state = $state;
+        return $this->updatedAt;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
+    }
 
 
 }

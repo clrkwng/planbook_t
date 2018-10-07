@@ -25,19 +25,6 @@ class PrizeRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByUserWithState(User $user, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('p')
-            ->from('Prize', 'p')
-            ->where('p.user_id = :user_identifier')
-            ->where('p.state = :state_identifier')
-            ->orderBy('p.name', 'ASC')
-            ->setParameter('user_identifier', $user->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findAllByImage(Image $image)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
@@ -57,6 +44,17 @@ class PrizeRepository extends EntityRepository
             ->where('p.name = :identifier')
             ->orderBy('p.name', 'ASC')
             ->setParameter('identifier', $name);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('p')
+            ->from('Prize', 'p')
+            ->where('p.slug = :identifier')
+            ->orderBy('p.name', 'ASC')
+            ->setParameter('identifier', $slug);
         return $qb->getQuery()->getResult();
     }
 }

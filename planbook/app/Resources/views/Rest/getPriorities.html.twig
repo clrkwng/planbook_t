@@ -1,0 +1,24 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block content %}
+
+    {% for priority in data.priorities %}
+
+        <div>
+            <a href="{{ path('get_priority',  {'priority': priority})}}">{{ priority }} in html</a>,
+            <a href="{{ path('get_priority', {'priority': priority, '_format': 'json'}) }}">{{ priority }} in json</a> and
+            <a href="{{ path('get_priority', {'priority': priority, '_format': 'xml'}) }}">{{ priority }} in xml</a>
+            <a href="{{ path('get_priority', {'priority': priority}) }}">{{ priority }} in the default format</a>,
+        </div>
+
+    {% endfor %}
+
+    <div><a href="{{ path('get_priorities', {'_format': 'json'}) }}">list priorities in json</a></div>
+    <div><a href="{{ path('get_priorities', {'_format': 'xml'}) }}">list priorities in xml</a></div>
+    <div><a href="{{ path('get_priorities') }}">list priorities in the default format</a></div>
+
+    <div><a href="{{ path('get_priorities', {'_format': 'html'}) }}">form to create a new priorities in html</a></div>
+
+    Rendered with twig. Page: {{ data.page }}
+
+{% endblock content %}

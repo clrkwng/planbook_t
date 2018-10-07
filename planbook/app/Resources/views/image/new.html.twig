@@ -4,3 +4,12 @@
 
     {{ form_row(form.file) }}
 {{ form_end(form) }}
+
+{% block stylesheets %}
+    <style>
+        img.admin-preview {
+            max-height: 200px;
+            max-width: 200px;
+        }
+    </style>
+{% endblock %}

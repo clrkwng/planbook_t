@@ -55,4 +55,15 @@ class FrequencyMetaRepository extends EntityRepository
             ->setParameter('identifier', $id);
         return $qb->getQuery()->getResult();
     }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('f')
+            ->from('frequency_meta', 'f')
+            ->where('f.slug = :identifier')
+            ->orderBy('f.id', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
 }

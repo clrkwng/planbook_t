@@ -7,21 +7,27 @@
  */
 
 namespace AppBundle\Entity\Organization\User\Task\Common;
+
 use AppBundle\Entity\Organization\Organization;
 use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeat;
 use AppBundle\Entity\Organization\User\Task\Repeat\TaskRepeatSingle;
 use AppBundle\Entity\Organization\User\Task\Single\TaskSingle;
+use AppBundle\Repository\Organization\User\Task\Common\PriorityRepository;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 
 /**
  * @ORM\Table(name="priority")
- * @ORM\Entity(repositoryClass="PriorityRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Common\PriorityRepository")
  *
  * Per tenant definitions of the priority placed on user tasks
+ *
+ * @Serializer\XmlRoot("priority")
  *
  **/
 class Priority
@@ -103,18 +109,36 @@ class Priority
     protected $completion_points;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\Common\PriorityUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
      *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"name"}, updatable=false)
+     *
+     * Allows for the category to be accessed via a url
      *
      */
-    protected $state;
+    protected $slug;
 
     /**
      * Priority constructor.
@@ -137,10 +161,14 @@ class Priority
 
     /**
      * @param TaskRepeatSingle $repeatTaskInstance
+     * @return $this
      */
     public function addRepeatTaskInstance(TaskRepeatSingle $repeatTaskInstance)
     {
-        $this->repeatTaskInstances[] = $repeatTaskInstance;
+        if (!$this->repeatTaskInstances->contains($repeatTaskInstance)) {
+            $this->repeatTaskInstances[] = $repeatTaskInstance;
+        }
+        return $this;
     }
 
     /**
@@ -148,15 +176,20 @@ class Priority
      */
     public function getSingleTasks()
     {
+
         return $this->singleTasks;
     }
 
     /**
      * @param TaskSingle $singleTask
+     * @return $this
      */
     public function addSingleTask(TaskSingle $singleTask)
     {
-        $this->singleTasks[] = $singleTask;
+        if (!$this->singleTasks->contains($singleTask)) {
+            $this->singleTasks[] = $singleTask;
+        }
+        return $this;
     }
 
     /**
@@ -169,10 +202,14 @@ class Priority
 
     /**
      * @param TaskRepeat $repeatTask
+     * @return $this
      */
     public function addRepeatTask(TaskRepeat $repeatTask)
     {
-        $this->repeatTasks[] = $repeatTask;
+        if (!$this->repeatTasks->contains($repeatTask)) {
+            $this->repeatTasks[] = $repeatTask;
+        }
+        return $this;
     }
 
     /**
@@ -232,22 +269,55 @@ class Priority
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getState()
+    public function getCreatedAt()
     {
-        return $this->state;
+        return $this->createdAt;
     }
 
     /**
-     * @param string $state
+     * @return \DateTime
      */
-    public function setState($state)
+    public function getUpdatedAt()
     {
-        $this->state = $state;
+        return $this->updatedAt;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    public function __toString(){
+        return $this->getName();
+    }
 
 }

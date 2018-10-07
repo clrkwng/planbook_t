@@ -45,19 +45,6 @@ class TrophyRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByOrganizationWithState(Organization $org, $state)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder()
-            ->select('t')
-            ->from('Trophy', 't')
-            ->where('t.organization_id = :org_identifier')
-            ->where('t.state = :state_identifier')
-            ->orderBy('t.name', 'ASC')
-            ->setParameter('org_identifier', $org->getId())
-            ->setParameter('state_identifier', $state);
-        return $qb->getQuery()->getResult();
-    }
-
     public function findAllByOrganizationWithImage(Organization $org, Image $image)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
@@ -90,6 +77,17 @@ class TrophyRepository extends EntityRepository
             ->where('t.name= :identifier')
             ->orderBy('t.name', 'ASC')
             ->setParameter('identifier', $name);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('Trophy', 't')
+            ->where('t.slug= :identifier')
+            ->orderBy('t.name', 'ASC')
+            ->setParameter('identifier', $slug);
         return $qb->getQuery()->getResult();
     }
 }

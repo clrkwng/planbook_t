@@ -9,14 +9,20 @@
 namespace AppBundle\Entity\Organization\User\Task\Repeat;
 
 use AppBundle\Entity\Organization\User\Task\Common\Priority;
+use AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatSingleRepository;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table(name="task_repeat_single")
- * @ORM\Entity(repositoryClass="TaskRepeatSingleRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Organization\User\Task\Repeat\TaskRepeatSingleRepository")
  *
  * A single occurrence of a task that occurs on a recurrent basis
+ *
+ * @Serializer\XmlRoot("task_repeat_single")
  *
  **/
 class TaskRepeatSingle
@@ -42,7 +48,7 @@ class TaskRepeatSingle
      * @var Priority
      * @ORM\ManyToOne(
      *     targetEntity="AppBundle\Entity\Organization\User\Task\Common\Priority",
-     *     inversedBy="repeatTasks"
+     *     inversedBy="repeatTaskInstances"
      * )
      *
      *
@@ -54,13 +60,12 @@ class TaskRepeatSingle
     protected $priority_ov;
 
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @var \datetime
+     * @ORM\Column(type="datetime")
      *
      * UNIX timestamp for when the task must be completed by
      *
      * @Assert\NotBlank()
-     * @Assert\Length(min = 4)
      *
      */
     protected $deadline;
@@ -96,18 +101,53 @@ class TaskRepeatSingle
     protected $description_ov;
 
     /**
-     * @var string
-     * @Assert\Choice(
-     *     callback = {
-     *          "AppBundle\Util\Organization\User\Task\Repeat\TaskRepeatSingleUtil",
-     *          "getStates"
-     *      }
-     * )
-     * @ORM\Column(type="string")
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="created_at", type="datetime")
      *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     *
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $updatedAt;
+
+
+    /**
+     * @ORM\Column(length=255, unique=true)
+     *
+     * @Gedmo\Slug(fields={"id", "deadline"}, updatable=false)
+     *
+     * Allows for the task repeat to be accessed via a url
      *
      */
-    protected $state;
+    protected $slug;
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
 
     /**
      * @return int
@@ -150,7 +190,7 @@ class TaskRepeatSingle
     }
 
     /**
-     * @return string
+     * @return \datetime
      */
     public function getDeadline()
     {
@@ -158,7 +198,7 @@ class TaskRepeatSingle
     }
 
     /**
-     * @param string $deadline
+     * @param \datetime $deadline
      */
     public function setDeadline($deadline)
     {
@@ -198,20 +238,48 @@ class TaskRepeatSingle
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
-    public function getState()
+    public function getCreatedAt()
     {
-        return $this->state;
+        return $this->createdAt;
     }
 
     /**
-     * @param string $state
+     * @return \DateTime
      */
-    public function setState($state)
+    public function getUpdatedAt()
     {
-        $this->state = $state;
+        return $this->updatedAt;
     }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     *
+     *
+     * @return string
+     */
+    public function __toString(){
+        $retStr = 'TaskRepeatSingle';
+        if(!is_null($this->getNameOv()) && $this->getNameOv() != ""){
+            $retStr = $this->getNameOv();
+        }
+        return (string) $retStr;
+    }
 
 }

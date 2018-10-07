@@ -2,82 +2,98 @@
 /**
  * Created by PhpStorm.
  * User: Andrew.Parise
- * Date: 9/8/2017
- * Time: 6:17 PM
+ * Date: 10/1/2017
+ * Time: 12:16 PM
  */
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\Organization\Config\Image;
-use AppBundle\Form\ImageType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use AppBundle\Service\FileUploader;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
+use Doctrine\Common\Collections\ArrayCollection;
+use FOS\RestBundle\View\ViewHandlerInterface;
+use FOS\RestBundle\Controller\Annotations\Prefix;
+use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\RouteResource;
 
-class ImageController extends Controller
+/*
+ * @Prefix("planbook/rest/image")
+ * @NamePrefix("planbook_rest_image_")
+ *
+ * @RouteResource("Image")
+ */
+class ImageController extends FOSRestController
 {
-    /**
-     * @Route("/image/new", name="app_image_new")
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     */
-    public function newAction(Request $request, FileUploader $fileUploader)
+
+    public function getImagesAction($orgSlug)
     {
-        $image = new Image();
-        $form = $this->createForm(ImageType::class, $image);
-        $form->handleRequest($request);
+        $imageManager = $this->get('image_manager');
+        $organizationManager = $this->get('organization_manager');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // $file stores the uploaded PDF file
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $file = $image->getPicture();
+        $org = $organizationManager->findBySlug($orgSlug);
+        $images = $imageManager->findAllByOrganization($org);
 
-            $fileName = $fileUploader->upload($file);
+        $view = $this->view($images, 200)
+            ->setTemplate("AppBundle:Image:getImages.html.twig")
+            ->setTemplateVar('images')
+        ;
 
-            // Update the 'picture' property to store the image file name
-            // instead of its contents
-            $image->setPicture($fileName);
+        return $this->handleView($view);
+    } // "get_organization_images"   [GET] /organization/{orgSlug}/image
 
-            //..other setters from the submitted form
+    public function getImageAction($orgSlug, $id)
+    {
+        $imageManager = $this->get('image_manager');
 
-            // ... persist the $image variable or any other work
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($image);
-            $em->flush();
+        $image = $imageManager->findById($id);
 
-            return $this->redirect($this->generateUrl('app_image_list'));
-        }
+        $view = $this->view($image, 200)
+            ->setTemplate("AppBundle:Image:getImage.html.twig")
+            ->setTemplateVar('image')
+        ;
 
-        return $this->render('image/new.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
+        return $this->handleView($view);
+    } // "get_organization_image"    [GET] /organization/{orgSlug}/image/{id}
 
-    public function editAction(Request $request, Image $image){
-        $form = $this->createForm(ImageType::class, $image);
-        $form->handleRequest($request);
+    public function deleteImageAction($orgSlug, $id)
+    {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // $file stores the uploaded image file
-            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $file */
-            $image->setPicture(
-                new File($this->getParameter('pictures_directory') . '/' . $image->getPicture())
-            );
-            //..other setters from the submitted form
+    } // "delete_organization_image" [DELETE] /organization/{orgSlug}/image/{id}
 
-            // ... persist the $image variable or any other work
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($image);
-            $em->flush();
+    public function newImageAction($orgSlug)
+    {
+        $organizationManager = $this->get('organization_manager');
+        $org = $organizationManager->findBySlug($orgSlug);
 
-        }
+        $newImage = new Image();
+        $newImage->setOrganization($org);
+        $newImage->setEnabled(true);
 
-        return $this->render('image/edit.html.twig', array(
-            'form' => $form->createView(),
-        ));
-    }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newImage);
+        $em->flush();
+
+        $view = $this->view($newImage, 200)
+            ->setTemplate("AppBundle:Prize:newImage.html.twig")
+            ->setTemplateVar('image')
+        ;
+
+        return $this->handleView($view);
+    } // "new_organization_image"   [GET] /organization/{orgSlug}/image/new
+
+    public function editImageAction($orgSlug, $id)
+    {
+        $imageManager = $this->get('image_manager');
+
+        $image = $imageManager->findById($id);
+
+        $view = $this->view($image, 200)
+            ->setTemplate("AppBundle:Image:postImage.html.twig")
+            ->setTemplateVar('image')
+        ;
+
+        return $this->handleView($view);
+    } // "edit_organization_image"   [GET] /organization/{orgSlug}/image/{id}/edit
+
 }

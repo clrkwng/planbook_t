@@ -1,0 +1,24 @@
+{% extends "AppBundle::layout.html.twig" %}
+
+{% block content %}
+
+    {% for task in data.tasks %}
+
+        <div>
+            <a href="{{ path('get_task',  {'task': task})}}">{{ task }} in html</a>,
+            <a href="{{ path('get_task', {'task': task, '_format': 'json'}) }}">{{ task }} in json</a> and
+            <a href="{{ path('get_task', {'task': task, '_format': 'xml'}) }}">{{ task }} in xml</a>
+            <a href="{{ path('get_task', {'task': task}) }}">{{ task }} in the default format</a>,
+        </div>
+
+    {% endfor %}
+
+    <div><a href="{{ path('get_tasks', {'_format': 'json'}) }}">list tasks in json</a></div>
+    <div><a href="{{ path('get_tasks', {'_format': 'xml'}) }}">list tasks in xml</a></div>
+    <div><a href="{{ path('get_tasks') }}">list tasks in the default format</a></div>
+
+    <div><a href="{{ path('get_tasks', {'_format': 'html'}) }}">form to create a new tasks in html</a></div>
+
+    Rendered with twig. Page: {{ data.page }}
+
+{% endblock content %}

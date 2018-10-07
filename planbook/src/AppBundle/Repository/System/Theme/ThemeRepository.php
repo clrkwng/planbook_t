@@ -21,7 +21,7 @@ class ThemeRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findThemeByName($name)
+    public function findByName($name)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('t')
@@ -32,14 +32,26 @@ class ThemeRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllByState($state)
+    public function findById($id)
     {
         $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('t')
             ->from('Theme', 't')
-            ->where('t.state = :identifier')
-            ->orderBy('t.state', 'ASC')
-            ->setParameter('identifier', $state);
+            ->where('t.id = :identifier')
+            ->orderBy('t.name', 'ASC')
+            ->setParameter('identifier', $id);
         return $qb->getQuery()->getResult();
     }
+
+    public function findBySlug($slug)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder()
+            ->select('t')
+            ->from('Theme', 't')
+            ->where('t.slug = :identifier')
+            ->orderBy('t.name', 'ASC')
+            ->setParameter('identifier', $slug);
+        return $qb->getQuery()->getResult();
+    }
+
 }

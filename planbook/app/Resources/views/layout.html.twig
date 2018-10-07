@@ -1,0 +1,34 @@
+{% extends "::base.html.twig" %}
+
+{% block body %}
+    <div>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            <a href="{{ path('fos_user_profile_show', {'username': app.user.username}) }}">
+                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+            </a> |
+            <a href="{{ path('fos_user_security_logout') }}">
+                {{ 'layout.logout'|trans([], 'FOSUserBundle') }}
+            </a>
+        {% else %}
+            <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans([], 'FOSUserBundle') }}</a> |
+            <a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans([], 'FOSUserBundle') }}</a>
+        {% endif %}
+    </div>
+
+    <h1>Hello Application</h1>
+
+    {% if query is not defined %}
+        {% set query = 'enter search query' %}
+    {% endif %}
+    {{ liip_search_box(query, 'query-field-id', 'css-class') }}
+
+    {% for type, flashMessages in app.session.flashbag.all() %}
+        {% for flashMessage in flashMessages %}
+            <div class="flash-{{ type }}">
+                {{ flashMessage }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+{% endblock %}
